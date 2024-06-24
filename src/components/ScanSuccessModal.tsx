@@ -50,22 +50,24 @@ import {
 import { Button } from "@/components/ui/button";
 
 interface ScanSuccessModalProps {
+    title: string;
+    description: string;
     isOpen: boolean;
     onClose: () => void;
 }
 
-const ScanSuccessModal: React.FC<ScanSuccessModalProps> = ({ isOpen, onClose }) => {
+const ScanSuccessModal: React.FC<ScanSuccessModalProps> = ({ title, description, isOpen, onClose }) => {
     return (
         <AlertDialog open={isOpen} onOpenChange={onClose}>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>Scan Successful</AlertDialogTitle>
+                    <AlertDialogTitle>{title}</AlertDialogTitle>
                     <AlertDialogDescription>
-                        The QR code/barcode was successfully scanned.
+                        {description}
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel onClick={onClose}>Close</AlertDialogCancel>
+                    <AlertDialogCancel onClick={onClose}>Deny</AlertDialogCancel>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
