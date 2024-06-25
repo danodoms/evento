@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Html5QrcodeScanner, Html5QrcodeSupportedFormats, Html5QrcodeScanType } from 'html5-qrcode';
 import UserMissingModal from '@/components/UserMissingModal'; // Import your ScanSuccessModal component
-import { userExists } from '@/app/database/Users';
+import { userExists, getUserDetailsById } from '@/app/database/Users';
+import useScanHistoryStore from '@/store/useScanHistoryStore';
 
 const Scanner = () => {
     const scannerRef = useRef<HTMLDivElement>(null);
@@ -13,25 +14,35 @@ const Scanner = () => {
     const [successModalDesc, setSuccessModalDesc] = useState("Lorem ipsum")
     const [successModalSubtitle, setSuccessModalSubtitle] = useState("Lorem ipsum")
 
-    // function evaluateId(id: string) {
-    //     if (userExists(id)) {
-    //         return 
-    //     }
-    // }
+    const { scanHistory, addScanHistory } = useScanHistoryStore();
+
+
+
+
+
+    const successSound = new Audio('/success.mp3');
 
 
     useEffect(() => {
         const onScanSuccess = (decodedText: string, decodedResult: any) => {
             console.log(`Code matched = ${decodedText}`, decodedResult);
             setIsModalOpen(true); // Show the modal on successful scan
-
+            successSound.play()
 
             if (userExists(decodedText)) {
-
+                const userDetails = getUserDetailsById(decodedText);
+                if (userDetails) {
+                    addScanHistory(userDetails); // Add to global scan history
+                    setSuccessModalTitle("User found");
+                    setSuccessModalDesc(`ID: ${decodedText}`);
+                    setSuccessModalSubtitle(userDetails.name);
+                }
+            } else {
+                setSuccessModalTitle("User not found");
+                setSuccessModalDesc("The scanned ID does not match any user.");
+                setSuccessModalSubtitle(`Scanned ID: ${decodedText}`);
             }
-
-
-            setSuccessModalSubtitle(() => decodedText)
+            setIsModalOpen(true); // Show the modal on successful scan
         };
 
         const onScanFailure = (error: any) => {

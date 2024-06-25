@@ -1,26 +1,26 @@
-import * as React from "react"
+import * as React from "react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { User } from '@/app/database/Users';
 
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
+interface LiveResultsSectionProps {
+    results: User[];
+}
 
-const tags = Array.from({ length: 50 }).map(
-    (_, i, a) => `v1.2.0-beta.${a.length - i}`
-)
-
-export default function LiveResultsSection() {
+export default function LiveResultsSection({ results }: LiveResultsSectionProps) {
     return (
         <ScrollArea className="h-72 w-full rounded-md border">
             <div className="p-4">
                 <h4 className="mb-4 text-sm font-medium leading-none">Results</h4>
-                {tags.map((tag) => (
-                    <>
-                        <div key={tag} className="text-sm">
-                            {tag}
+                {results.map((result, num) => (
+                    <React.Fragment key={num}>
+                        <div className="text-sm">
+                            {result.name}
                         </div>
                         <Separator className="my-2" />
-                    </>
+                    </React.Fragment>
                 ))}
             </div>
         </ScrollArea>
-    )
+    );
 }

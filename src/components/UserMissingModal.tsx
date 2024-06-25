@@ -31,7 +31,8 @@ const ScanSuccessModal: React.FC<ScanSuccessModalProps> = ({ title, subtitle, de
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel onClick={onClose}>Deny</AlertDialogCancel>
+                    <AlertDialogCancel onClick={onClose}>Continue Scanning</AlertDialogCancel>
+                    <Button >Register this ID instead</Button>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
