@@ -2,6 +2,7 @@ import * as React from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { User } from '@/app/database/Users';
+import { Trash } from "lucide-react";
 
 interface LiveResultsSectionProps {
     results: User[];
@@ -14,9 +15,20 @@ export default function LiveResultsSection({ results }: LiveResultsSectionProps)
                 <h4 className="mb-4 text-sm font-medium leading-none">Results</h4>
                 {results.map((result, num) => (
                     <React.Fragment key={num}>
-                        <div className="text-sm">
-                            {result.name}
+                        <div className="flex justify-between gap-4 items-center">
+                            <div className="text-normal font-medium">
+                                {result.name}
+                            </div>
+
+                            <div className="text-xs ">
+                                ID:{result.id}
+                            </div>
+
+                            <a href="#" className="button">
+                                <Trash />
+                            </a>
                         </div>
+
                         <Separator className="my-2" />
                     </React.Fragment>
                 ))}

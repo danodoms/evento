@@ -6,6 +6,7 @@ import UserMissingModal from '@/components/UserMissingModal'; // Import your Sca
 import { userExists, getUserDetailsById } from '@/app/database/Users';
 import useScanHistoryStore from '@/store/useScanHistoryStore';
 
+
 const Scanner = () => {
     const scannerRef = useRef<HTMLDivElement>(null);
     const [isScanning, setIsScanning] = useState(false);
@@ -20,13 +21,13 @@ const Scanner = () => {
 
 
 
-    const successSound = new Audio('/success.mp3');
+
 
 
     useEffect(() => {
+        const successSound = new Audio('/success.mp3');
         const onScanSuccess = (decodedText: string, decodedResult: any) => {
             console.log(`Code matched = ${decodedText}`, decodedResult);
-            setIsModalOpen(true); // Show the modal on successful scan
             successSound.play()
 
             if (userExists(decodedText)) {
@@ -41,8 +42,9 @@ const Scanner = () => {
                 setSuccessModalTitle("User not found");
                 setSuccessModalDesc("The scanned ID does not match any user.");
                 setSuccessModalSubtitle(`Scanned ID: ${decodedText}`);
+                setIsModalOpen(true)
             }
-            setIsModalOpen(true); // Show the modal on successful scan
+            // setIsModalOpen(true); // Show the modal on successful scan
         };
 
         const onScanFailure = (error: any) => {
@@ -52,7 +54,7 @@ const Scanner = () => {
         if (scannerRef.current) {
             const html5QrcodeScanner = new Html5QrcodeScanner(
                 scannerRef.current.id,
-                { fps: 3, qrbox: { width: 250, height: 250 } },
+                { fps: 5, qrbox: { width: 500, height: 500 } },
                 /* verbose= */ false
             );
 
