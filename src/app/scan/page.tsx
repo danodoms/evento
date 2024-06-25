@@ -5,14 +5,21 @@ import { useEffect, useRef, useState } from 'react';
 import { Html5QrcodeScanner, Html5QrcodeSupportedFormats, Html5QrcodeScanType } from 'html5-qrcode';
 import ScanSuccessModal from '@/components/ScanSuccessModal'; // Import your ScanSuccessModal component
 import Scanner from '@/components/Scanner';
+import LiveResultsSection from '@/components/LiveResultsSection';
 
 const ScanPage = () => {
 
-
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <Scanner />
-        </div >
+        <section className="flex flex-col items-center justify-center min-h-screen bg-background ">
+            <div className='border'>
+                <Scanner />
+            </div>
+
+            <div>
+                <LiveResultsSection />
+            </div>
+
+        </section >
     );
 };
 

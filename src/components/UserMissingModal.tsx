@@ -12,7 +12,6 @@ import {
 import { Button } from "@/components/ui/button";
 
 interface ScanSuccessModalProps {
-    success: boolean;
     title: string;
     subtitle: string;
     description: string;
@@ -20,15 +19,12 @@ interface ScanSuccessModalProps {
     onClose: () => void;
 }
 
-const ScanSuccessModal: React.FC<ScanSuccessModalProps> = ({ success, title, subtitle, description, isOpen, onClose }) => {
+const ScanSuccessModal: React.FC<ScanSuccessModalProps> = ({ title, subtitle, description, isOpen, onClose }) => {
     return (
         <AlertDialog open={isOpen} onOpenChange={onClose}>
             <AlertDialogContent>
                 <AlertDialogHeader>
-
-                    {/* {success ? () : ()} */}
-
-                    <AlertDialogTitle>{title}</AlertDialogTitle>
+                    <AlertDialogTitle>User not found</AlertDialogTitle>
                     <h3>{subtitle}</h3>
                     <AlertDialogDescription>
                         {description}

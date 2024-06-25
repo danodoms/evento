@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Html5QrcodeScanner, Html5QrcodeSupportedFormats, Html5QrcodeScanType } from 'html5-qrcode';
-import ScanSuccessModal from '@/components/ScanSuccessModal'; // Import your ScanSuccessModal component
+import UserMissingModal from '@/components/UserMissingModal'; // Import your ScanSuccessModal component
+import { userExists } from '@/app/database/Users';
 
 const Scanner = () => {
     const scannerRef = useRef<HTMLDivElement>(null);
@@ -10,13 +11,27 @@ const Scanner = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [successModalTitle, setSuccessModalTitle] = useState("User not found")
     const [successModalDesc, setSuccessModalDesc] = useState("Lorem ipsum")
+    const [successModalSubtitle, setSuccessModalSubtitle] = useState("Lorem ipsum")
+
+    // function evaluateId(id: string) {
+    //     if (userExists(id)) {
+    //         return 
+    //     }
+    // }
 
 
     useEffect(() => {
         const onScanSuccess = (decodedText: string, decodedResult: any) => {
             console.log(`Code matched = ${decodedText}`, decodedResult);
             setIsModalOpen(true); // Show the modal on successful scan
-            setSuccessModalTitle(() => decodedText)
+
+
+            if (userExists(decodedText)) {
+
+            }
+
+
+            setSuccessModalSubtitle(() => decodedText)
         };
 
         const onScanFailure = (error: any) => {
@@ -52,7 +67,7 @@ const Scanner = () => {
             <h1 className="text-2xl font-bold mb-4">Barcode/QR Code Scanner</h1>
             <div id="reader" ref={scannerRef} className="w-full max-w-sm border border-gray-300 rounded"></div>
             {isScanning && <p className="mt-2 text-green-500">Scanning...</p>}
-            <ScanSuccessModal title={successModalTitle} description={successModalDesc} isOpen={isModalOpen} onClose={handleCloseModal} />
+            <UserMissingModal title={successModalTitle} subtitle={successModalSubtitle} description={successModalDesc} isOpen={isModalOpen} onClose={handleCloseModal} />
         </div>
     );
 };
