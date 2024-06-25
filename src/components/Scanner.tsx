@@ -54,7 +54,7 @@ const Scanner = () => {
         if (scannerRef.current) {
             const html5QrcodeScanner = new Html5QrcodeScanner(
                 scannerRef.current.id,
-                { fps: 5, qrbox: { width: 500, height: 500 } },
+                { fps: 5, qrbox: { width: 250, height: 250 } },
                 /* verbose= */ false
             );
 

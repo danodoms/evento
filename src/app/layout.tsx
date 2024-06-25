@@ -21,6 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+
         <Header />
 
         <ThemeProvider
@@ -33,6 +34,8 @@ export default function RootLayout({
 
           <BottomNav />
         </ThemeProvider>
+
+
       </body>
     </html>
   );

@@ -13,12 +13,12 @@ const ScanPage = () => {
     const { scanHistory } = useScanHistoryStore()
 
     return (
-        <section className="flex flex-col gap-4 items-center justify-center min-h-screen bg-background ">
+        <section className="flex flex-col gap-4  justify-center min-h-screen bg-background pt-10 p-2">
             <div className=''>
                 <Scanner />
             </div>
 
-            <div>
+            <div className=''>
                 <LiveResultsSection results={scanHistory} />
             </div>
 
