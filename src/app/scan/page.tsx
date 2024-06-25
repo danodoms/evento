@@ -10,8 +10,8 @@ import LiveResultsSection from '@/components/LiveResultsSection';
 const ScanPage = () => {
 
     return (
-        <section className="flex flex-col items-center justify-center min-h-screen bg-background ">
-            <div className='border'>
+        <section className="flex flex-col flex gap-4 items-center justify-center min-h-screen bg-background ">
+            <div className=''>
                 <Scanner />
             </div>
 

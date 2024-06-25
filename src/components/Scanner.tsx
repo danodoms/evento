@@ -63,10 +63,10 @@ const Scanner = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <h1 className="text-2xl font-bold mb-4">Barcode/QR Code Scanner</h1>
-            <div id="reader" ref={scannerRef} className="w-full max-w-sm border border-gray-300 rounded"></div>
-            {isScanning && <p className="mt-2 text-green-500">Scanning...</p>}
+        <div className="flex flex-col items-center justify-center">
+            {/* <h1 className="text-2xl font-bold mb-4">Barcode/QR Code Scanner</h1> */}
+            <div id="reader" ref={scannerRef} className="w-full max-w-sm  rounded"></div>
+            {/* {isScanning && <p className="mt-2 text-green-500">Scanning...</p>} */}
             <UserMissingModal title={successModalTitle} subtitle={successModalSubtitle} description={successModalDesc} isOpen={isModalOpen} onClose={handleCloseModal} />
         </div>
     );

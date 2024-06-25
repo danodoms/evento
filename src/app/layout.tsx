@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import BottomNav from "@/components/BottomNav"
 import { ThemeProvider } from "@/components/theme-provider"
+import Header from "@/components/Header";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -20,6 +21,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <Header />
+
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -27,9 +30,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+
+          <BottomNav />
         </ThemeProvider>
       </body>
-      <BottomNav />
     </html>
   );
 }
