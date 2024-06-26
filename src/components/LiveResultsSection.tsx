@@ -2,7 +2,8 @@ import * as React from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { User } from '@/app/database/Users';
-import { Trash, CircleUserRound, UserRound } from "lucide-react";
+import { Trash, CircleUserRound, UserRound, TextSearch } from "lucide-react";
+import { Toaster } from "@/components/ui/sonner"
 
 interface LiveResultsSectionProps {
     results: User[];
@@ -39,34 +40,45 @@ export default function LiveResultsSection({ results }: LiveResultsSectionProps)
 
     return (
         <>
-            <h4 className="mb-4 text-sm font-medium leading-none text-center">Results</h4>
+            {results.length > 0 ? (
+                <div className="h-72 overflow-auto w-full rounded-md flex flex-col gap-2">
+                    <Toaster />
 
-            <div className="h-72 overflow-auto w-full rounded-md flex flex-col gap-2">
+                    {results.map((result, num) => (
 
-                {results.map((result, num) => (
-                    <React.Fragment key={num}>
-                        <div className="flex justify-between gap-4 items-center border-1 border-solid border rounded-md p-4 bg-secondary">
+                        <React.Fragment key={num}>
+                            <div className="flex justify-between gap-4 items-center border-1 border-solid border rounded-md p-4 bg-secondary">
 
-                            <UserRound />
+                                <div className="flex gap-4 items-center">
+                                    <UserRound />
 
-                            <div className="text-normal font-medium">
-                                {result.name}
-                            </div>
+                                    <div className="flex flex-col">
+                                        <div className="text-normal font-medium">
+                                            {result.name}
+                                        </div>
 
-                            <div className="text-xs ">
-                                ID:{result.id}
-                            </div>
+                                        <div className="text-xs ">
+                                            ID:{result.id}
+                                        </div>
+                                    </div>
 
-                            {/* <a href="#" className="button icon">
+                                </div>
+
+                                {/* <a href="#" className="button icon">
                                 <Trash />
                             </a> */}
-                        </div>
-                    </React.Fragment>
-                ))}
+                            </div>
+                        </React.Fragment>
+                    ))}
 
-            </div>
+                </div>
+            ) : (
+                <div className="flex gap-2 items-center place-content-center">
+                    <TextSearch />
+                    <h4 className="text-sm font-medium leading-none text-center">Results will display here</h4>
+                </div>
+
+            )}
         </>
-
-
     );
 }

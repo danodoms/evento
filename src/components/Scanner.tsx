@@ -1,34 +1,26 @@
-'use client';
-
-import { useEffect, useRef, useState } from 'react';
-import { Html5QrcodeScanner, Html5QrcodeSupportedFormats, Html5QrcodeScanType } from 'html5-qrcode';
+import React, { useEffect, useRef, useState } from 'react';
+import { Html5QrcodeScanner } from 'html5-qrcode';
 import UserMissingModal from '@/components/UserMissingModal'; // Import your ScanSuccessModal component
 import { userExists, getUserDetailsById } from '@/app/database/Users';
 import useScanHistoryStore from '@/store/useScanHistoryStore';
-
+import { toast } from "sonner";
 
 const Scanner = () => {
     const scannerRef = useRef<HTMLDivElement>(null);
+    const html5QrcodeScannerRef = useRef<Html5QrcodeScanner | null>(null);
     const [isScanning, setIsScanning] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [successModalTitle, setSuccessModalTitle] = useState("User not found")
-    const [successModalDesc, setSuccessModalDesc] = useState("Lorem ipsum")
-    const [successModalSubtitle, setSuccessModalSubtitle] = useState("Lorem ipsum")
+    const [successModalTitle, setSuccessModalTitle] = useState("User not found");
+    const [successModalDesc, setSuccessModalDesc] = useState("Lorem ipsum");
+    const [successModalSubtitle, setSuccessModalSubtitle] = useState("Lorem ipsum");
 
     const { scanHistory, addScanHistory } = useScanHistoryStore();
-
-
-
-
-
-
-
 
     useEffect(() => {
         const successSound = new Audio('/success.mp3');
         const onScanSuccess = (decodedText: string, decodedResult: any) => {
             console.log(`Code matched = ${decodedText}`, decodedResult);
-            successSound.play()
+            successSound.play();
 
             if (userExists(decodedText)) {
                 const userDetails = getUserDetailsById(decodedText);
@@ -37,14 +29,29 @@ const Scanner = () => {
                     setSuccessModalTitle("User found");
                     setSuccessModalDesc(`ID: ${decodedText}`);
                     setSuccessModalSubtitle(userDetails.name);
+
+                    toast("Event has been created", {
+                        description: "Sunday, December 03, 2023 at 9:00 AM",
+                        action: {
+                            label: "Undo",
+                            onClick: () => console.log("Undo"),
+                        },
+                    });
                 }
             } else {
                 setSuccessModalTitle("User not found");
                 setSuccessModalDesc("The scanned ID does not match any user.");
                 setSuccessModalSubtitle(`Scanned ID: ${decodedText}`);
-                setIsModalOpen(true)
+                setIsModalOpen(true);
             }
-            // setIsModalOpen(true); // Show the modal on successful scan
+
+            // Pause the scanner for 500ms after successful scan
+            if (html5QrcodeScannerRef.current) {
+                html5QrcodeScannerRef.current.pause();
+                setTimeout(() => {
+                    html5QrcodeScannerRef.current?.resume();
+                }, 500);
+            }
         };
 
         const onScanFailure = (error: any) => {
@@ -59,6 +66,7 @@ const Scanner = () => {
             );
 
             html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+            html5QrcodeScannerRef.current = html5QrcodeScanner; // Save the scanner instance
 
             // Indicate that scanning has started
             setIsScanning(true);
@@ -77,9 +85,7 @@ const Scanner = () => {
 
     return (
         <div className="flex flex-col items-center justify-center">
-            {/* <h1 className="text-2xl font-bold mb-4">Barcode/QR Code Scanner</h1> */}
-            <div id="reader" ref={scannerRef} className="w-full max-w-sm  rounded"></div>
-            {/* {isScanning && <p className="mt-2 text-green-500">Scanning...</p>} */}
+            <div id="reader" ref={scannerRef} className="w-full max-w-sm rounded"></div>
             <UserMissingModal title={successModalTitle} subtitle={successModalSubtitle} description={successModalDesc} isOpen={isModalOpen} onClose={handleCloseModal} />
         </div>
     );
