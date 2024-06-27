@@ -18,9 +18,10 @@ const Scanner = () => {
 
     useEffect(() => {
         const successSound = new Audio('/success.mp3');
+        const failSound = new Audio('/fail.mp3');
         const onScanSuccess = (decodedText: string, decodedResult: any) => {
             console.log(`Code matched = ${decodedText}`, decodedResult);
-            successSound.play();
+
 
             if (userExists(decodedText)) {
                 const userDetails = getUserDetailsById(decodedText);
@@ -30,18 +31,22 @@ const Scanner = () => {
                     setSuccessModalDesc(`ID: ${decodedText}`);
                     setSuccessModalSubtitle(userDetails.name);
 
-                    toast("Event has been created", {
-                        description: "Sunday, December 03, 2023 at 9:00 AM",
-                        action: {
-                            label: "Undo",
-                            onClick: () => console.log("Undo"),
-                        },
-                    });
+                    successSound.play();
+
+                    // toast("Event has been created", {
+                    //     description: "Sunday, December 03, 2023 at 9:00 AM",
+                    //     action: {
+                    //         label: "Undo",
+                    //         onClick: () => console.log("Undo"),
+                    //     },
+                    // });
                 }
             } else {
+                html5QrcodeScannerRef.current?.pause();
                 setSuccessModalTitle("User not found");
                 setSuccessModalDesc("The scanned ID does not match any user.");
                 setSuccessModalSubtitle(`Scanned ID: ${decodedText}`);
+                failSound.play();
                 setIsModalOpen(true);
             }
 
@@ -81,6 +86,7 @@ const Scanner = () => {
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
+        html5QrcodeScannerRef.current?.resume()
     };
 
     return (

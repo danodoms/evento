@@ -17,6 +17,7 @@
     "@zxing/library": "^0.21.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "firebase": "^10.12.2",
     "html5-qrcode": "^2.3.8",
     "lucide-react": "^0.396.0",
     "next": "14.2.4",
