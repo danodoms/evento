@@ -19,7 +19,7 @@ const ScanPage = () => {
             </div>
 
             <div className=''>
-                <LiveResultsSection results={scanHistory} />
+                {/* <LiveResultsSection results={scanHistory} /> */}
             </div>
 
         </section >

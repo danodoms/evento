@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(
-        "min-h-screen bg-background font-sans antialiased",
+        "min-h-screen bg-background font-sans antialiased my-14",
         fontSans.variable
       )}>
 
@@ -37,7 +37,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+
           {children}
+
+
 
           <BottomNav />
         </ThemeProvider>

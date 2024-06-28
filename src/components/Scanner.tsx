@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import UserMissingModal from '@/components/UserMissingModal'; // Import your ScanSuccessModal component
-import { studentExists, getStudentDetailsById } from '@/app/models/Student';
+import { getStudentDetailsByIdNum } from '@/models/Student';
 import useScanHistoryStore from '@/store/useScanHistoryStore';
 import { toast } from "sonner";
 
@@ -14,37 +14,36 @@ const Scanner = () => {
     const [successModalDesc, setSuccessModalDesc] = useState("Lorem ipsum");
     const [successModalSubtitle, setSuccessModalSubtitle] = useState("Lorem ipsum");
 
-    const { scanHistory, addScanHistory } = useScanHistoryStore();
 
     useEffect(() => {
         const successSound = new Audio('/success.mp3');
         const failSound = new Audio('/fail.mp3');
-        const onScanSuccess = (decodedText: string, decodedResult: any) => {
-            console.log(`Code matched = ${decodedText}`, decodedResult);
 
 
-            if (studentExists(decodedText)) {
-                const userDetails = getStudentDetailsById(decodedText);
+        const onScanSuccess = async (decodedText: string, decodedResult: any) => {
+            console.log(`Scanned Value = ${decodedText}`, decodedResult);
+
+
+            try {
+                const userDetails = await getStudentDetailsByIdNum(decodedText);
                 if (userDetails) {
-                    addScanHistory(userDetails); // Add to global scan history
                     setSuccessModalTitle("User found");
                     setSuccessModalDesc(`ID: ${decodedText}`);
                     setSuccessModalSubtitle(userDetails.name);
-
+                    setIsModalOpen(true);
                     successSound.play();
-
-                    // toast("Event has been created", {
-                    //     description: "Sunday, December 03, 2023 at 9:00 AM",
-                    //     action: {
-                    //         label: "Undo",
-                    //         onClick: () => console.log("Undo"),
-                    //     },
-                    // });
+                } else {
+                    html5QrcodeScannerRef.current?.pause();
+                    setSuccessModalDesc("The scanned ID does not match any user.");
+                    setSuccessModalSubtitle(`Scanned ID: ${decodedText}`);
+                    failSound.play();
+                    setIsModalOpen(true);
                 }
-            } else {
+            } catch (error) {
+                console.error("Error fetching student details: ", error);
                 html5QrcodeScannerRef.current?.pause();
-                setSuccessModalTitle("User not found");
-                setSuccessModalDesc("The scanned ID does not match any user.");
+                setSuccessModalTitle("Error");
+                setSuccessModalDesc("An error occurred while fetching student details.");
                 setSuccessModalSubtitle(`Scanned ID: ${decodedText}`);
                 failSound.play();
                 setIsModalOpen(true);
@@ -60,7 +59,7 @@ const Scanner = () => {
         };
 
         const onScanFailure = (error: any) => {
-            console.warn(`QR Code scan error: ${error}`);
+            // console.warn(`QR Code scan error: ${error}`);
         };
 
         if (scannerRef.current) {

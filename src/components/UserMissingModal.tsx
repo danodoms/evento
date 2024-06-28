@@ -19,7 +19,7 @@ interface ScanSuccessModalProps {
     onClose: () => void;
 }
 
-const ScanSuccessModal: React.FC<ScanSuccessModalProps> = ({ title, subtitle, description, isOpen, onClose }) => {
+const ScanSuccessModal: React.FC<ScanSuccessModalProps> = ({ subtitle, description, isOpen, onClose }) => {
     return (
         <AlertDialog open={isOpen} onOpenChange={onClose}>
             <AlertDialogContent>
