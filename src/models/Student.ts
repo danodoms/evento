@@ -30,7 +30,9 @@ export interface Student {
 //   return true;
 // };
 
-export const getStudentDetailsByIdNum = async (idNum: string) => {
+export const getStudentDetailsByIdNum = async (
+  idNum: string
+): Promise<Student | null> => {
   try {
     // Create a query to find the student document by idNum
     const studentsCollectionRef = collection(db, "students");
@@ -42,7 +44,7 @@ export const getStudentDetailsByIdNum = async (idNum: string) => {
     // Check if a document was found
     if (!querySnapshot.empty) {
       const studentDoc = querySnapshot.docs[0];
-      const studentData = studentDoc.data();
+      const studentData = studentDoc.data() as Student;
       console.log("Student details fetched: ", studentData);
       return studentData;
     } else {
