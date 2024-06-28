@@ -1,12 +1,12 @@
 import * as React from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { User } from '@/app/database/Users';
+import { Student } from '@/app/models/Student';
 import { Trash, CircleUserRound, UserRound, TextSearch } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner"
 
 interface LiveResultsSectionProps {
-    results: User[];
+    results: Student[];
 }
 
 export default function LiveResultsSection({ results }: LiveResultsSectionProps) {
@@ -58,7 +58,7 @@ export default function LiveResultsSection({ results }: LiveResultsSectionProps)
                                         </div>
 
                                         <div className="text-xs ">
-                                            ID:{result.id}
+                                            ID:{result.idNum}
                                         </div>
                                     </div>
 

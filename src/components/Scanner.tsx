@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import UserMissingModal from '@/components/UserMissingModal'; // Import your ScanSuccessModal component
-import { userExists, getUserDetailsById } from '@/app/database/Users';
+import { studentExists, getStudentDetailsById } from '@/app/models/Student';
 import useScanHistoryStore from '@/store/useScanHistoryStore';
 import { toast } from "sonner";
 
@@ -23,8 +23,8 @@ const Scanner = () => {
             console.log(`Code matched = ${decodedText}`, decodedResult);
 
 
-            if (userExists(decodedText)) {
-                const userDetails = getUserDetailsById(decodedText);
+            if (studentExists(decodedText)) {
+                const userDetails = getStudentDetailsById(decodedText);
                 if (userDetails) {
                     addScanHistory(userDetails); // Add to global scan history
                     setSuccessModalTitle("User found");
