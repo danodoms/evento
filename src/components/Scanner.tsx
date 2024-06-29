@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Html5QrcodeScanner } from 'html5-qrcode';
-import UserMissingModal from '@/components/UserMissingModal'; // Import your ScanSuccessModal component
-import { Student, getStudentDetailsByIdNum } from '@/models.old/Student';
-import useScanHistoryStore from '@/store/useScanHistoryStore';
+import { StudentMissingModal } from '@/components/StudentMissingModal'; // Import your ScanSuccessModal component
+import { Student } from '@/models/Student';
 import { toast } from "sonner";
-// import { addAttendanceRecord } from '@/models.old/Attendance';
+import { handleAttendanceRecord } from '@/models/Attendance';
 import { getStudentByIdNum, getAllStudents } from '@/models/Student';
 
 const Scanner = () => {
@@ -12,7 +11,6 @@ const Scanner = () => {
     const html5QrcodeScannerRef = useRef<Html5QrcodeScanner | null>(null);
     const [isScanning, setIsScanning] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [successModalTitle, setSuccessModalTitle] = useState("User not found");
     const [successModalDesc, setSuccessModalDesc] = useState("Lorem ipsum");
     const [successModalSubtitle, setSuccessModalSubtitle] = useState("Lorem ipsum");
 
@@ -28,16 +26,15 @@ const Scanner = () => {
 
             try {
                 // const userDetails: Student | null = await getStudentDetailsByIdNum(decodedText);
-                const userDetails: Student | null = await getStudentByIdNum(decodedText);
+                const student: Student | null = await getStudentByIdNum(decodedText);
                 getAllStudents();
 
-                if (userDetails) {
-                    setSuccessModalTitle("User found");
+                if (student) {
                     setSuccessModalDesc(`ID: ${decodedText}`);
-                    setSuccessModalSubtitle(userDetails.name);
+                    setSuccessModalSubtitle(student.name);
                     setIsModalOpen(true);
                     successSound.play();
-                    // addAttendanceRecord(userDetails);
+                    handleAttendanceRecord(student.id)
                 } else {
                     html5QrcodeScannerRef.current?.pause();
                     setSuccessModalDesc("The scanned ID does not match any user.");
@@ -48,7 +45,6 @@ const Scanner = () => {
             } catch (error) {
                 console.error("Error fetching student details: ", error);
                 html5QrcodeScannerRef.current?.pause();
-                setSuccessModalTitle("Error");
                 setSuccessModalDesc("An error occurred while fetching student details.");
                 setSuccessModalSubtitle(`Scanned ID: ${decodedText}`);
                 failSound.play();
@@ -97,7 +93,7 @@ const Scanner = () => {
     return (
         <div className="flex flex-col items-center justify-center">
             <div id="reader" ref={scannerRef} className="w-full max-w-sm rounded"></div>
-            <UserMissingModal title={successModalTitle} subtitle={successModalSubtitle} description={successModalDesc} isOpen={isModalOpen} onClose={handleCloseModal} />
+            <StudentMissingModal subtitle={successModalSubtitle} description={successModalDesc} isOpen={isModalOpen} onClose={handleCloseModal} />
         </div>
     );
 };

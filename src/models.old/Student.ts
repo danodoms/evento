@@ -17,6 +17,7 @@ import { db } from "../firebase"; // Adjust the import path according to your pr
 // const colRef = collection(db, "students");
 
 export interface Student {
+  id: number;
   idNum: string;
   name: string;
   department: Department | null;

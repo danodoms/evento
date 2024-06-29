@@ -22,6 +22,7 @@ export async function getStudentByIdNum(idNum: string) {
     return null;
   }
 
+  console.log("Fetched student:", data);
   return data;
 }
 

@@ -11,15 +11,14 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 
-interface ScanSuccessModalProps {
-    title: string;
+interface StudentMissingModalProps {
     subtitle: string;
     description: string;
     isOpen: boolean;
     onClose: () => void;
 }
 
-const ScanSuccessModal: React.FC<ScanSuccessModalProps> = ({ subtitle, description, isOpen, onClose }) => {
+export const StudentMissingModal: React.FC<StudentMissingModalProps> = ({ subtitle, description, isOpen, onClose }) => {
     return (
         <AlertDialog open={isOpen} onOpenChange={onClose}>
             <AlertDialogContent>
@@ -38,5 +37,3 @@ const ScanSuccessModal: React.FC<ScanSuccessModalProps> = ({ subtitle, descripti
         </AlertDialog>
     );
 };
-
-export default ScanSuccessModal;
