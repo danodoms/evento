@@ -34,7 +34,7 @@ const Scanner: React.FC = () => {
             }
 
             setIsModalOpen(true);
-            html5QrcodeScannerRef.current?.pause();
+            html5QrcodeScannerRef.current?.pause(shouldPauseVideo = true);
             setTimeout(() => html5QrcodeScannerRef.current?.resume(), 500);
         } catch (error) {
             console.error("Error fetching student details:", error);
@@ -58,7 +58,7 @@ const Scanner: React.FC = () => {
         if (node && !html5QrcodeScannerRef.current) {
             const html5QrcodeScanner = new Html5QrcodeScanner(
                 node.id,
-                { fps: 5, qrbox: { width: 250, height: 250 } },
+                { fps: 4, qrbox: { width: 250, height: 250 } },
                 false
             );
 

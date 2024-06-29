@@ -4,36 +4,34 @@ const supabase = createClient();
 
 export interface Attendance {
   id: number;
-  createdAt: string;
-  studentId: number;
-  timeIn: string;
-  timeOut: string;
-  isAm: boolean;
+  created_at: string;
+  student_id: number;
+  time_in: string | null;
+  time_out: string | null;
+  is_am: boolean | null;
 }
 
-// export async function addTimeIn() {
-//   const { data, error } = await supabase
-//     .from("attendance")
-//     .insert([{ some_column: "someValue", other_column: "otherValue" }])
-//     .select();
-// }
+export interface Student {
+  id: number;
+  created_at: string;
+  id_num: string;
+  name: string;
+  dept_id: number | null;
+}
 
-const getCurrentTime = () => {
-  return new Date().toISOString().slice(11, 19); // Current time in HH:MM:SS
-};
+const getCurrentTime = () => new Date().toISOString().slice(11, 19); // Current time in HH:MM:SS
 
-const isAm = () => {
-  return new Date().getHours() < 12; // Assuming AM is before 12 PM
-};
+const isAm = () => new Date().getHours() < 12; // Assuming AM is before 12 PM
 
-export const handleAttendanceRecord = async (studentId: number) => {
+const getTodayDateRange = () => {
   const today = new Date().toISOString().slice(0, 10); // Today's date in YYYY-MM-DD
   const startOfDay = `${today}T00:00:00.000Z`; // Start of today's date in ISO format
   const endOfDay = `${today}T23:59:59.999Z`; // End of today's date in ISO format
-  const currentTime = getCurrentTime();
-  const currentIsAm = isAm();
+  return { startOfDay, endOfDay };
+};
 
-  console.log("date today is", today);
+const fetchTodayRecords = async (studentId: number) => {
+  const { startOfDay, endOfDay } = getTodayDateRange();
 
   const { data, error } = await supabase
     .from("attendance")
@@ -44,52 +42,76 @@ export const handleAttendanceRecord = async (studentId: number) => {
     .order("created_at", { ascending: true });
 
   if (error) {
-    console.error("Error fetching today's attendance records:", error);
-    return;
+    throw new Error(
+      "Error fetching today's attendance records: " + error.message
+    );
   }
+  return data as Attendance[];
+};
 
-  // Check if the student already has two records for today and if both have timeouts
-  if (data.length >= 2) {
-    const [firstRecord, secondRecord] = data;
-    if (
-      firstRecord.time_in &&
-      firstRecord.time_out &&
-      secondRecord.time_in &&
-      secondRecord.time_out
-    ) {
+const hasCompleteRecords = (records: Attendance[]) => {
+  return (
+    records.length >= 2 &&
+    records.every((record) => record.time_in && record.time_out)
+  );
+};
+
+const findIncompleteRecord = (records: Attendance[]) => {
+  return records.find((record) => !record.time_out);
+};
+
+const updateRecordTimeout = async (recordId: number, currentTime: string) => {
+  const { error } = await supabase
+    .from("attendance")
+    .update({ time_out: currentTime })
+    .eq("id", recordId);
+  if (error) {
+    throw new Error("Error updating time out: " + error.message);
+  }
+};
+
+const insertNewRecord = async (
+  studentId: number,
+  currentTime: string,
+  currentIsAm: boolean
+) => {
+  const { error } = await supabase.from("attendance").insert({
+    student_id: studentId,
+    time_in: currentTime,
+    is_am: currentIsAm,
+  });
+  if (error) {
+    throw new Error("Error adding new attendance record: " + error.message);
+  }
+};
+
+export const handleAttendanceRecord = async (studentId: number) => {
+  try {
+    const currentTime = getCurrentTime();
+    const currentIsAm = isAm();
+    const records = await fetchTodayRecords(studentId);
+
+    if (hasCompleteRecords(records)) {
       console.log(
-        "Student already has two attendance records for today with timeouts."
+        "Student already has two complete attendance records for today."
       );
       return;
     }
-  }
 
-  // Find the first record without timeout
-  const recordWithoutTimeout = data.find((record) => !record.time_out);
+    const incompleteRecord = findIncompleteRecord(records);
 
-  if (recordWithoutTimeout) {
-    const { error: updateError } = await supabase
-      .from("attendance")
-      .update({ time_out: currentTime })
-      .eq("id", recordWithoutTimeout.id);
-    if (updateError) {
-      console.error("Error updating time out:", updateError);
-    } else {
+    if (incompleteRecord) {
+      await updateRecordTimeout(incompleteRecord.id, currentTime);
       console.log("Time out recorded:", currentTime);
-    }
-  } else {
-    const { error: insertError } = await supabase.from("attendance").insert({
-      student_id: studentId,
-      time_in: currentTime,
-      is_am: currentIsAm,
-    });
-    if (insertError) {
-      console.error("Error adding new attendance record:", insertError);
     } else {
+      await insertNewRecord(studentId, currentTime, currentIsAm);
       console.log(
         `Time in ${currentIsAm ? "AM" : "PM"} recorded:`,
         currentTime
       );
     }
+  } catch (error) {
+    // console.error(error.message);
+    console.log(error);
   }
 };
