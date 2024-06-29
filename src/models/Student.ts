@@ -10,7 +10,7 @@ import {
   doc,
   deleteDoc,
 } from "firebase/firestore";
-import { db } from "../app/firebase"; // Adjust the import path according to your project structure
+import { db } from "../firebase"; // Adjust the import path according to your project structure
 
 /////////////////////////////////////ADD FUNCTIONS
 
