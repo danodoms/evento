@@ -4,19 +4,24 @@ import React, { useRef, useState } from 'react';
 import { Html5QrcodeScanner, Html5QrcodeResult, Html5QrcodeScannerState } from 'html5-qrcode';
 import { StudentMissingModal } from '@/components/modals/StudentMissingModal';
 import { Student } from '@/models/Student';
-import { handleAttendanceRecord } from '@/models/Attendance';
+import { handleAttendanceRecord, createQueuedAttendanceRecord } from '@/models/Attendance';
 import { getStudentByIdNum } from '@/models/Student';
 import { successSound, failSound } from '@/utils/sound';
+import useQueuedAttendanceStore from '@/store/useQueuedAttendanceStore';
 
 interface ModalContent {
     desc: string;
     subtitle: string;
 }
 
+
+
 const Scanner: React.FC = () => {
     const html5QrcodeScannerRef = useRef<Html5QrcodeScanner | null>(null);
     const [modalContent, setModalContent] = useState<ModalContent | null>(null);
 
+
+    const addAttendanceQueue = useQueuedAttendanceStore((state) => state.addAttendanceQueue);
 
 
     const pauseAndResumeScanner = (scanner: Html5QrcodeScanner | null, delay: number) => {
@@ -40,14 +45,20 @@ const Scanner: React.FC = () => {
 
             if (student) {
                 // setModalContent({ desc: `ID: ${decodedText}`, subtitle: student.name });
-                successSound.play();
-                handleAttendanceRecord(student.id);
+                successSound?.play();
+                // handleAttendanceRecord(student.id);
+
+                const queuedAttendance = await createQueuedAttendanceRecord(student);
+                if (queuedAttendance) {
+                    addAttendanceQueue(queuedAttendance);
+                }
+
             } else {
                 setModalContent({ desc: "The scanned ID does not match any user.", subtitle: `Scanned ID: ${decodedText}` });
                 if (html5QrcodeScannerRef.current?.getState() === Html5QrcodeScannerState.SCANNING) {
                     html5QrcodeScannerRef.current.pause();
                 }
-                failSound.play();
+                failSound?.play();
 
             }
 
@@ -55,7 +66,7 @@ const Scanner: React.FC = () => {
         } catch (error) {
             console.error("Error fetching student details:", error);
             setModalContent({ desc: "An error occurred while fetching student details.", subtitle: `Scanned ID: ${decodedText}` });
-            failSound.play();
+            failSound?.play();
             pauseAndResumeScanner(html5QrcodeScannerRef.current, 700);
         }
     };

@@ -1,12 +1,18 @@
+"use client"
+
 import * as React from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Student } from '@/models.old/Student';
 import { Trash, CircleUserRound, UserRound, TextSearch } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner"
+import { pushAttendanceRecord, QueuedAttendance } from '@/models/Attendance';
+
+
+
 
 interface LiveResultsSectionProps {
-    results: Student[];
+    results: QueuedAttendance[];
 }
 
 export default function LiveResultsSection({ results }: LiveResultsSectionProps) {
@@ -54,11 +60,11 @@ export default function LiveResultsSection({ results }: LiveResultsSectionProps)
 
                                     <div className="flex flex-col">
                                         <div className="text-normal font-medium">
-                                            {result.name}
+                                            {result.student.name}
                                         </div>
 
                                         <div className="text-xs ">
-                                            ID:{result.idNum}
+                                            ID:{result.student.idNum}
                                         </div>
                                     </div>
 
