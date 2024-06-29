@@ -1,62 +1,32 @@
-import { Department } from "./Department";
-import {
-  collection,
-  addDoc,
-  setDoc,
-  getDocs,
-  where,
-  query,
-  updateDoc,
-  doc,
-  deleteDoc,
-} from "firebase/firestore";
-import { db } from "../firebase"; // Adjust the import path according to your project structure
+import { createClient } from "@/utils/supabase/client";
 
-/////////////////////////////////////ADD FUNCTIONS
-
-// const colRef = collection(db, "students");
+const supabase = createClient();
 
 export interface Student {
+  id: number;
+  createdAt: string;
   idNum: string;
   name: string;
-  department: Department | null;
-  addedOn: Date;
-  addedBy: string;
+  deptId: number;
 }
 
-// // Function to check if a Student exists by ID
-// export const studentExists = (id: string): boolean => {
-//   // return users.some((user: User) => user.id === id);
-//   return true;
-// };
+export async function getStudentByIdNum(idNum: string) {
+  const { data, error } = await supabase
+    .from("students")
+    .select("*")
+    .eq("id_num", idNum)
+    .single(); // Use .single() if you expect only one row to be returned
 
-export const getStudentDetailsByIdNum = async (
-  idNum: string
-): Promise<Student | null> => {
-  try {
-    // Create a query to find the student document by idNum
-    const studentsCollectionRef = collection(db, "students");
-    const queryRef = query(studentsCollectionRef, where("idNum", "==", idNum));
-
-    // Fetch the document
-    const querySnapshot = await getDocs(queryRef);
-
-    // Check if a document was found
-    if (!querySnapshot.empty) {
-      const studentDoc = querySnapshot.docs[0];
-      const studentData = studentDoc.data() as Student;
-      console.log("Student details fetched: ", studentData);
-      return studentData;
-    } else {
-      console.log("No student found with idNum: ", idNum);
-      return null;
-    }
-  } catch (error) {
-    console.error("Error fetching student details: ", error);
+  if (error) {
+    console.error("Error fetching student:", error);
     return null;
   }
-};
 
-export const addStudent = (user: Student): void => {
-  // users.push(user);
-};
+  return data;
+}
+
+export async function getAllStudents() {
+  const { data: students, error } = await supabase.from("students").select("*");
+
+  console.log("All studentts", students);
+}

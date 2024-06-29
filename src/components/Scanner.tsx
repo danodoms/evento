@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import UserMissingModal from '@/components/UserMissingModal'; // Import your ScanSuccessModal component
-import { Student, getStudentDetailsByIdNum } from '@/models/Student';
+import { Student, getStudentDetailsByIdNum } from '@/models.old/Student';
 import useScanHistoryStore from '@/store/useScanHistoryStore';
 import { toast } from "sonner";
-import { addAttendanceRecord } from '@/models/Attendance';
+// import { addAttendanceRecord } from '@/models.old/Attendance';
+import { getStudentByIdNum, getAllStudents } from '@/models/Student';
 
 const Scanner = () => {
     const scannerRef = useRef<HTMLDivElement>(null);
@@ -26,14 +27,17 @@ const Scanner = () => {
 
 
             try {
-                const userDetails: Student | null = await getStudentDetailsByIdNum(decodedText);
+                // const userDetails: Student | null = await getStudentDetailsByIdNum(decodedText);
+                const userDetails: Student | null = await getStudentByIdNum(decodedText);
+                getAllStudents();
+
                 if (userDetails) {
                     setSuccessModalTitle("User found");
                     setSuccessModalDesc(`ID: ${decodedText}`);
                     setSuccessModalSubtitle(userDetails.name);
                     setIsModalOpen(true);
                     successSound.play();
-                    addAttendanceRecord(userDetails);
+                    // addAttendanceRecord(userDetails);
                 } else {
                     html5QrcodeScannerRef.current?.pause();
                     setSuccessModalDesc("The scanned ID does not match any user.");

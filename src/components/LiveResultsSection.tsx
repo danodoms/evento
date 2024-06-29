@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { Student } from '@/models/Student';
+import { Student } from '@/models.old/Student';
 import { Trash, CircleUserRound, UserRound, TextSearch } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner"
 
