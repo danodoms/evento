@@ -86,7 +86,7 @@ const Scanner: React.FC = () => {
         if (node && !html5QrcodeScannerRef.current) {
             const html5QrcodeScanner = new Html5QrcodeScanner(
                 node.id,
-                { fps: 15, qrbox: { width: 250, height: 250 } },
+                { fps: 3, qrbox: { width: 250, height: 250 } },
                 false
             );
 

@@ -4,7 +4,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Html5QrcodeScanner, Html5QrcodeSupportedFormats, Html5QrcodeScanType } from 'html5-qrcode';
 import Scanner from '@/components/Scanner';
-import LiveResultsSection from '@/components/LiveResultsSection';
+import LiveResultsSection from '@/components/AttendanceQueueSection';
 import useQueuedAttendanceStore from '@/store/useQueuedAttendanceStore';
 
 const ScanPage = () => {
