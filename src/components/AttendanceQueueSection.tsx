@@ -5,7 +5,7 @@ import { TextSearch } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
 import { AttendanceQueueCard } from "./AttendanceQueueCard";
 
-import { pushAttendanceRecord, QueuedAttendance } from "@/models/Attendance";
+import { pushQueuedAttendanceRecord, QueuedAttendance } from "@/models/Attendance";
 import useQueuedAttendanceStore from "@/store/useQueuedAttendanceStore";
 
 interface AttendanceQueueSectionProps {
@@ -14,12 +14,11 @@ interface AttendanceQueueSectionProps {
 
 const AttendanceQueueSection: React.FC<AttendanceQueueSectionProps> = ({ results }) => {
     const { attendanceQueue, addAttendanceQueue, removeAttendanceQueue, setAttendanceQueue } = useQueuedAttendanceStore();
-    const [processing, setProcessing] = useState(false);
 
     // Function to process each queue item independently with a delay
     const processQueueItem = async (item: QueuedAttendance) => {
         await new Promise((resolve) => setTimeout(resolve, 7000)); // 10 seconds delay
-        await pushAttendanceRecord(item);
+        await pushQueuedAttendanceRecord(item);
         removeAttendanceQueue(item);
     };
 

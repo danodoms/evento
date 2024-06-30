@@ -6,6 +6,7 @@
     "dev": "next dev -H 0.0.0.0",
     "build": "next build",
     "start": "next start",
+    "deploy": "npm run build && npx vercel deploy --prod",
     "lint": "next lint"
   },
   "dependencies": {

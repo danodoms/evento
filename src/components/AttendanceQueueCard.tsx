@@ -28,27 +28,27 @@ export function AttendanceQueueCard(result: QueuedAttendance) {
     }, [startTime]); // Run effect when startTime changes
 
     return (
-        <div className={`flex justify-between gap-4 items-center border-1 border-solid border rounded-md relative ${result.timeOut ? 'bg-destructive' : ''}`}>
+        <div className={`flex justify-between gap-4 items-center border-1 border-solid border rounded-md relative ${result.time_out ? 'bg-destructive' : ''}`}>
             <div className="flex gap-2 w-full flex-col p-4">
                 <div className="flex gap-4 items-center">
                     <UserRound />
                     <div className="flex flex-col">
                         <div className="text-normal font-medium">{result.student.name}</div>
 
-                        <div className="text-xs ">ID: {result.student.schoolId}</div>
+                        <div className="text-xs ">ID: {result.student.school_id}</div>
 
 
                     </div>
                     <div className="ml-auto flex gap-4 items-center ">
-                        {result.timeIn ? (
+                        {!result.time_out ? (
                             <div className="p-2 items-center flex flex-col ">
                                 <p className="text-xs">TIMED IN</p>
-                                <p className="font-bold">{result.timeIn}</p>
+                                <p className="font-bold">{result.time_in}</p>
                             </div>
                         ) : (
                             <div className=" p-2 items-center flex flex-col">
                                 <p className="text-xs">TIMED OUT</p>
-                                <p className="font-bold">{result.timeOut}</p>
+                                <p className="font-bold">{result.time_out}</p>
                             </div>
                         )}
                         <Button className=" z-10 flex gap-2" variant="ghost">   <X /> </Button>

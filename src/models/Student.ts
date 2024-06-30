@@ -4,10 +4,10 @@ const supabase = createClient();
 
 export interface Student {
   id: number;
-  createdAt: string;
-  schoolId: string;
+  created_at: string;
+  school_id: string;
   name: string;
-  deptId: number;
+  dept_id: number;
 }
 
 export async function getStudentByIdNum(idNum: string) {
