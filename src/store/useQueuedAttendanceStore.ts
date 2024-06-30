@@ -12,7 +12,7 @@ const useQueuedAttendanceStore = create<QueuedAttendanceState>((set) => ({
   attendanceQueue: [],
   addAttendanceQueue: (queuedAttendance: QueuedAttendance) =>
     set((state) => ({
-      attendanceQueue: [queuedAttendance, ...state.attendanceQueue],
+      attendanceQueue: [...state.attendanceQueue, queuedAttendance],
     })),
   removeAttendanceQueue: (queuedAttendance: QueuedAttendance) =>
     set((state) => ({

@@ -44,9 +44,7 @@ const Scanner: React.FC = () => {
             const student: Student | null = await getStudentByIdNum(decodedText);
 
             if (student) {
-                // setModalContent({ desc: `ID: ${decodedText}`, subtitle: student.name });
                 successSound?.play();
-                // handleAttendanceRecord(student.id);
 
                 const queuedAttendance = await createQueuedAttendanceRecord(student);
                 if (queuedAttendance) {

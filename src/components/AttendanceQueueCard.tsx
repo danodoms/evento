@@ -1,7 +1,7 @@
 import { pushAttendanceRecord, QueuedAttendance } from "@/models/Attendance";
 import { Button } from "./ui/button";
 import { useState, useEffect } from "react";
-import { TextSearch, UserRound } from "lucide-react";
+import { TextSearch, UserRound, X } from "lucide-react";
 import { Progress } from "@/components/ui/progress"
 
 export function AttendanceQueueCard(result: QueuedAttendance) {
@@ -39,7 +39,7 @@ export function AttendanceQueueCard(result: QueuedAttendance) {
 
 
                     </div>
-                    <Button className="ml-auto z-10" variant="outline">Cancel</Button>
+                    <Button className="ml-auto z-10 flex gap-2" variant="outline">  Cancel <X size="16" /> </Button>
                 </div>
             </div>
             <Progress value={progress} className="w-full h-full absolute opacity-10 p-0 m-0 rounded-md" />
