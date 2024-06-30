@@ -18,7 +18,7 @@ const AttendanceQueueSection: React.FC<AttendanceQueueSectionProps> = ({ results
 
     // Function to process each queue item independently with a delay
     const processQueueItem = async (item: QueuedAttendance) => {
-        await new Promise((resolve) => setTimeout(resolve, 10000)); // 10 seconds delay
+        await new Promise((resolve) => setTimeout(resolve, 7000)); // 10 seconds delay
         await pushAttendanceRecord(item);
         removeAttendanceQueue(item);
     };
@@ -33,7 +33,7 @@ const AttendanceQueueSection: React.FC<AttendanceQueueSectionProps> = ({ results
     return (
         <>
             {attendanceQueue.length > 0 ? (
-                <div className="overflow-auto w-full rounded-md flex flex-col gap-2">
+                <div className="h-72 overflow-auto w-full rounded-md flex flex-col gap-2">
                     <Toaster />
                     {attendanceQueue.map((result, num) => (
                         <Fragment key={num}>

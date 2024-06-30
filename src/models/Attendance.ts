@@ -1,220 +1,153 @@
 import { createClient } from "@/utils/supabase/client";
-
 import { Student } from "./Student";
+import useQueuedAttendanceStore from "@/store/useQueuedAttendanceStore";
 
 const supabase = createClient();
 
 export interface Attendance {
   id: number | null;
-  created_at: string;
-  student_id: number;
-  time_in: string;
-  time_out: string | null;
-  is_am: boolean | null;
+  date: string;
+  studentId: number;
+  timeIn: string;
+  timeOut: string | null;
 }
 
 export interface QueuedAttendance extends Attendance {
   student: Student;
 }
 
-const getCurrentTime = () => new Date().toISOString().slice(11, 19); // Current time in HH:MM:SS
-
-const isAm = () => new Date().getHours() < 12; // Assuming AM is before 12 PM
+const getCurrentTime = (): string => new Date().toISOString().slice(11, 19);
 
 const getTodayDateRange = () => {
-  const today = new Date().toISOString().slice(0, 10); // Today's date in YYYY-MM-DD
-  const startOfDay = `${today}T00:00:00.000Z`; // Start of today's date in ISO format
-  const endOfDay = `${today}T23:59:59.999Z`; // End of today's date in ISO format
-  return { startOfDay, endOfDay };
+  const today = new Date().toISOString().slice(0, 10);
+  return {
+    today,
+    startOfDay: `${today}T00:00:00.000Z`,
+    endOfDay: `${today}T23:59:59.999Z`,
+  };
 };
 
-const fetchTodayRecords = async (studentId: number) => {
-  const { startOfDay, endOfDay } = getTodayDateRange();
+const convertQueuedAttendanceToAttendance = (
+  queuedAttendances: QueuedAttendance[]
+): Attendance[] => {
+  return queuedAttendances.map(({ student, ...attendance }) => attendance);
+};
 
+const fetchTodayRecords = async (studentId: number): Promise<Attendance[]> => {
+  const { startOfDay, endOfDay } = getTodayDateRange();
   const { data, error } = await supabase
     .from("attendance")
     .select("*")
     .eq("student_id", studentId)
-    .gte("created_at", startOfDay)
-    .lte("created_at", endOfDay)
-    .order("created_at", { ascending: true });
+    .gte("date", startOfDay)
+    .lte("date", endOfDay)
+    .order("date", { ascending: true });
 
-  if (error) {
+  if (error)
     throw new Error(
       "Error fetching today's attendance records: " + error.message
     );
-  }
-  return data as Attendance[];
+
+  console.log("TODAY'S ATTENDANCE RECORDS: ", data);
+
+  const attendanceQueue = useQueuedAttendanceStore.getState().attendanceQueue;
+
+  const attendanceFromQueue =
+    convertQueuedAttendanceToAttendance(attendanceQueue);
+
+  console.log("ATTENDANCE FROM QUEUE: ", attendanceFromQueue);
+
+  return [...data, ...attendanceFromQueue] as Attendance[];
 };
 
-const hasCompleteRecords = (records: Attendance[]) => {
-  return (
-    records.length >= 2 &&
-    records.every((record) => record.time_in && record.time_out)
-  );
+const hasCompleteRecords = (records: Attendance[]): boolean => {
+  const completeCount = records.filter(
+    (record) => record.timeIn && record.timeOut
+  ).length;
+  return completeCount >= 2;
 };
 
-const findIncompleteRecord = (records: Attendance[]) => {
-  return records.find((record) => !record.time_out);
-};
+// const hasCompleteRecords = (records: Attendance[]): boolean =>
+//   records.length >= 2 &&
+//   records.every((record) => record.timeIn && record.timeOut);
 
-export const createAttendanceRecord = async (studentId: number) => {
-  const currentTime = getCurrentTime();
-  const currentIsAm = isAm();
+// const hasCompleteRecords = (records: Attendance[]): boolean => true;
+
+const findIncompleteRecord = (records: Attendance[]): Attendance | undefined =>
+  records.find((record) => !record.timeOut);
+
+const createAttendanceRecord = async (
+  studentId: number
+): Promise<Attendance | null> => {
   const records = await fetchTodayRecords(studentId);
-
   if (hasCompleteRecords(records)) {
-    console.log(
-      "Student already has two complete attendance records for today."
+    console.warn(
+      "2 COMPLETE RECORDS TODAY FOUND FOR STUDENT WITH DB ID: ",
+      studentId
     );
     return null;
   }
 
   const incompleteRecord = findIncompleteRecord(records);
-
-  if (incompleteRecord) {
-    return {
-      ...incompleteRecord,
-      time_out: currentTime,
-    };
-  } else {
-    return {
-      id: null, // Indicating a new record
-      created_at: new Date().toISOString(),
-      student_id: studentId,
-      time_in: currentTime,
-      time_out: null,
-      is_am: currentIsAm,
-    };
-  }
+  const currentTime = getCurrentTime();
+  return incompleteRecord
+    ? { ...incompleteRecord, timeOut: currentTime }
+    : {
+        id: null,
+        date: new Date().toISOString(),
+        studentId,
+        timeIn: currentTime,
+        timeOut: null,
+      };
 };
-
-// export const createQueuedAttendanceRecord = async (student: Student) => {
-//   const currentTime = getCurrentTime();
-//   const currentIsAm = isAm();
-//   const records = await fetchTodayRecords(student.id);
-
-//   if (hasCompleteRecords(records)) {
-//     console.log(
-//       "Student already has two complete attendance records for today."
-//     );
-//     return null;
-//   }
-
-//   const incompleteRecord = findIncompleteRecord(records);
-
-//   if (incompleteRecord) {
-//     return {
-//       ...incompleteRecord,
-//       time_out: currentTime,
-//     };
-//   } else {
-//     return {
-//       student: student,
-//       id: null, // Indicating a new record
-//       created_at: new Date().toISOString(),
-//       student_id: student.id,
-//       time_in: currentTime,
-//       time_out: null,
-//       is_am: currentIsAm,
-//     };
-//   }
-// };
 
 export const createQueuedAttendanceRecord = async (
   student: Student
 ): Promise<QueuedAttendance | null> => {
-  const currentTime = getCurrentTime();
-  const currentIsAm = isAm();
-  const records = await fetchTodayRecords(student.id);
-
-  if (hasCompleteRecords(records)) {
-    console.log(
-      "Student already has two complete attendance records for today."
-    );
-    return null;
-  }
-
-  const incompleteRecord = findIncompleteRecord(records);
-
-  if (incompleteRecord) {
-    return {
-      ...incompleteRecord,
-      time_out: currentTime,
-      student: student,
-    };
-  } else {
-    return {
-      id: null,
-      created_at: new Date().toISOString(),
-      student_id: student.id,
-      time_in: currentTime,
-      time_out: null,
-      is_am: currentIsAm,
-      student: student,
-    };
-  }
+  const record = await createAttendanceRecord(student.id);
+  return record ? { ...record, student } : null;
 };
 
-export const pushQueuedAttendanceRecord = async (record: QueuedAttendance) => {
-  if (record.id) {
-    const { error } = await supabase
-      .from("attendance")
-      .update({ time_out: record.time_out })
-      .eq("id", record.id);
-    if (error) {
-      throw new Error("Error updating time out: " + error.message);
-    }
-    console.log("Time out recorded:", record.time_out);
-  } else {
-    const { error } = await supabase.from("attendance").insert({
-      student_id: record.student_id,
-      time_in: record.time_in,
-      is_am: record.is_am,
-    });
-    if (error) {
-      throw new Error("Error adding new attendance record: " + error.message);
-    }
-    console.log(
-      `Time in ${record.is_am ? "AM" : "PM"} recorded:`,
-      record.time_in
-    );
-  }
+const updateRecord = async (record: Attendance): Promise<void> => {
+  const { error } = await supabase
+    .from("attendance")
+    .update({ time_out: record.timeOut })
+    .eq("id", record.id);
+  if (error) throw new Error("Error updating time out: " + error.message);
 };
 
-export const pushAttendanceRecord = async (record: Attendance) => {
-  if (record.id) {
-    const { error } = await supabase
-      .from("attendance")
-      .update({ time_out: record.time_out })
-      .eq("id", record.id);
-    if (error) {
-      throw new Error("Error updating time out: " + error.message);
-    }
-    console.log("Time out recorded:", record.time_out);
-  } else {
-    const { error } = await supabase.from("attendance").insert({
-      student_id: record.student_id,
-      time_in: record.time_in,
-      is_am: record.is_am,
-    });
-    if (error) {
-      throw new Error("Error adding new attendance record: " + error.message);
-    }
-    console.log(
-      `Time in ${record.is_am ? "AM" : "PM"} recorded:`,
-      record.time_in
-    );
-  }
+const insertRecord = async (record: Attendance): Promise<void> => {
+  const { today } = getTodayDateRange();
+  const { error } = await supabase.from("attendance").insert({
+    date: today,
+    student_id: record.studentId,
+    time_in: record.timeIn,
+  });
+  if (error)
+    throw new Error("Error adding new attendance record: " + error.message);
 };
 
-export const handleAttendanceRecord = async (studentId: number) => {
+export const pushQueuedAttendanceRecord = async (
+  record: QueuedAttendance
+): Promise<void> => {
+  record.id ? await updateRecord(record) : await insertRecord(record);
+  console.log(record.timeIn || record.timeOut);
+};
+
+export const pushAttendanceRecord = async (
+  record: Attendance
+): Promise<void> => {
+  record.id ? await updateRecord(record) : await insertRecord(record);
+  console.log(record.timeIn || record.timeOut);
+};
+
+export const handleAttendanceRecord = async (
+  studentId: number
+): Promise<void> => {
   try {
     const record = await createAttendanceRecord(studentId);
-    if (record) {
-      await pushAttendanceRecord(record);
-    }
+    if (record) await pushAttendanceRecord(record);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };

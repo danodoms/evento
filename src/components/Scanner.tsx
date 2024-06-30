@@ -28,13 +28,21 @@ const Scanner: React.FC = () => {
         if (scanner) {
             const state = scanner.getState();
             if (state === Html5QrcodeScannerState.SCANNING) {
-                // scanner.pause(true);
                 scanner.pause();
                 setTimeout(() => {
                     if (scanner.getState() === Html5QrcodeScannerState.PAUSED) {
                         scanner.resume();
                     }
                 }, delay);
+
+
+                // STOP AND START APPROACH, IT WORKS BUT CAN BE ANNOYING
+                // scanner.clear();
+                // setTimeout(() => {
+
+                //     scanner.render(onScanSuccess, onScanFailure);
+
+                // }, delay);
             }
         }
     };
@@ -60,7 +68,7 @@ const Scanner: React.FC = () => {
 
             }
 
-            pauseAndResumeScanner(html5QrcodeScannerRef.current, 700);
+            pauseAndResumeScanner(html5QrcodeScannerRef.current, 1000);
         } catch (error) {
             console.error("Error fetching student details:", error);
             setModalContent({ desc: "An error occurred while fetching student details.", subtitle: `Scanned ID: ${decodedText}` });
@@ -84,7 +92,7 @@ const Scanner: React.FC = () => {
         if (node && !html5QrcodeScannerRef.current) {
             const html5QrcodeScanner = new Html5QrcodeScanner(
                 node.id,
-                { fps: 3, qrbox: { width: 250, height: 250 } },
+                { fps: 3, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 },
                 false
             );
 

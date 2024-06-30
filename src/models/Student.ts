@@ -5,7 +5,7 @@ const supabase = createClient();
 export interface Student {
   id: number;
   createdAt: string;
-  idNum: string;
+  schoolId: string;
   name: string;
   deptId: number;
 }
@@ -14,7 +14,7 @@ export async function getStudentByIdNum(idNum: string) {
   const { data, error } = await supabase
     .from("students")
     .select("*")
-    .eq("id_num", idNum)
+    .eq("school_id", idNum)
     .single(); // Use .single() if you expect only one row to be returned
 
   if (error) {
