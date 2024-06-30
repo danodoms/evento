@@ -19,11 +19,11 @@ const Scanner: React.FC = () => {
     const [modalContent, setModalContent] = useState<ModalContent | null>(null);
     const addAttendanceQueue = useQueuedAttendanceStore((state) => state.addAttendanceQueue);
 
-    const pauseScanner = () => {
+    const pauseScanner = (pauseVideo = false) => {
         if (html5QrcodeScannerRef.current) {
             const state = html5QrcodeScannerRef.current.getState();
             if (state === Html5QrcodeScannerState.SCANNING) {
-                html5QrcodeScannerRef.current.pause(); // freeze scanning
+                html5QrcodeScannerRef.current.pause(pauseVideo); // freeze scanning
             }
         }
     };
@@ -39,6 +39,7 @@ const Scanner: React.FC = () => {
 
     const onScanSuccess = async (decodedText: string, decodedResult: Html5QrcodeResult) => {
         try {
+            // SCANNING SHOULD BE PAUSED IMMEDIATELY SINCE FOLLOWING CODES ARE ASYNC
             pauseScanner(); // Pause scanning
 
             const student: Student | null = await getStudentByIdNum(decodedText);
@@ -51,21 +52,23 @@ const Scanner: React.FC = () => {
                     addAttendanceQueue(queuedAttendance);
                 }
 
+
+                setTimeout(() => {
+                    resumeScanner(); // Resume scanning after a delay
+                }, 800);
+
             } else {
                 setModalContent({ desc: "The scanned ID does not match any user.", subtitle: `Scanned ID: ${decodedText}` });
-                await failSound?.play();
+                failSound?.play();
+                pauseScanner(true); // Pause scanning
             }
 
-            setTimeout(() => {
-                resumeScanner(); // Resume scanning after a delay
-            }, 1000);
+
         } catch (error) {
             console.error("Error fetching student details:", error);
             setModalContent({ desc: "An error occurred while fetching student details.", subtitle: `Scanned ID: ${decodedText}` });
             failSound?.play();
-            setTimeout(() => {
-                resumeScanner(); // Resume scanning after a delay
-            }, 700);
+            pauseScanner(); // Pause scanning
         }
     };
 
