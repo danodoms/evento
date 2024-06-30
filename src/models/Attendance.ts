@@ -56,6 +56,7 @@ const fetchTodayRecords = async (studentId: number): Promise<Attendance[]> => {
     convertQueuedAttendanceToAttendance(attendanceQueue);
 
   console.log("ATTENDANCE FROM QUEUE: ", attendanceFromQueue);
+  console.log("COMBINED RECORDS: ", [...data, ...attendanceFromQueue]);
 
   return [...data, ...attendanceFromQueue] as Attendance[];
 };
@@ -86,6 +87,11 @@ const createAttendanceRecord = async (
       studentId
     );
     return null;
+  } else {
+    console.log(
+      "NO COMPLETE RECORDS TODAY FOUND FOR STUDENT WITH DB ID: ",
+      studentId
+    );
   }
 
   const incompleteRecord = findIncompleteRecord(records);

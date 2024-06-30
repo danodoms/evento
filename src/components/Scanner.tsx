@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Html5QrcodeScanner, Html5QrcodeResult, Html5QrcodeScannerState } from 'html5-qrcode';
 import { StudentMissingModal } from '@/components/modals/StudentMissingModal';
 import { Student } from '@/models/Student';
-import { handleAttendanceRecord, createQueuedAttendanceRecord } from '@/models/Attendance';
+import { createQueuedAttendanceRecord } from '@/models/Attendance';
 import { getStudentByIdNum } from '@/models/Student';
 import { successSound, failSound } from '@/utils/sound';
 import useQueuedAttendanceStore from '@/store/useQueuedAttendanceStore';
@@ -14,41 +14,33 @@ interface ModalContent {
     subtitle: string;
 }
 
-
-
 const Scanner: React.FC = () => {
     const html5QrcodeScannerRef = useRef<Html5QrcodeScanner | null>(null);
     const [modalContent, setModalContent] = useState<ModalContent | null>(null);
-
-
     const addAttendanceQueue = useQueuedAttendanceStore((state) => state.addAttendanceQueue);
 
-
-    const pauseAndResumeScanner = (scanner: Html5QrcodeScanner | null, delay: number) => {
-        if (scanner) {
-            const state = scanner.getState();
+    const pauseScanner = () => {
+        if (html5QrcodeScannerRef.current) {
+            const state = html5QrcodeScannerRef.current.getState();
             if (state === Html5QrcodeScannerState.SCANNING) {
-                scanner.pause();
-                setTimeout(() => {
-                    if (scanner.getState() === Html5QrcodeScannerState.PAUSED) {
-                        scanner.resume();
-                    }
-                }, delay);
+                html5QrcodeScannerRef.current.pause(); // freeze scanning
+            }
+        }
+    };
 
-
-                // STOP AND START APPROACH, IT WORKS BUT CAN BE ANNOYING
-                // scanner.clear();
-                // setTimeout(() => {
-
-                //     scanner.render(onScanSuccess, onScanFailure);
-
-                // }, delay);
+    const resumeScanner = () => {
+        if (html5QrcodeScannerRef.current) {
+            const state = html5QrcodeScannerRef.current.getState();
+            if (state === Html5QrcodeScannerState.PAUSED) {
+                html5QrcodeScannerRef.current.resume();
             }
         }
     };
 
     const onScanSuccess = async (decodedText: string, decodedResult: Html5QrcodeResult) => {
         try {
+            pauseScanner(); // Pause scanning
+
             const student: Student | null = await getStudentByIdNum(decodedText);
 
             if (student) {
@@ -61,19 +53,19 @@ const Scanner: React.FC = () => {
 
             } else {
                 setModalContent({ desc: "The scanned ID does not match any user.", subtitle: `Scanned ID: ${decodedText}` });
-                if (html5QrcodeScannerRef.current?.getState() === Html5QrcodeScannerState.SCANNING) {
-                    html5QrcodeScannerRef.current.pause();
-                }
-                failSound?.play();
-
+                await failSound?.play();
             }
 
-            pauseAndResumeScanner(html5QrcodeScannerRef.current, 1000);
+            setTimeout(() => {
+                resumeScanner(); // Resume scanning after a delay
+            }, 1000);
         } catch (error) {
             console.error("Error fetching student details:", error);
             setModalContent({ desc: "An error occurred while fetching student details.", subtitle: `Scanned ID: ${decodedText}` });
             failSound?.play();
-            pauseAndResumeScanner(html5QrcodeScannerRef.current, 700);
+            setTimeout(() => {
+                resumeScanner(); // Resume scanning after a delay
+            }, 700);
         }
     };
 
@@ -83,21 +75,19 @@ const Scanner: React.FC = () => {
 
     const handleCloseModal = () => {
         setModalContent(null);
-        if (html5QrcodeScannerRef.current?.getState() === Html5QrcodeScannerState.PAUSED) {
-            html5QrcodeScannerRef.current.resume();
-        }
+        resumeScanner(); // Ensure scanner is resumed when modal is closed
     };
 
     const setScannerRef = (node: HTMLDivElement | null) => {
         if (node && !html5QrcodeScannerRef.current) {
-            const html5QrcodeScanner = new Html5QrcodeScanner(
+            const scanner = new Html5QrcodeScanner(
                 node.id,
-                { fps: 3, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 },
+                { fps: 5, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 },
                 false
             );
 
-            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
-            html5QrcodeScannerRef.current = html5QrcodeScanner;
+            scanner.render(onScanSuccess, onScanFailure);
+            html5QrcodeScannerRef.current = scanner;
         }
     };
 
