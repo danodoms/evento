@@ -8,6 +8,7 @@ import { createQueuedAttendanceRecord } from '@/models/Attendance';
 import { getStudentByIdNum } from '@/models/Student';
 import { successSound, failSound } from '@/utils/sound';
 import useQueuedAttendanceStore from '@/store/useQueuedAttendanceStore';
+import { QueuedAttendance } from '@/models/Attendance';
 
 interface ModalContent {
     desc: string;
@@ -18,6 +19,8 @@ const Scanner: React.FC = () => {
     const html5QrcodeScannerRef = useRef<Html5QrcodeScanner | null>(null);
     const [modalContent, setModalContent] = useState<ModalContent | null>(null);
     const addAttendanceQueue = useQueuedAttendanceStore((state) => state.addAttendanceQueue);
+
+    const attendanceQueueProp: QueuedAttendance[] = []
 
     const pauseScanner = (pauseVideo = false) => {
         if (html5QrcodeScannerRef.current) {

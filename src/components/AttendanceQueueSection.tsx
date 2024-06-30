@@ -13,7 +13,7 @@ interface AttendanceQueueSectionProps {
 }
 
 const AttendanceQueueSection: React.FC<AttendanceQueueSectionProps> = ({ results }) => {
-    const { attendanceQueue, addAttendanceQueue, removeAttendanceQueue, setAttendanceQueue } = useQueuedAttendanceStore();
+    const { attendanceQueue, removeAttendanceQueue } = useQueuedAttendanceStore();
 
     // Function to process each queue item independently with a delay
     const processQueueItem = async (item: QueuedAttendance) => {

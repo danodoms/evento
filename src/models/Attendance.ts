@@ -55,8 +55,9 @@ const fetchTodayRecords = async (studentId: number): Promise<Attendance[]> => {
 
   const attendanceQueue = useQueuedAttendanceStore.getState().attendanceQueue;
 
-  const attendanceFromQueue =
-    convertQueuedAttendanceToAttendance(attendanceQueue);
+  const attendanceFromQueue = convertQueuedAttendanceToAttendance(
+    attendanceQueue
+  ).filter((record) => record.student_id === studentId);
 
   console.log("ATTENDANCE FROM QUEUE: ", attendanceFromQueue);
   console.log("COMBINED RECORDS: ", [...data, ...attendanceFromQueue]);
