@@ -5,39 +5,37 @@ import { TextSearch } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
 import { AttendanceQueueCard } from "./AttendanceQueueCard";
 
-import { pushQueuedAttendanceRecord, QueuedAttendance } from "@/models/Attendance";
-import useQueuedAttendanceStore from "@/store/useQueuedAttendanceStore";
+import { QueuedAttendance } from "@/models/Attendance";
 
 interface AttendanceQueueSectionProps {
     results: QueuedAttendance[];
 }
 
 const AttendanceQueueSection: React.FC<AttendanceQueueSectionProps> = ({ results }) => {
-    const { attendanceQueue, removeAttendanceQueue } = useQueuedAttendanceStore();
 
-    // Function to process each queue item independently with a delay
-    const processQueueItem = async (item: QueuedAttendance) => {
-        await new Promise((resolve) => setTimeout(resolve, 7000)); // 10 seconds delay
-        await pushQueuedAttendanceRecord(item);
-        removeAttendanceQueue(item);
-    };
+    // // Function to process each queue item independently with a delay
+    // const processQueueItem = async (item: QueuedAttendance) => {
+    //     await new Promise((resolve) => setTimeout(resolve, 7000)); // 10 seconds delay
+    //     await pushQueuedAttendanceRecord(item);
+    //     removeAttendanceQueue(item.uniqueId);
+    // };
 
-    // Trigger the queue processing when results change
-    useEffect(() => {
-        if (results.length > 0) {
-            processQueueItem(results[results.length - 1])
-        }
-    }, [results]);
+    // // Trigger the queue processing when results change
+    // useEffect(() => {
+    //     if (results.length > 0) {
+    //         processQueueItem(results[0])
+    //     }
+    // }, [results]);
+
+
 
     return (
         <>
-            {attendanceQueue.length > 0 ? (
+            {results.length > 0 ? (
                 <div className="h-72 overflow-auto w-full rounded-md flex flex-col gap-2">
                     <Toaster />
-                    {attendanceQueue.map((result, num) => (
-                        <Fragment key={num}>
-                            <AttendanceQueueCard {...result} />
-                        </Fragment>
+                    {results.map((result, num) => (
+                        <AttendanceQueueCard key={num} {...result} />
                     ))}
                 </div>
             ) : (
