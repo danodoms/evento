@@ -9,6 +9,8 @@ import { getStudentByIdNum } from '@/models/Student';
 import { successSound, failSound } from '@/utils/sound';
 import useQueuedAttendanceStore from '@/store/useQueuedAttendanceStore';
 import { QueuedAttendance } from '@/models/Attendance';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface ModalContent {
     desc: string;
@@ -16,11 +18,14 @@ interface ModalContent {
 }
 
 const Scanner: React.FC = () => {
+
     const html5QrcodeScannerRef = useRef<Html5QrcodeScanner | null>(null);
     const [modalContent, setModalContent] = useState<ModalContent | null>(null);
     const addAttendanceQueue = useQueuedAttendanceStore((state) => state.addAttendanceQueue);
 
     const attendanceQueueProp: QueuedAttendance[] = []
+
+    const notify = () => toast.error("Attendance is already complete for today!");
 
     const pauseScanner = (pauseVideo = false) => {
         if (html5QrcodeScannerRef.current) {
@@ -53,6 +58,8 @@ const Scanner: React.FC = () => {
                 const queuedAttendance = await createQueuedAttendanceRecord(student);
                 if (queuedAttendance) {
                     addAttendanceQueue(queuedAttendance);
+                } else {
+                    notify();
                 }
 
 

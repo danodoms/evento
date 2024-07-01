@@ -6,6 +6,7 @@ import { Html5QrcodeScanner, Html5QrcodeSupportedFormats, Html5QrcodeScanType } 
 import Scanner from '@/components/Scanner';
 import AttendanceQueueSection from '@/components/AttendanceQueueSection';
 import useQueuedAttendanceStore from '@/store/useQueuedAttendanceStore';
+import { ToastContainer, toast } from 'react-toastify';
 
 const ScanPage = () => {
     const { attendanceQueue } = useQueuedAttendanceStore()
@@ -20,7 +21,7 @@ const ScanPage = () => {
             <div className=''>
                 <AttendanceQueueSection results={attendanceQueue} />
             </div>
-
+            <ToastContainer />
         </section >
     );
 };
