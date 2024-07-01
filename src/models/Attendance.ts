@@ -15,6 +15,7 @@ export interface Attendance {
 export interface QueuedAttendance extends Attendance {
   student: Student;
   uniqueId: number;
+  performed: boolean;
 }
 
 const getCurrentTime = (): string => {
@@ -142,7 +143,7 @@ export const createQueuedAttendanceRecord = async (
   student: Student
 ): Promise<QueuedAttendance | null> => {
   const record = await createAttendanceRecord(student.id);
-  return record ? { ...record, student, uniqueId: 0 } : null;
+  return record ? { ...record, student, uniqueId: 0, performed: false } : null;
 };
 
 const addTimeOut = async (record: Attendance): Promise<void> => {

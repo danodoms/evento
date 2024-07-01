@@ -9,9 +9,10 @@ interface QueuedAttendanceState {
   addAttendanceQueue: (
     queuedAttendance: Omit<QueuedAttendance, "uniqueId">
   ) => void;
-  removeAttendanceQueue: (uniqueId: number) => void;
+  removeAttendanceFromQueue: (uniqueId: number) => void;
 
   setAttendanceQueue: (attendanceQueue: QueuedAttendance[]) => void;
+  markAttendanceAsPerformed: (uniqueId: number) => void;
 }
 
 const useQueuedAttendanceStore = create<QueuedAttendanceState>((set) => ({
@@ -26,12 +27,13 @@ const useQueuedAttendanceStore = create<QueuedAttendanceState>((set) => ({
         "ATTENDANCE QUEUE VALUES: ",
         useQueuedAttendanceStore.getState().attendanceQueue
       ); // Log the new value
+
       return {
-        attendanceQueue: [...state.attendanceQueue, newAttendance],
+        attendanceQueue: [newAttendance, ...state.attendanceQueue],
       };
     }),
 
-  removeAttendanceQueue: (uniqueId: number) =>
+  removeAttendanceFromQueue: (uniqueId: number) =>
     set((state) => ({
       attendanceQueue: state.attendanceQueue.filter(
         (item) => item.uniqueId !== uniqueId
@@ -40,6 +42,13 @@ const useQueuedAttendanceStore = create<QueuedAttendanceState>((set) => ({
 
   setAttendanceQueue: (attendanceQueue: QueuedAttendance[]) =>
     set({ attendanceQueue }),
+
+  markAttendanceAsPerformed: (uniqueId: number) =>
+    set((state) => ({
+      attendanceQueue: state.attendanceQueue.map((item) =>
+        item.uniqueId === uniqueId ? { ...item, performed: true } : item
+      ),
+    })),
 }));
 
 export default useQueuedAttendanceStore;

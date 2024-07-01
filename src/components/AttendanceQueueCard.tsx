@@ -4,9 +4,15 @@ import { useState, useEffect, useRef } from "react";
 import { UserRound, X } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import useQueuedAttendanceStore from "@/store/useQueuedAttendanceStore";
+import { Item } from "@radix-ui/react-dropdown-menu";
 
 export function AttendanceQueueCard(result: QueuedAttendance) {
-    const { removeAttendanceQueue } = useQueuedAttendanceStore();
+
+    // if (result.performed) {
+    //     return
+    // }
+
+    const { removeAttendanceFromQueue, markAttendanceAsPerformed } = useQueuedAttendanceStore();
 
     const [cancel, setCancel] = useState(false);
     const [progress, setProgress] = useState(0);
@@ -22,7 +28,8 @@ export function AttendanceQueueCard(result: QueuedAttendance) {
         timeoutRef.current = setTimeout(async () => {
             if (!cancel) {
                 await pushQueuedAttendanceRecord(item);
-                removeAttendanceQueue(item.uniqueId);
+                removeAttendanceFromQueue(item.uniqueId);
+                // markAttendanceAsPerformed(item.uniqueId)
             }
         }, 7000); // 7 seconds delay
     };
@@ -54,13 +61,11 @@ export function AttendanceQueueCard(result: QueuedAttendance) {
         if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
         }
-        removeAttendanceQueue(result.uniqueId);
+        removeAttendanceFromQueue(result.uniqueId);
+        //markAttendanceAsPerformed(result.uniqueId)
 
         console.log("Cancelled");
     };
-
-
-
 
 
 
