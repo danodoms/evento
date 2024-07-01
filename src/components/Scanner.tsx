@@ -25,7 +25,7 @@ const Scanner: React.FC = () => {
 
     const attendanceQueueProp: QueuedAttendance[] = []
 
-    const notify = () => toast.error("Attendance is already complete for today!");
+    const notify = () => toast.error("Daily attendance limit reached!");
 
     const pauseScanner = (pauseVideo = false) => {
         if (html5QrcodeScannerRef.current) {

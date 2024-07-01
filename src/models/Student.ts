@@ -7,7 +7,7 @@ export interface Student {
   created_at: string;
   school_id: string;
   name: string;
-  dept_id: number;
+  dept_id: number | null;
 }
 
 export async function getStudentByIdNum(idNum: string) {
@@ -30,4 +30,19 @@ export async function getAllStudents() {
   const { data: students, error } = await supabase.from("students").select("*");
 
   console.log("All studentts", students);
+}
+
+export async function addStudent(student: Omit<Student, "id" | "created_at">) {
+  const { data, error } = await supabase
+    .from("students")
+    .insert(student)
+    .single(); // Use .single() if you expect only one row to be inserted
+
+  if (error) {
+    console.error("Error adding student:", error);
+    return null;
+  }
+
+  console.log("Added student:", data);
+  return data;
 }
