@@ -21,7 +21,7 @@ const ScanPage = () => {
             <div className=''>
                 <AttendanceQueueSection results={attendanceQueue} />
             </div>
-
+            <ToastContainer />
         </section >
     );
 };
