@@ -13,8 +13,7 @@ export interface Attendance {
 }
 
 export interface AttendanceRecord extends Attendance {
-  name: string;
-  school_id: number;
+  student: Student;
 }
 
 export interface QueuedAttendance extends Attendance {
@@ -228,20 +227,15 @@ export async function getAllAttendanceRecords(): Promise<
   AttendanceRecord[] | null
 > {
   const { data, error } = await supabase.from("attendance").select(`
-          *,
-          students (
-              id,
-              created_at,
-              school_id,
-              name,
-              dept_id
-          )
-      `);
+            *,
+            student:students!attendance_studentId_fkey(school_id, name)
+        `);
 
   if (error) {
     console.error("Error fetching data:", error);
     return null;
   }
 
+  console.log("All attendance records: ", data);
   return data;
 }
