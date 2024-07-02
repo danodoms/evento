@@ -29,12 +29,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(
-        "min-h-screen bg-background font-sans antialiased py-14 ",
+        "h-screen bg-background font-sans antialiased py-14",
         fontSans.variable
       )}>
-
-
-
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -49,8 +46,6 @@ export default function RootLayout({
             <BottomNav />
           </ReactQueryProvider>
         </ThemeProvider>
-
-
       </body>
     </html>
   );
