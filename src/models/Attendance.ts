@@ -12,6 +12,11 @@ export interface Attendance {
   time_out: string | null;
 }
 
+export interface AttendanceRecord extends Attendance {
+  name: string;
+  school_id: number;
+}
+
 export interface QueuedAttendance extends Attendance {
   student: Student;
   uniqueId: number;
@@ -205,3 +210,38 @@ export const handleAttendanceRecord = async (
     console.error(error);
   }
 };
+
+// export const getAllAttendanceRecords = async (): Promise<
+//   AttendanceRecord[]
+// > => {
+//   const { data, error } = await supabase.from("attendance").select("*");
+
+//   if (error) {
+//     throw new Error("Error fetching attendance records: " + error.message);
+//   }
+
+//   console.log("All attendance records: ", data);
+//   return data;
+// };
+
+export async function getAllAttendanceRecords(): Promise<
+  AttendanceRecord[] | null
+> {
+  const { data, error } = await supabase.from("attendance").select(`
+          *,
+          students (
+              id,
+              created_at,
+              school_id,
+              name,
+              dept_id
+          )
+      `);
+
+  if (error) {
+    console.error("Error fetching data:", error);
+    return null;
+  }
+
+  return data;
+}
