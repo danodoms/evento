@@ -23,7 +23,11 @@ const HistoryPage: React.FC = () => {
     }
 
     return (
-        <section className="p-4 flex flex-col gap-4">
+        <section className="p-4 flex flex-col gap-2">
+            <h1 className="font-semibold text-lg">
+                Recent scan results
+            </h1>
+
             {attendanceRecords.map((record: AttendanceRecord) => (
                 record.time_out ? (
                     <TimeOutCard key={record.id} result={record} />

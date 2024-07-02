@@ -32,7 +32,16 @@ export async function getAllStudents() {
   console.log("All studentts", students);
 }
 
-export async function addStudent(student: Omit<Student, "id" | "created_at">) {
+export async function addStudent(
+  student: Omit<Student, "id" | "created_at">
+): Promise<Student | null | "SCHOOL_ID_EXISTS"> {
+  //check if school id already exists
+  const schoolIdExists = await schoolIdAlreadyExists(student.school_id);
+  if (schoolIdExists) {
+    console.error("School ID already exists");
+    return "SCHOOL_ID_EXISTS";
+  }
+
   const { data, error } = await supabase
     .from("students")
     .insert(student)
@@ -45,4 +54,21 @@ export async function addStudent(student: Omit<Student, "id" | "created_at">) {
 
   console.log("Added student:", data);
   return data;
+}
+
+export async function schoolIdAlreadyExists(
+  schoolId: string
+): Promise<boolean | null> {
+  const { data, error } = await supabase
+    .from("students")
+    .select("*")
+    .eq("school_id", schoolId)
+    .single();
+
+  if (error) {
+    console.error("Error fetching school id", error);
+    return null;
+  }
+
+  return data ? true : false;
 }

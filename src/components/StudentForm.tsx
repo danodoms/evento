@@ -28,6 +28,7 @@ import { Department, getDepartments } from "@/models/Department";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { addStudent } from "@/models/Student";
+import { ToastContainer, toast } from "react-toastify";
 
 const formSchema = studentSchema;
 
@@ -53,12 +54,31 @@ export function StudentForm() {
     function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values);
 
+
+        // if (values.school_id === "") {
+        //     toast.error("School ID is required");
+        //     return;
+        // }
+
         //add the student to database from the values
         addStudent({
             school_id: values.school_id,
             name: values.name,
             dept_id: null,
         })
+            .then((student) => {
+                if (student === "SCHOOL_ID_EXISTS") {
+                    console.log("School ID already exists");
+                    toast.error("School ID already in use");
+                } else {
+                    console.log("Student added successfully");
+                    toast.success("Student added successfully");
+                    form.reset();
+                }
+            })
+            .catch((error) => {
+                console.error("Error adding student:", error);
+            });
     }
 
 
