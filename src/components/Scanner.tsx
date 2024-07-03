@@ -11,6 +11,8 @@ import useQueuedAttendanceStore from '@/store/useQueuedAttendanceStore';
 import { QueuedAttendance } from '@/models/Attendance';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { fulfillWithTimeLimit, throwErrorAfterTimeout } from '@/utils/utils';
+import { set } from 'zod';
 
 interface ModalContent {
     desc: string;
@@ -25,7 +27,7 @@ const Scanner: React.FC = () => {
 
     const attendanceQueueProp: QueuedAttendance[] = []
 
-    const notify = () => toast.error("Daily attendance limit reached!");
+    // const notify = () => toast.error("Daily attendance limit reached!");
 
     const pauseScanner = (pauseVideo = false) => {
         if (html5QrcodeScannerRef.current) {
@@ -47,19 +49,25 @@ const Scanner: React.FC = () => {
 
     const onScanSuccess = async (decodedText: string, decodedResult: Html5QrcodeResult) => {
         try {
-            // SCANNING SHOULD BE PAUSED IMMEDIATELY SINCE FOLLOWING CODES ARE ASYNC
+            // SCANNING SHOULD BE PAUSED IMMEDIATELY SINCE FOLLOWING CODE ARE ASYNC
             pauseScanner(); // Pause scanning
 
-            const student: Student | null = await getStudentByIdNum(decodedText);
+            if (!navigator.onLine) {
+                throw new Error("OFFLINE");
+            }
+
+            const student = await throwErrorAfterTimeout(2000, () => getStudentByIdNum(decodedText), "TIME_LIMIT_REACHED");
 
             if (student) {
                 successSound?.play();
 
-                const queuedAttendance = await createQueuedAttendanceRecord(student);
+                // const queuedAttendance = await createQueuedAttendanceRecord(student);
+                const queuedAttendance = await throwErrorAfterTimeout(2000, () => createQueuedAttendanceRecord(student), "TIME_LIMIT_REACHED");
+
                 if (queuedAttendance) {
                     addAttendanceQueue(queuedAttendance);
                 } else {
-                    notify();
+                    toast.error("Daily attendance limit reached!", { autoClose: 3000 })
                 }
 
 
@@ -74,11 +82,21 @@ const Scanner: React.FC = () => {
             }
 
 
-        } catch (error) {
+        } catch (error: Error | any) {
             console.error("Error fetching student details:", error);
-            setModalContent({ desc: "An error occurred while fetching student details.", subtitle: `Scanned ID: ${decodedText}` });
-            failSound?.play();
-            pauseScanner(); // Pause scanning
+
+            if (error.message === "OFFLINE") {
+                toast.error("You are offline, please check your internet connection", { autoClose: 3000, toastId: "toast-offline" });
+                resumeScanner(); // Resume scanning after a delay
+            } else if (error.message === "TIME_LIMIT_REACHED") {
+                toast.error("Server took too long to respond, try again", { autoClose: 3000 });
+                resumeScanner(); // Resume scanning after a delay
+            } else {
+                setModalContent({ desc: "An error occurred while fetching student details.", subtitle: `Scanned ID: ${decodedText}` });
+                failSound?.play();
+                pauseScanner(); // Pause scanning
+            }
+
         }
     };
 
