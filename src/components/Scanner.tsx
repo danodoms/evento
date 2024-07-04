@@ -6,7 +6,7 @@ import { StudentMissingModal } from '@/components/modals/StudentMissingModal';
 import { Student } from '@/models/Student';
 import { createQueuedAttendanceRecord } from '@/models/Attendance';
 import { getStudentByIdNum } from '@/models/Student';
-import { successSound, failSound } from '@/utils/sound';
+import { successSound, failSound, networkErrorSound, offlineSound } from '@/utils/sound';
 import useQueuedAttendanceStore from '@/store/useQueuedAttendanceStore';
 import { QueuedAttendance } from '@/models/Attendance';
 import { ToastContainer, toast } from 'react-toastify';
@@ -70,7 +70,6 @@ const Scanner: React.FC = () => {
                     toast.error("Daily attendance limit reached!", { autoClose: 3000 })
                 }
 
-
                 setTimeout(() => {
                     resumeScanner(); // Resume scanning after a delay
                 }, 800);
@@ -86,9 +85,11 @@ const Scanner: React.FC = () => {
             console.error("Error fetching student details:", error);
 
             if (error.message === "OFFLINE") {
+                offlineSound?.play();
                 toast.error("You are offline, please check your internet connection", { autoClose: 3000, toastId: "toast-offline" });
                 resumeScanner(); // Resume scanning after a delay
             } else if (error.message === "TIME_LIMIT_REACHED") {
+                networkErrorSound?.play();
                 toast.error("Server took too long to respond, try again", { autoClose: 3000 });
                 resumeScanner(); // Resume scanning after a delay
             } else {
