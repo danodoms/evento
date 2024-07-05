@@ -59,7 +59,7 @@ export default function Home() {
       <div className="gap-2 grid-cols-2 grid">
 
         {buttons.map((button, index) => (
-          <a href={button.link} className="w-full rounded-md p-8 flex justify-center gap-2 border bg-secondary">
+          <a href={button.link} className="w-full rounded-md p-8 flex justify-center gap-2 border ">
             {React.createElement(button.iconName)}
             <p className="font-semibold">
               {button.name}

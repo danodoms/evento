@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(
-        "h-screen bg-background font-sans antialiased py-14",
+        "h-screen bg-neutral font-sans antialiased py-14",
         fontSans.variable
       )}>
         <ThemeProvider

@@ -1,5 +1,5 @@
 import { pushQueuedAttendanceRecord, QueuedAttendance } from "@/models/Attendance";
-import { Button } from "./ui/button";
+import { Button } from "../../components/ui/button";
 import { useState, useEffect, useRef } from "react";
 import { UserRound, X } from "lucide-react";
 import { Progress } from "@/components/ui/progress";

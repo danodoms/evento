@@ -4,23 +4,23 @@ import useQueuedAttendanceStore from "@/store/useQueuedAttendanceStore";
 
 const supabase = createClient();
 
-export interface Attendance {
+export type Attendance = {
   id: number | null;
   date: string;
   student_id: number;
   time_in: string;
   time_out: string | null;
-}
+};
 
-export interface AttendanceRecord extends Attendance {
+export type AttendanceRecord = Attendance & {
   student: Student;
-}
+};
 
-export interface QueuedAttendance extends Attendance {
+export type QueuedAttendance = Attendance & {
   student: Student;
   uniqueId: number;
   performed: boolean;
-}
+};
 
 const getCurrentTime = (): string => {
   const now = new Date();
@@ -223,9 +223,7 @@ export const handleAttendanceRecord = async (
 //   return data;
 // };
 
-export async function getAllAttendanceRecords(): Promise<
-  AttendanceRecord[] | null
-> {
+export async function getAllAttendanceRecords(): Promise<AttendanceRecord[]> {
   const { data, error } = await supabase.from("attendance").select(`
             *,
             student:students!attendance_studentId_fkey(school_id, name)
@@ -233,9 +231,9 @@ export async function getAllAttendanceRecords(): Promise<
 
   if (error) {
     console.error("Error fetching data:", error);
-    return null;
+    // return null;
   }
 
   console.log("All attendance records: ", data);
-  return data;
+  return data as AttendanceRecord[];
 }

@@ -1,4 +1,4 @@
-import { StudentForm } from "@/components/StudentForm";
+import { StudentForm } from "@/app/register/StudentForm";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 

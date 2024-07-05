@@ -14,9 +14,9 @@ const HistoryPage: React.FC = () => {
         queryFn: getAllAttendanceRecords,
     });
 
-    if (isLoading) {
-        return <p>Loading...</p>; // Optional loading state while data is fetched
-    }
+    // if (isLoading) {
+    //     return <p>Loading...</p>; // Optional loading state while data is fetched
+    // }
 
     if (error) {
         return <p>Error: {error.message}</p>; // Optional error handling
