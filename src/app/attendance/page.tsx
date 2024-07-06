@@ -18,7 +18,7 @@ export default function AttendancePage() {
     });
 
     return (
-        <div className="p-4 flex flex-col gap-2">
+        <div className="flex flex-col gap-2">
             <DataTable columns={columns} data={attendanceRecords} />
         </div>
     )

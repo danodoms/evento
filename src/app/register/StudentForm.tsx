@@ -120,7 +120,7 @@ export function StudentForm() {
                     name="dept_id"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Department ID</FormLabel>
+                            <FormLabel>Department</FormLabel>
                             <FormControl>
                                 <Select>
                                     <SelectTrigger className="w-full">

@@ -23,6 +23,16 @@ import {
     TableRow,
 } from "@/components/ui/table"
 
+import {
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from "@/components/ui/pagination"
+
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -66,10 +76,37 @@ export function DataTable<TData, TValue>({
 
     })
 
+
+    const totalPages = table.getPageCount();
+    const currentPage = table.getState().pagination.pageIndex;
+
+
+    const getPageNumbers = () => {
+        const pages = [];
+        const maxPageButtons = 3;
+
+        if (totalPages <= maxPageButtons) {
+            for (let i = 0; i < totalPages; i++) {
+                pages.push(i);
+            }
+        } else {
+            if (currentPage === 0) {
+                pages.push(0, 1, 2);
+            } else if (currentPage === totalPages - 1) {
+                pages.push(totalPages - 3, totalPages - 2, totalPages - 1);
+            } else {
+                pages.push(currentPage - 1, currentPage, currentPage + 1);
+            }
+        }
+        return pages;
+    };
+
+    const pageNumbers = getPageNumbers();
+
     return (
 
-        <div>
-            <div className="flex items-center gap-4 py-4">
+        <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-4 pb-4">
                 <Input
                     placeholder="Search..."
                     value={globalFilter}
@@ -149,24 +186,35 @@ export function DataTable<TData, TValue>({
                     </TableBody>
                 </Table>
             </div>
-            <div className="flex items-center justify-end space-x-2 py-4">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
-                >
-                    Previous
-                </Button>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.nextPage()}
-                    disabled={!table.getCanNextPage()}
-                >
-                    Next
-                </Button>
-            </div>
+
+            <Pagination>
+                <PaginationContent>
+                    <PaginationItem hidden={!table.getCanPreviousPage()}>
+                        <PaginationPrevious onClick={() => table.previousPage()} />
+                    </PaginationItem>
+                    {pageNumbers.map((page) => (
+                        <PaginationItem key={page}>
+                            <PaginationLink
+                                href="#"
+                                isActive={page === currentPage}
+                                onClick={() => table.setPageIndex(page)}
+                            >
+                                {page + 1}
+                            </PaginationLink>
+                        </PaginationItem>
+                    ))}
+
+                    {currentPage + 1 != totalPages && (
+                        <PaginationItem>
+                            <PaginationEllipsis />
+                        </PaginationItem>)
+                    }
+
+                    <PaginationItem hidden={!table.getCanNextPage()}>
+                        <PaginationNext onClick={() => table.nextPage()} />
+                    </PaginationItem>
+                </PaginationContent>
+            </Pagination>
         </div>
     )
 }
