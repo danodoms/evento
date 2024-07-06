@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(
-        "h-screen bg-background font-sans antialiased",
+        "h-screen bg-background font-sans antialiased ",
         fontSans.variable
       )}>
         <ThemeProvider
@@ -42,7 +42,7 @@ export default function RootLayout({
 
             <Header />
 
-            <main className="pt-14 pb-14">
+            <main className="pt-14 pb-14 max-w-7xl mx-auto">
               <div className="p-4">
                 {children}
               </div>

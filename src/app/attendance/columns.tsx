@@ -64,8 +64,20 @@ export const columns: ColumnDef<AttendanceRecord>[] = [
 
 
     {
-        header: "Date",
-        accessorKey: "date"
+        accessorKey: "date",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    className="mr-auto"
+                >
+                    Date
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+
     },
     {
         header: "Time in",
