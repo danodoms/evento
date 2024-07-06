@@ -4,7 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export default function RegisterStudentPage() {
     return (
-        <div className="p-4 flex flex-col gap-4">
+        <div className="flex flex-col gap-4">
             <h1 className="text-3xl font-bold tracking-tight sm:text-5xl">
                 Register Student
             </h1>

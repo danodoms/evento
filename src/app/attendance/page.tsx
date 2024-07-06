@@ -11,17 +11,14 @@ import { columns } from "./columns"
 
 
 
-export default function DemoPage() {
-
-
-
+export default function AttendancePage() {
     const { data: attendanceRecords = [], error, isLoading } = useQuery<AttendanceRecord[]>({
         queryKey: ["attendanceRecords"],
         queryFn: getAllAttendanceRecords,
     });
 
     return (
-        <div className="container mx-auto py-10">
+        <div className="p-4 flex flex-col gap-2">
             <DataTable columns={columns} data={attendanceRecords} />
         </div>
     )

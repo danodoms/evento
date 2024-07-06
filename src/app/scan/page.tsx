@@ -12,7 +12,7 @@ const ScanPage = () => {
     const { attendanceQueue } = useQueuedAttendanceStore()
 
     return (
-        <section className="flex flex-col gap-4 justify-center bg-background pt-4 p-4">
+        <section className="flex flex-col gap-4 justify-center bg-background pt-4 flex-wrap">
             {/* <Toaster /> */}
             <div className='p-0 m-0'>
                 <Scanner />

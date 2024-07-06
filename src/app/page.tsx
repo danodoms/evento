@@ -32,12 +32,11 @@ const buttons: UiButton[] = [{
 
 export default function Home() {
   return (
-    <section className="p-4 flex flex-col gap-4">
-
+    <section className="flex flex-col gap-4">
 
 
       {/* TOP SECTION */}
-      <div className="flex flex-col gap-2 ">
+      <div className="flex flex-col gap-2">
         <div className="font-bold text-4xl text-pretty flex items-center gap-2">
           {/* {appName} */}
           Dashboard
@@ -56,10 +55,10 @@ export default function Home() {
 
 
       {/* BOTTOM SECTION */}
-      <div className="gap-2 grid-cols-2 grid">
+      <div className="gap-4 flex flex-col grid-cols-2 md:grid">
 
         {buttons.map((button, index) => (
-          <a href={button.link} className="w-full rounded-md p-8 flex justify-center gap-2 border ">
+          <a href={button.link} className="w-full p-8 flex justify-center gap-2 border rounded-lg bg-card text-card-foreground shadow-sm">
             {React.createElement(button.iconName)}
             <p className="font-semibold">
               {button.name}

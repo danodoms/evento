@@ -7,7 +7,7 @@ interface Props {
 }
 
 const TimeInCard: React.FC<Props> = ({ result }) => (
-    <div className="flex justify-between gap-4 items-center border-1 border-solid border rounded-md relative bg-secondary">
+    <div className="flex justify-between gap-4 items-center border-1 border-solid rounded-md relative bg-secondary">
         <div className="flex gap-2 w-full flex-col p-4">
             <div className="flex gap-4 items-center">
                 <UserRound />

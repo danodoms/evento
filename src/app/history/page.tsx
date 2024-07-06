@@ -7,6 +7,7 @@ import TimeInCard from "@/components/TimeInCard";
 import TimeOutCard from "@/components/TimeOutCard";
 
 
+
 const HistoryPage: React.FC = () => {
 
     const { data: attendanceRecords = [], error, isLoading } = useQuery<AttendanceRecord[]>({
@@ -23,7 +24,7 @@ const HistoryPage: React.FC = () => {
     }
 
     return (
-        <section className="p-4 flex flex-col gap-2">
+        <section className="flex flex-col gap-2">
             <h1 className="font-semibold text-lg">
                 Recent scan results
             </h1>
