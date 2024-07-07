@@ -103,8 +103,6 @@ export default function Home() {
 
 
 
-
-
       {/* BOTTOM SECTION */}
       <div className="gap-4 flex flex-col grid-cols-2 md:grid">
 
