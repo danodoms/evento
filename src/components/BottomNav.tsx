@@ -24,9 +24,6 @@ export default function BottomNav() {
                     <History />
                 </Link>
 
-
-
-
             </div>
         </nav>
     )

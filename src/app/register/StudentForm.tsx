@@ -45,6 +45,9 @@ export function StudentForm() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            school_id: "",
+            name: "",
+            dept_id: "0",
         },
     });
 
@@ -76,6 +79,9 @@ export function StudentForm() {
             .catch((error) => {
                 console.error("Error adding student:", error);
             });
+
+
+
     }
 
 

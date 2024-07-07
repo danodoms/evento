@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 export const eventSchema = z.object({
-  id: z.bigint(),
-  created_at: z.string(), // Assuming ISO 8601 date string
-  is_active: z.boolean(),
+  id: z.bigint().optional(), // Make optional
+  created_at: z.string().optional(), // Make optional
+  is_active: z.boolean().default(true), // Set a default value
   name: z
     .string()
     .min(1, "Name is required")

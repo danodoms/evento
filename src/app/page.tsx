@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { CalendarX, GanttChart, GanttChartIcon, Asterisk, UsersRound, UserRoundPlus, CalendarFold } from "lucide-react";
+import { CalendarX, Heart, GanttChart, GanttChartIcon, Asterisk, UsersRound, UserRoundPlus, CalendarFold } from "lucide-react";
 import { appName } from "@/config";
 import React from "react";
 import Link from "next/link"
@@ -59,13 +59,21 @@ export default function Home() {
       <div className="gap-4 flex flex-col grid-cols-2 md:grid">
 
         {buttons.map((button, index) => (
-          <Link href={button.link} className="w-full p-8 flex justify-center gap-2 border rounded-lg bg-card text-card-foreground shadow-sm">
+          <Link href={button.link} key={index} className="w-full p-8 flex justify-center gap-2 border rounded-lg bg-card text-card-foreground shadow-sm">
             {React.createElement(button.iconName)}
             <p className="font-semibold">
               {button.name}
             </p>
           </Link>
         ))}
+      </div>
+
+      <div className="flex text-xs font-normal opacity-25 items-center gap-1 pt-20 mx-auto">
+        made with
+        <Heart className="size-4" />
+        by
+        <a href="https://danodoms.vercel.app" target="_blank" className="underline">danodoms</a>
+
       </div>
     </section>
   );

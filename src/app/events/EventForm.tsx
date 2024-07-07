@@ -43,7 +43,7 @@ import {
 
 import { cn } from "@/lib/utils"
 
-import { eventDuration } from "@/models/Event";
+import { eventDuration, addEvent, Event } from "@/models/Event";
 import { MapPin } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 
@@ -84,6 +84,10 @@ export function EventForm() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            name: "",
+            date: new Date(),
+            description: "",
+            location: "",
         },
     });
 
@@ -92,7 +96,22 @@ export function EventForm() {
 
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        console.log("pass")
         console.log(values);
+
+        const event: Event = {
+            id: undefined,
+            is_active: undefined,
+            created_at: undefined,
+            name: values.name,
+            date: format(values.date, "yyyy-MM-dd"),
+            description: values.description,
+            location: values.location,
+            duration: values.duration,
+        }
+
+        await addEvent(event);
+        form.reset();
 
         // addStudent({
         //     school_id: values.school_id,
