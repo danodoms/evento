@@ -3,6 +3,10 @@ import { CalendarX, Heart, GanttChart, GanttChartIcon, Asterisk, UsersRound, Use
 import { appName } from "@/config";
 import React from "react";
 import Link from "next/link"
+import { Separator } from "@/components/ui/separator"
+
+import { Badge } from "@/components/ui/badge"
+
 
 interface UiButton {
   name: string;
@@ -37,11 +41,49 @@ export default function Home() {
 
 
       {/* TOP SECTION */}
-      <div className="flex flex-col gap-2">
-        <div className="font-bold text-4xl text-pretty flex items-center gap-2">
-          {/* {appName} */}
+
+
+      <div className="flex flex-col gap-2 p-4 border rounded-lg ">
+
+        <h1 className="text-2xl text-pretty  items-center gap-2">
+          Welcome to
+          <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-500 to-blue-500"> {appName}</span>
+
+
+
+          <div className="w-full leading-relaxed rounded-md flex justify-between text-xs pt-1 ">
+            Streamlining university events for students.
+          </div>
+        </h1>
+
+
+
+        <Separator />
+
+        <div className="w-full leading-relaxed rounded-md flex justify-between text-xs opacity-70 text-pretty">
+
+          An internal web app for Davao Oriental State University Banaybanay Campus Student Council.
+        </div>
+
+
+
+
+
+        <div className="flex text-xs font-normal gap-1 opacity-50 pt-1 rounded-md items-center">
+          made with
+          <Heart className="size-3" />
+          by
+          <a href="https://danodoms.vercel.app" target="_blank" className="underline">danodoms</a>
+
+        </div>
+      </div>
+
+
+
+
+      <div className="flex flex-col gap-2 p-4 border rounded-lg">
+        <div className="font-semibold text-md text-pretty flex items-center gap-2">
           Dashboard
-          {/* <Asterisk className="size-xl" /> */}
         </div>
 
         <div className="w-full rounded-md p-4 flex justify-between bg-destructive">
@@ -52,6 +94,14 @@ export default function Home() {
           <CalendarX />
         </div>
       </div>
+
+
+
+
+
+
+
+
 
 
 
@@ -68,13 +118,7 @@ export default function Home() {
         ))}
       </div>
 
-      <div className="flex text-xs font-normal opacity-25 items-center gap-1 pt-20 mx-auto">
-        made with
-        <Heart className="size-4" />
-        by
-        <a href="https://danodoms.vercel.app" target="_blank" className="underline">danodoms</a>
 
-      </div>
     </section>
   );
 }
