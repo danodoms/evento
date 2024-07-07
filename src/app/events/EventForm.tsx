@@ -117,7 +117,7 @@ export function EventForm() {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <FormField
                     control={form.control}
                     name="name"
@@ -221,7 +221,7 @@ export function EventForm() {
                         <FormItem>
                             <FormLabel>Event duration</FormLabel>
                             <FormControl>
-                                <Select>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <SelectTrigger className="w-full">
                                         <SelectValue placeholder="Select event duration" />
                                     </SelectTrigger>

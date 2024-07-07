@@ -45,9 +45,6 @@ export function StudentForm() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            school_id: "",
-            name: "",
-            dept_id: "",
         },
     });
 
@@ -84,7 +81,7 @@ export function StudentForm() {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <FormField
                     control={form.control}
                     name="school_id"

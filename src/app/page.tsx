@@ -2,6 +2,7 @@ import Image from "next/image";
 import { CalendarX, GanttChart, GanttChartIcon, Asterisk, UsersRound, UserRoundPlus, CalendarFold } from "lucide-react";
 import { appName } from "@/config";
 import React from "react";
+import Link from "next/link"
 
 interface UiButton {
   name: string;
@@ -58,12 +59,12 @@ export default function Home() {
       <div className="gap-4 flex flex-col grid-cols-2 md:grid">
 
         {buttons.map((button, index) => (
-          <a href={button.link} className="w-full p-8 flex justify-center gap-2 border rounded-lg bg-card text-card-foreground shadow-sm">
+          <Link href={button.link} className="w-full p-8 flex justify-center gap-2 border rounded-lg bg-card text-card-foreground shadow-sm">
             {React.createElement(button.iconName)}
             <p className="font-semibold">
               {button.name}
             </p>
-          </a>
+          </Link>
         ))}
       </div>
     </section>

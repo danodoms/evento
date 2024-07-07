@@ -1,26 +1,31 @@
 import { House, Scan, History } from "lucide-react"
+import Link from "next/link"
+
 
 export default function BottomNav() {
     return (
         <nav className="fixed bottom-0 w-full bg-background border-t  border-1 z-100">
             <div className="max-w-lg mx-auto flex justify-around items-center p-4">
 
-                <a href="/" className="button flex flex-col items-centerfocus:outline-none">
+                <Link href="/" className="button flex flex-col items-centerfocus:outline-none">
                     <House />
 
-                </a>
+                </Link>
 
 
-                <a href="/scan" className="button flex flex-col items-center  focus:outline-none">
+                <Link href="/scan" className="button flex flex-col items-center  focus:outline-none">
                     <Scan />
 
-                </a>
+                </Link>
 
 
 
-                <a href="/history" className="button flex flex-col items-center  focus:outline-none">
+                <Link href="/history" className="button flex flex-col items-center  focus:outline-none">
                     <History />
-                </a>
+                </Link>
+
+
+
 
             </div>
         </nav>
