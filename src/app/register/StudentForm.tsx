@@ -51,7 +51,7 @@ export function StudentForm() {
         },
     });
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values);
 
 
@@ -61,7 +61,7 @@ export function StudentForm() {
         // }
 
         //add the student to database from the values
-        addStudent({
+        await addStudent({
             school_id: values.school_id,
             name: values.name,
             dept_id: null,
@@ -122,13 +122,13 @@ export function StudentForm() {
                         <FormItem>
                             <FormLabel>Department</FormLabel>
                             <FormControl>
-                                <Select>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <SelectTrigger className="w-full">
                                         <SelectValue placeholder="Select Department" />
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectGroup>
-                                            <SelectLabel>Departments</SelectLabel>
+                                            {/* <SelectLabel>Departments</SelectLabel> */}
                                             <SelectItem value="0">
                                                 No Department
                                             </SelectItem>
@@ -147,7 +147,11 @@ export function StudentForm() {
                         </FormItem>
                     )}
                 />
-                <Button type="submit" className="w-full">Submit</Button>
+                <Button type="submit" disabled={form.formState.isSubmitting} className="w-full">
+                    {
+                        form.formState.isSubmitting ? "Submitting..." : "Submit"
+                    }
+                </Button>
             </form>
         </Form>
     );
