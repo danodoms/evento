@@ -4,10 +4,7 @@ export const eventSchema = z.object({
   id: z.bigint().optional(), // Make optional
   created_at: z.string().optional(), // Make optional
   is_active: z.boolean().default(true), // Set a default value
-  name: z
-    .string()
-    .min(1, "Name is required")
-    .regex(/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces"),
+  name: z.string().min(1, "Name is required"),
   description: z.string().optional(),
   date: z.date(), // Assuming ISO 8601 date string
   location: z.string().optional(),

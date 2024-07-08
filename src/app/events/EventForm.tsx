@@ -144,7 +144,11 @@ export function EventForm() {
                         <FormItem>
                             <FormLabel>Name</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter event name" {...field} />
+                                <Textarea
+                                    placeholder="Enter event name"
+                                    className="resize-none"
+                                    {...field}
+                                />
                             </FormControl>
                             {form.formState.errors.name && (
                                 <FormMessage>{form.formState.errors.name.message}</FormMessage>
@@ -239,23 +243,23 @@ export function EventForm() {
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Event duration</FormLabel>
-                            <FormControl>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
                                     <SelectTrigger className="w-full">
                                         <SelectValue placeholder="Select event duration" />
                                     </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            <SelectLabel>Event Duration</SelectLabel>
-                                            {eventTypes?.map((type, index) => (
-                                                <SelectItem key={index} value={type.value}>
-                                                    {type.text}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                            </FormControl>
+                                </FormControl>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Event Duration</SelectLabel>
+                                        {eventTypes?.map((type, index) => (
+                                            <SelectItem key={index} value={type.value}>
+                                                {type.text}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
                             {form.formState.errors.duration && (
                                 <FormMessage>{form.formState.errors.duration.message}</FormMessage>
                             )}
