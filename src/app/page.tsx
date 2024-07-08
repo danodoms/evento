@@ -15,25 +15,24 @@ interface UiButton {
 }
 
 
-const buttons: UiButton[] = [{
-  name: "Students",
-  iconName: UsersRound,
-  link: "/students"
+const buttons: UiButton[] = [
 
-},
-{
-  name: "Register",
-  iconName: UserRoundPlus,
-  link: "/register"
-}, {
-  name: "Attendance",
-  iconName: GanttChart,
-  link: "/attendance"
-}, {
-  name: "Events",
-  iconName: CalendarFold,
-  link: "/events"
-}]
+  {
+    name: "Attendance",
+    iconName: GanttChart,
+    link: "/attendance"
+  },
+  {
+
+    name: "Students",
+    iconName: UsersRound,
+    link: "/students"
+
+  }, {
+    name: "Events",
+    iconName: CalendarFold,
+    link: "/events"
+  }]
 
 export default function Home() {
   return (
