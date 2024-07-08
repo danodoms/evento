@@ -134,7 +134,7 @@ export default function StudentsPage() {
 
 
             {filteredStudents ? (
-                <div className="flex flex-col gap-4 md:grid md:grid-cols-2 lg:grid-cols-3">
+                <div className="flex flex-col gap-3 md:grid md:grid-cols-2 lg:grid-cols-3">
                     {filteredStudents.map((student, index) => (
                         <div key={index} className="p-4 border rounded-lg flex flex-col gap-2 backdrop-contrast-50 backdrop-opacity-25">
                             <div className="flex justify-between items-center">

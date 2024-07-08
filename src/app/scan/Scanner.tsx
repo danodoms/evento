@@ -1,11 +1,10 @@
 "use client";
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Html5QrcodeScanner, Html5QrcodeResult, Html5QrcodeScannerState } from 'html5-qrcode';
 import { StudentMissingModal } from '@/components/modals/StudentMissingModal';
-import { Student } from '@/models/Student';
+import { Student, getAllStudents, getStudentBySchoolId } from '@/models/Student';
 import { createQueuedAttendanceRecord } from '@/models/Attendance';
-import { getStudentByIdNum } from '@/models/Student';
 import { successSound, failSound, networkErrorSound, offlineSound } from '@/utils/sound';
 import useQueuedAttendanceStore from '@/store/useQueuedAttendanceStore';
 import { QueuedAttendance } from '@/models/Attendance';
@@ -13,17 +12,39 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { fulfillWithTimeLimit, throwErrorAfterTimeout } from '@/utils/utils';
 import { set } from 'zod';
+import { useQuery } from '@tanstack/react-query';
 
 interface ModalContent {
     desc: string;
     subtitle: string;
 }
 
-const Scanner: React.FC = () => {
+export default function Scanner() {
+
+
+    const { data: students = [], error, isLoading } = useQuery<Student[]>({
+        queryKey: ["students"],
+        queryFn: getAllStudents
+    });
+
+    const studentsRef = useRef(students);
+
+    useEffect(() => {
+        console.log('Student query status:', { isLoading, students, error });
+        studentsRef.current = students;
+    }, [students, isLoading, error]);
+
+
+
+
 
     const html5QrcodeScannerRef = useRef<Html5QrcodeScanner | null>(null);
     const [modalContent, setModalContent] = useState<ModalContent | null>(null);
     const addAttendanceQueue = useQueuedAttendanceStore((state) => state.addAttendanceQueue);
+
+
+
+
 
     const attendanceQueueProp: QueuedAttendance[] = []
 
@@ -56,7 +77,16 @@ const Scanner: React.FC = () => {
                 throw new Error("OFFLINE");
             }
 
-            const student = await throwErrorAfterTimeout(2000, () => getStudentByIdNum(decodedText), "TIME_LIMIT_REACHED");
+
+            // checks first if there are students in the variable fetched by react-tanstack-query
+            if (studentsRef.current.length === 0) {
+                throw new Error("EMPTY_STUDENTS_REFERENCE");
+            }
+
+
+            //The commented initiates an API call everytime, it is replaced by a client side filtering method to reduce API calls
+            // const student = await throwErrorAfterTimeout(2000, () => getStudentByIdNum(decodedText), "TIME_LIMIT_REACHED");
+            const student: Student | undefined = getStudentBySchoolId(studentsRef.current, decodedText);
 
             if (student) {
                 successSound?.play();
@@ -91,6 +121,10 @@ const Scanner: React.FC = () => {
             } else if (error.message === "TIME_LIMIT_REACHED") {
                 networkErrorSound?.play();
                 toast.error("Server took too long to respond, try again", { autoClose: 3000 });
+                resumeScanner(); // Resume scanning after a delay
+            } else if (error.message === "EMPTY_STUDENTS_REFERENCE") {
+                toast.error("No students to compare in the database", { autoClose: 3000, toastId: "toast-empty-students" });
+                failSound?.play();
                 resumeScanner(); // Resume scanning after a delay
             } else {
                 setModalContent({ desc: "An error occurred while fetching student details.", subtitle: `Scanned ID: ${decodedText}` });
@@ -136,5 +170,3 @@ const Scanner: React.FC = () => {
         </div>
     );
 };
-
-export default Scanner;

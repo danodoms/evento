@@ -4,8 +4,8 @@ import Link from "next/link"
 
 export default function BottomNav() {
     return (
-        <nav className="fixed bottom-0 w-full bg-background border-t  border-1 z-100">
-            <div className="max-w-lg mx-auto flex justify-around items-center p-4">
+        <nav className="fixed bottom-0 w-full bg-background border-t z-100">
+            <div className="max-w-lg mx-auto flex justify-around items-center p-3">
 
                 <Link href="/" className="button flex flex-col items-centerfocus:outline-none">
                     <House />

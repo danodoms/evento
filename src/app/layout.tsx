@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import Header from "@/components/Header";
 import { cn } from "@/lib/utils"
 import { ReactQueryProvider } from "./ReactQueryProvider";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 
 
@@ -44,11 +45,12 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ReactQueryProvider>
+            <ReactQueryDevtools />
 
             <Header />
 
             <main className="pt-14 pb-14 max-w-7xl mx-auto">
-              <div className="p-4">
+              <div className="p-3">
                 {children}
               </div>
             </main>

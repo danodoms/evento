@@ -27,7 +27,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 
 import { format, parseISO, getMonth, getYear } from 'date-fns';
-import { MapPin, Clock, Calendar, Pencil, Trash } from "lucide-react";
+import { MapPin, Clock, Calendar, Pencil, Trash, SquarePen, Ellipsis, EllipsisVertical } from "lucide-react";
 
 import Link from "next/link"
 
@@ -44,6 +44,39 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
+
+
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+    DialogFooter
+} from "@/components/ui/dialog"
+
+
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+
+
+import EventFormDialog from "./EventFormDialog";
 
 
 
@@ -52,6 +85,12 @@ import {
 
 
 export default function EventsPage() {
+
+
+    // const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+
+    // const handleOpenDialog = () => setDialogOpen(true);
+    // const handleCloseDialog = () => setDialogOpen(false);
 
 
     const { data: events = [], error, isLoading } = useQuery<Event[]>({
@@ -110,6 +149,13 @@ export default function EventsPage() {
         );
     });
 
+
+    function formatIsoDate(isoDate: any, includeTime = true) {
+        const parsedDate = parseISO(isoDate);
+        const dateFormat = includeTime ? 'MMMM d, yyyy h:mm:ss a OOOO' : 'MMMM d, yyyy';
+        return format(parsedDate, dateFormat);
+    }
+
     return (
         <div className="flex flex-col gap-4">
             <div className="flex justify-between items-center">
@@ -129,16 +175,7 @@ export default function EventsPage() {
 
 
             <div className="flex gap-2 justify-evenly">
-                {/* <input
-                    type="text"
-                    placeholder="Filter by name"
-                    value={filter}
-                    onChange={e => setFilter(e.target.value)}
-                    className="p-2 border rounded-lg"
-                /> */}
 
-
-                {/* <Select onValueChange={value => setYearFilter(value ? Number(value) : null)} value={yearFilter !== null ? yearFilter.toString() : ''}> */}
                 <Select onValueChange={value => setYearFilter(value)} value={yearFilter}>
                     <SelectTrigger className="">
                         <SelectValue placeholder="All Years" />
@@ -156,7 +193,6 @@ export default function EventsPage() {
 
 
 
-                {/* <Select onValueChange={value => setMonthFilter(value ? Number(value) : null)} value={monthFilter !== null ? monthFilter.toString() : ''}> */}
                 <Select onValueChange={value => setMonthFilter(value)} value={monthFilter}>
                     <SelectTrigger className="">
                         <SelectValue placeholder="All Months" />
@@ -171,8 +207,6 @@ export default function EventsPage() {
                         </SelectGroup>
                     </SelectContent>
                 </Select>
-
-
 
 
 
@@ -205,20 +239,41 @@ export default function EventsPage() {
 
 
             {filteredEvents ? (
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-3 md:grid grid-cols-2">
                     {/* RENDER EVENT CARDS */}
                     {/* RENDER EVENT CARDS */}
                     {/* RENDER EVENT CARDS */}
                     {filteredEvents.map((event, index) => (
-                        <div key={index} className="p-4 border rounded-lg flex flex-col gap-2 backdrop-contrast-50 backdrop-opacity-25">
+                        <div key={index} className="p-4 border rounded-lg flex flex-col gap-2 backdrop-contrast-50 backdrop-opacity-25 ">
                             <div className="flex justify-between items-center">
                                 <div className="flex gap-2 items-center">
                                     <Calendar className="size-5" />
                                     <p className="font-bold text-sm">{formatDate(event.date)}</p>
+
                                 </div>
                                 <div className="flex gap-2 items-center">
-                                    <Link href="#" className="text-xs border p-2 rounded-full flex gap-1"><Trash className="size-4" /></Link>
-                                    <Link href="#" className="text-xs border p-2 rounded-full flex gap-1"><Pencil className="size-4" /></Link>
+
+                                    {/* <Link href="#" className="text-xs border p-2 rounded-full flex gap-1"><Trash className="size-4" /></Link>
+                                    <Link href="#" className="text-xs border p-2 rounded-full flex gap-1"><Pencil className="size-4" /></Link> */}
+
+                                    {/* <p className="text-xs opacity-50">Added on {formatIsoDate(event.created_at, false)}</p> */}
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger className="border rounded-full px-4 text-sm flex gap-2 items-center"><Ellipsis className=" " /></DropdownMenuTrigger>
+                                        <DropdownMenuContent>
+                                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuItem asChild ><EventFormDialog /></DropdownMenuItem>
+                                            <DropdownMenuItem><Trash className="size-4 mr-2" />Delete</DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+
+                                    {/* 
+                                    <Popover>
+                                        <PopoverTrigger>Open</PopoverTrigger>
+                                        <PopoverContent>Place content for the popover here.</PopoverContent>
+                                    </Popover> */}
+
+
                                 </div>
                             </div>
 

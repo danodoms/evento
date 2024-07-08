@@ -26,15 +26,25 @@ export async function getStudentByIdNum(idNum: string) {
   return data;
 }
 
+export function getStudentBySchoolId(
+  students: Student[],
+  schoolId: string
+): Student | undefined {
+  const student = students.find((student) => student.school_id === schoolId);
+
+  console.log("Student found:", student);
+  return student;
+}
+
 export async function getAllStudents(): Promise<Student[]> {
-  const { data: students, error } = await supabase.from("students").select("*");
+  const { data, error } = await supabase.from("students").select("*");
 
   if (error) {
     console.error("Error fetching all students:", error);
   }
 
-  console.log("All studentts", students);
-  return students as Student[];
+  console.log("All students", data);
+  return data as Student[];
 }
 
 export async function addStudent(
