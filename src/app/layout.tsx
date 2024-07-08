@@ -15,8 +15,13 @@ const fontSans = FontSans({
 })
 
 export const metadata: Metadata = {
-  title: "Evento",
-  description: "Events attendance tracking",
+  title: "evento",
+  description: "Streamlining university events for students.",
+  manifest: "/manifest.json",
+  icons: {
+    apple: "/icon.png",
+  },
+  themeColor: "#ffffff",
 };
 
 
