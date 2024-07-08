@@ -6,7 +6,7 @@ import Link from "next/link"
 import { Calendar } from "lucide-react";
 
 
-export default function RegisterStudentPage() {
+export default function AddEventPage() {
     return (
         <div className="flex flex-col gap-4">
             <div className="flex justify-between items-center">

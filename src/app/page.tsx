@@ -6,6 +6,9 @@ import Link from "next/link"
 import { Separator } from "@/components/ui/separator"
 
 import { Badge } from "@/components/ui/badge"
+import AttendanceHistory from "./history/AttendanceHistory";
+
+
 
 
 interface UiButton {
@@ -103,7 +106,7 @@ export default function Home() {
 
 
       {/* BOTTOM SECTION */}
-      <div className="gap-4 flex flex-col grid-cols-2 md:grid">
+      {/* <div className="gap-4 flex flex-col grid-cols-2 md:grid">
 
         {buttons.map((button, index) => (
           <Link href={button.link} key={index} className="w-full p-8 flex justify-center gap-2 border rounded-lg bg-card text-card-foreground shadow-sm">
@@ -113,9 +116,18 @@ export default function Home() {
             </p>
           </Link>
         ))}
+      </div> */}
+
+      <div className="font-semibold text-md text-pretty flex items-center gap-2">
+        Recent Scan Results
+      </div>
+
+      <div className="overflow-auto h-80 rounded-lg">
+        <AttendanceHistory />
       </div>
 
 
-    </section>
+
+    </section >
   );
 }

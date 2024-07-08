@@ -1,4 +1,4 @@
-import { House, Scan, History } from "lucide-react"
+import { House, HouseIcon, Scan, History, GanttChart, UsersRound, CalendarFold, GanttChartIcon } from "lucide-react"
 import Link from "next/link"
 
 
@@ -12,6 +12,10 @@ export default function BottomNav() {
 
                 </Link>
 
+                <Link href="/attendance" className="button flex flex-col items-center  focus:outline-none">
+                    <GanttChart />
+
+                </Link>
 
                 <Link href="/scan" className="button flex flex-col items-center  focus:outline-none">
                     <Scan />
@@ -19,10 +23,22 @@ export default function BottomNav() {
                 </Link>
 
 
+                <Link href="/students" className="button flex flex-col items-center  focus:outline-none">
+                    <UsersRound />
 
-                <Link href="/history" className="button flex flex-col items-center  focus:outline-none">
-                    <History />
                 </Link>
+
+
+                <Link href="/events" className="button flex flex-col items-center  focus:outline-none">
+                    <CalendarFold />
+
+                </Link>
+
+
+
+                {/* <Link href="/history" className="button flex flex-col items-center  focus:outline-none">
+                    <History />
+                </Link> */}
 
             </div>
         </nav>

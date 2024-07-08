@@ -70,9 +70,9 @@ export default function EventsPage() {
     }
 
     const [filter, setFilter] = useState<string>('');
-    const [durationFilter, setDurationFilter] = useState<string>('');
-    const [monthFilter, setMonthFilter] = useState<number | null>(null);
-    const [yearFilter, setYearFilter] = useState<number | null>(null);
+    const [durationFilter, setDurationFilter] = useState<string>('all');
+    const [monthFilter, setMonthFilter] = useState<string>('all');
+    const [yearFilter, setYearFilter] = useState<string>('all');
 
 
 
@@ -104,9 +104,9 @@ export default function EventsPage() {
         const eventDate = parseISO(event.date);
         return (
             event.name.toLowerCase().includes(filter.toLowerCase()) &&
-            (durationFilter ? event.duration === durationFilter : true) &&
-            (monthFilter !== null ? getMonth(eventDate) === monthFilter : true) &&
-            (yearFilter !== null ? getYear(eventDate) === yearFilter : true)
+            (durationFilter !== 'all' ? event.duration === durationFilter : true) &&
+            (monthFilter !== 'all' ? getMonth(eventDate) === Number(monthFilter) : true) &&
+            (yearFilter !== 'all' ? getYear(eventDate) === Number(yearFilter) : true)
         );
     });
 
@@ -138,15 +138,15 @@ export default function EventsPage() {
                 /> */}
 
 
-
-                <Select onValueChange={value => setYearFilter(value ? Number(value) : null)} value={yearFilter !== null ? yearFilter.toString() : ''}>
+                {/* <Select onValueChange={value => setYearFilter(value ? Number(value) : null)} value={yearFilter !== null ? yearFilter.toString() : ''}> */}
+                <Select onValueChange={value => setYearFilter(value)} value={yearFilter}>
                     <SelectTrigger className="">
                         <SelectValue placeholder="All Years" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
                             <SelectLabel>Years</SelectLabel>
-                            <SelectItem value={null}>All Years</SelectItem>
+                            <SelectItem value="all">All Years</SelectItem>
                             {uniqueYears.map(year => (
                                 <SelectItem key={year} value={year.toString()}>{year}</SelectItem>
                             ))}
@@ -156,15 +156,15 @@ export default function EventsPage() {
 
 
 
-
-                <Select onValueChange={value => setMonthFilter(value ? Number(value) : null)} value={monthFilter !== null ? monthFilter.toString() : ''}>
+                {/* <Select onValueChange={value => setMonthFilter(value ? Number(value) : null)} value={monthFilter !== null ? monthFilter.toString() : ''}> */}
+                <Select onValueChange={value => setMonthFilter(value)} value={monthFilter}>
                     <SelectTrigger className="">
                         <SelectValue placeholder="All Months" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
                             <SelectLabel>Months</SelectLabel>
-                            <SelectItem value={null}>All Months</SelectItem>
+                            <SelectItem value="all">All Months</SelectItem>
                             {uniqueMonths.map(month => (
                                 <SelectItem key={month} value={month.toString()}>{format(new Date(0, month), "MMMM")}</SelectItem>
                             ))}
@@ -183,7 +183,7 @@ export default function EventsPage() {
                     <SelectContent>
                         <SelectGroup>
                             <SelectLabel>Durations</SelectLabel>
-                            <SelectItem value={null}>All Durations</SelectItem>
+                            <SelectItem value="all">All Durations</SelectItem>
                             <SelectItem value="AM_ONLY">Morning</SelectItem>
                             <SelectItem value="PM_ONLY">Afternoon</SelectItem>
                             <SelectItem value="AM_AND_PM">Whole Day</SelectItem>
@@ -210,7 +210,7 @@ export default function EventsPage() {
                     {/* RENDER EVENT CARDS */}
                     {/* RENDER EVENT CARDS */}
                     {filteredEvents.map((event, index) => (
-                        <div key={index} className="p-4 border rounded-lg flex flex-col gap-2">
+                        <div key={index} className="p-4 border rounded-lg flex flex-col gap-2 backdrop-contrast-50 backdrop-opacity-25">
                             <div className="flex justify-between items-center">
                                 <div className="flex gap-2 items-center">
                                     <Calendar className="size-5" />

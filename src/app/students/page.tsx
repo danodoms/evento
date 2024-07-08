@@ -25,7 +25,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 
 import { format, parseISO, getMonth, getYear } from 'date-fns';
-import { MapPin, Clock, Calendar, Pencil, Trash } from "lucide-react";
+import { MapPin, Clock, Calendar, Pencil, Trash, UserRound, Building2 } from "lucide-react";
 
 import Link from "next/link"
 
@@ -53,7 +53,7 @@ import { Input } from "@/components/ui/input";
 
 
 
-export default function EventsPage() {
+export default function StudentsPage() {
 
 
     const { data: students = [], error: studentsError, isLoading: isStudentsLoading } = useQuery<Student[]>({
@@ -77,36 +77,15 @@ export default function EventsPage() {
     //     return formattedDate;
     // }
 
+    function getDepartmentNameById(departmentId: number): string | undefined {
+        const department = departments.find(dept => dept.id === departmentId);
+        return department ? department.short_name : undefined;
+    }
+
+
     const [filter, setFilter] = useState<string>('');
     const [departmentFilter, setDepartmentFilter] = useState<string>('');
-    // const [monthFilter, setMonthFilter] = useState<number | null>(null);
-    // const [yearFilter, setYearFilter] = useState<number | null>(null);
 
-
-
-    // const uniqueMonths = useMemo(() => {
-    //     const months = events.map(event => getMonth(parseISO(event.date)));
-    //     return Array.from(new Set(months));
-    // }, [events]);
-
-    // const uniqueYears = useMemo(() => {
-    //     const years = events.map(event => getYear(parseISO(event.date)));
-    //     console.log("Unique Years", Array.from(new Set(years)));
-    //     return Array.from(new Set(years));
-    // }, [events]);
-
-    // function renderEventDuration(duration: Event["duration"]): string {
-    //     switch (duration) {
-    //         case "AM_ONLY":
-    //             return "Morning";
-    //         case "PM_ONLY":
-    //             return "Afternoon";
-    //         case "AM_AND_PM":
-    //             return "Whole Day";
-    //         default:
-    //             return "Unknown";
-    //     }
-    // }
 
     const filteredStudents = students.filter(student => {
         return (
@@ -120,7 +99,7 @@ export default function EventsPage() {
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold tracking-tight">Students</h1>
                 <Link href="/students/create" className="flex gap-2 items-center button font-semibold border p-2 rounded-lg">
-                    <Calendar className="mr size-4" />Add Student
+                    <UserRound className="mr size-4" />Add Student
                 </Link>
             </div>
 
@@ -134,16 +113,9 @@ export default function EventsPage() {
 
 
             <div className="flex gap-2 justify-evenly">
-                {/* <input
-                    type="text"
-                    placeholder="Filter by name"
-                    value={filter}
-                    onChange={e => setFilter(e.target.value)}
-                    className="p-2 border rounded-lg"
-                /> */}
+
 
                 <Input type="text" placeholder="Filter by name" onChange={e => setFilter(e.target.value)} value={filter} />
-
 
 
 
@@ -161,10 +133,6 @@ export default function EventsPage() {
                         </SelectGroup>
                     </SelectContent>
                 </Select>
-
-
-
-
             </div>
 
 
@@ -174,17 +142,13 @@ export default function EventsPage() {
 
 
 
-
-
-
-
             {filteredStudents ? (
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-4 md:grid md:grid-cols-2 lg:grid-cols-3">
                     {filteredStudents.map((student, index) => (
-                        <div key={index} className="p-4 border rounded-lg flex flex-col gap-2">
+                        <div key={index} className="p-4 border rounded-lg flex flex-col gap-2 backdrop-contrast-50 backdrop-opacity-25">
                             <div className="flex justify-between items-center">
                                 <div className="flex gap-2 items-center">
-                                    <Calendar className="size-5" />
+                                    <UserRound className="size-5" />
                                     <p className="font-bold text-sm">{student.school_id}</p>
                                 </div>
                                 <div className="flex gap-2 items-center">
@@ -201,12 +165,11 @@ export default function EventsPage() {
                                 {event.description ? event.description : "No description"}
                             </div> */}
 
-                            {/* <div className="flex gap-2 flex-wrap mt-1">
-                                <Badge className="flex gap-1"><Clock className="size-3" />{renderEventDuration(event.duration)}</Badge>
-                                {event.location && (
-                                    <Badge className="flex gap-1"><MapPin className="size-3" />{event.location}</Badge>
+                            <div className="flex gap-2 flex-wrap mt-1">
+                                {student.dept_id && (
+                                    <Badge className="flex gap-1"><Building2 className="size-3" />{getDepartmentNameById(student.dept_id)}</Badge>
                                 )}
-                            </div> */}
+                            </div>
                         </div>
                     ))}
                 </div>

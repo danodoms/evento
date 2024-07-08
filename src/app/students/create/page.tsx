@@ -9,7 +9,7 @@ export default function RegisterStudentPage() {
         <div className="flex flex-col gap-4 ">
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold tracking-tight">Add Student</h1>
-                <Link href="/events" className="flex gap-2 items-center button font-semibold border p-2 rounded-lg">
+                <Link href="/students" className="flex gap-2 items-center button font-semibold border p-2 rounded-lg">
                     <UserRound className="mr size-4" />View Students
                 </Link>
             </div>
