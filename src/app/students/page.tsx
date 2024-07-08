@@ -67,15 +67,6 @@ export default function StudentsPage() {
     });
 
 
-    // function formatDate(dateString: string): string {
-    //     // Parse the ISO format date string
-    //     const parsedDate = parseISO(dateString);
-
-    //     // Format the date in the desired text form
-    //     const formattedDate = format(parsedDate, "MMMM d, yyyy");
-
-    //     return formattedDate;
-    // }
 
     function getDepartmentNameById(departmentId: number): string | undefined {
         const department = departments.find(dept => dept.id === departmentId);
@@ -84,13 +75,13 @@ export default function StudentsPage() {
 
 
     const [filter, setFilter] = useState<string>('');
-    const [departmentFilter, setDepartmentFilter] = useState<string>('');
+    const [departmentFilter, setDepartmentFilter] = useState<string>('all');
 
 
     const filteredStudents = students.filter(student => {
         return (
             student.name.toLowerCase().includes(filter.toLowerCase()) &&
-            (departmentFilter ? student.dept_id?.toString() === departmentFilter : true)
+            (departmentFilter !== 'all' ? student.dept_id?.toString() === departmentFilter : true)
         );
     });
 
@@ -126,7 +117,7 @@ export default function StudentsPage() {
                     <SelectContent>
                         <SelectGroup>
                             <SelectLabel>Departments</SelectLabel>
-                            <SelectItem value={null}>All Departments</SelectItem>
+                            <SelectItem value="all">All Departments</SelectItem>
                             {departments.map(department => (
                                 <SelectItem key={department.id} value={department.id.toString()}>{department.short_name}</SelectItem>
                             ))}
