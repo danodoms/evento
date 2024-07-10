@@ -91,8 +91,8 @@ const EventFormDialog = ({ event }: EventFormDialogProps) => {
             </DrawerTrigger>
             <DrawerContent>
                 <DrawerHeader>
-                    <DrawerTitle>{title}</DrawerTitle>
-                    <DrawerDescription className="text-balance">{description}</DrawerDescription>
+                    <DrawerTitle className="text-xl">{title}</DrawerTitle>
+                    <DrawerDescription className="text-balance text-xs px-4">{description}</DrawerDescription>
                 </DrawerHeader>
 
                 <div className="p-4">

@@ -1,6 +1,6 @@
 import { House, HouseIcon, Scan, History, GanttChart, UsersRound, CalendarFold, GanttChartIcon } from "lucide-react"
 import Link from "next/link"
-
+import { ModeToggle } from "./ModeToggle"
 
 export default function BottomNav() {
     return (
@@ -12,10 +12,10 @@ export default function BottomNav() {
 
                 </Link>
 
-                <Link href="/attendance" className="button flex flex-col items-center  focus:outline-none">
+                {/* <Link href="/attendance" className="button flex flex-col items-center  focus:outline-none">
                     <GanttChart />
 
-                </Link>
+                </Link> */}
 
                 <Link href="/scan" className="button flex flex-col items-center  focus:outline-none">
                     <Scan />
@@ -39,6 +39,7 @@ export default function BottomNav() {
                 {/* <Link href="/history" className="button flex flex-col items-center  focus:outline-none">
                     <History />
                 </Link> */}
+                {/* <ModeToggle className={}/> */}
 
             </div>
         </nav>

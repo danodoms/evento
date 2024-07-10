@@ -1,39 +1,17 @@
 "use client"
 
-
 import { useQuery } from "@tanstack/react-query";
 import { EventForm } from "./EventForm";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-
 import { Event, getEvents } from "@/models/Event";
-
 import { Separator } from "@/components/ui/separator";
-
-
-import { BellIcon, CheckIcon } from "@radix-ui/react-icons"
-
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
-// import { Switch } from "@/components/ui/switch"
 import { Badge } from "@/components/ui/badge";
-
 import { format, parseISO, getMonth, getYear } from 'date-fns';
-import { MapPin, Clock, Calendar, Pencil, Trash, SquarePen, Ellipsis, EllipsisVertical } from "lucide-react";
-
+import { MapPin, Clock, Calendar, Pencil, Trash, SquarePen, Ellipsis, Plus, EllipsisVertical, Filter } from "lucide-react";
 import Link from "next/link"
-
 import { useState, useMemo } from 'react';
-
-
+import EventFormDialog from "./EventFormDialog";
 import {
     Select,
     SelectContent,
@@ -43,7 +21,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -52,46 +29,41 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
-
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
-
-
+    Drawer,
+    DrawerClose,
+    DrawerContent,
+    DrawerDescription,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerTrigger,
+} from "@/components/ui/drawer"
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-    DialogFooter
-} from "@/components/ui/dialog"
-
+    Button
+} from "@/components/ui/button"
 
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-
-
-import EventFormDialog from "./EventFormDialog";
-
-
+import {
+    Sheet,
+    SheetClose,
+    SheetContent,
+    SheetDescription,
+    SheetFooter,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet"
 
 
 
 
 
 export default function EventsPage() {
-
-
     // const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-
     // const handleOpenDialog = () => setDialogOpen(true);
     // const handleCloseDialog = () => setDialogOpen(false);
-
 
     const { data: events = [], error, isLoading } = useQuery<Event[]>({
         queryKey: ["events"],
@@ -112,7 +84,6 @@ export default function EventsPage() {
     const [durationFilter, setDurationFilter] = useState<string>('all');
     const [monthFilter, setMonthFilter] = useState<string>('all');
     const [yearFilter, setYearFilter] = useState<string>('all');
-
 
 
     const uniqueMonths = useMemo(() => {
@@ -139,7 +110,7 @@ export default function EventsPage() {
         }
     }
 
-    const filteredEvents = events.filter(event => {
+    const filteredEvents: Event[] = events.filter(event => {
         const eventDate = parseISO(event.date);
         return (
             event.name.toLowerCase().includes(filter.toLowerCase()) &&
@@ -158,11 +129,89 @@ export default function EventsPage() {
 
     return (
         <div className="flex flex-col gap-4">
+            {/* HEADER SECTION */}
+            {/* HEADER SECTION */}
+            {/* HEADER SECTION */}
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold tracking-tight">Events</h1>
-                <Link href="/events/create" className="flex gap-2 items-center button font-semibold border p-2 rounded-lg">
-                    <Calendar className="mr size-4" />Add Event
+
+
+                <Link href="/events/create" className="flex gap-2 items-center button border p-2 rounded-md">
+                    <Plus className="size-4" />Add Event
                 </Link>
+
+                <Sheet>
+                    <SheetTrigger asChild>
+                        <Button variant="outline"><Filter className="mr-2 size-4" />Filter<Badge variant={"destructive"} className="ml-2">3</Badge></Button>
+                    </SheetTrigger>
+                    <SheetContent className="flex h-full justify-center flex-col">
+                        <SheetHeader>
+                            <SheetTitle>Filter Events</SheetTitle>
+                            <SheetDescription className="text-balance">
+                                Make changes to your profile here. Click save when you're done.
+                            </SheetDescription>
+                        </SheetHeader>
+
+                        <div className="flex gap-4 flex-col justify-evenly py-4">
+                            {/* YEAR FILTER */}
+                            <Select onValueChange={value => setYearFilter(value)} value={yearFilter}>
+                                <SelectTrigger className="">
+                                    <SelectValue placeholder="All Years" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Years</SelectLabel>
+                                        <SelectItem value="all">All Years</SelectItem>
+                                        {uniqueYears.map(year => (
+                                            <SelectItem key={year} value={year.toString()}>{year}</SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+
+                            {/* MONTH FILTER */}
+                            <Select onValueChange={value => setMonthFilter(value)} value={monthFilter}>
+                                <SelectTrigger className="">
+                                    <SelectValue placeholder="All Months" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Months</SelectLabel>
+                                        <SelectItem value="all">All Months</SelectItem>
+                                        {uniqueMonths.map(month => (
+                                            <SelectItem key={month} value={month.toString()}>{format(new Date(0, month), "MMMM")}</SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+
+                            {/* DURATION FILTER */}
+                            <Select onValueChange={value => setDurationFilter(value)} value={durationFilter}>
+                                <SelectTrigger className="">
+                                    <SelectValue className="text-xs" placeholder="All Durations" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Durations</SelectLabel>
+                                        <SelectItem value="all">All Durations</SelectItem>
+                                        <SelectItem value="AM_ONLY">Morning</SelectItem>
+                                        <SelectItem value="PM_ONLY">Afternoon</SelectItem>
+                                        <SelectItem value="AM_AND_PM">Whole Day</SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+
+                        </div>
+                        <SheetFooter>
+                            <SheetClose asChild>
+                                <Button type="submit">Save changes</Button>
+                            </SheetClose>
+                        </SheetFooter>
+                    </SheetContent>
+                </Sheet>
+
+
+
             </div>
 
 
@@ -173,75 +222,16 @@ export default function EventsPage() {
 
 
 
-
-            <div className="flex gap-2 justify-evenly">
-
-                <Select onValueChange={value => setYearFilter(value)} value={yearFilter}>
-                    <SelectTrigger className="">
-                        <SelectValue placeholder="All Years" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectLabel>Years</SelectLabel>
-                            <SelectItem value="all">All Years</SelectItem>
-                            {uniqueYears.map(year => (
-                                <SelectItem key={year} value={year.toString()}>{year}</SelectItem>
-                            ))}
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
+            {/* FILTER SECTION */}
+            {/* FILTER SECTION */}
+            {/* FILTER SECTION */}
 
 
-
-                <Select onValueChange={value => setMonthFilter(value)} value={monthFilter}>
-                    <SelectTrigger className="">
-                        <SelectValue placeholder="All Months" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectLabel>Months</SelectLabel>
-                            <SelectItem value="all">All Months</SelectItem>
-                            {uniqueMonths.map(month => (
-                                <SelectItem key={month} value={month.toString()}>{format(new Date(0, month), "MMMM")}</SelectItem>
-                            ))}
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-
-
-
-                <Select onValueChange={value => setDurationFilter(value)} value={durationFilter}>
-                    <SelectTrigger className="">
-                        <SelectValue className="text-xs" placeholder="All Durations" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectLabel>Durations</SelectLabel>
-                            <SelectItem value="all">All Durations</SelectItem>
-                            <SelectItem value="AM_ONLY">Morning</SelectItem>
-                            <SelectItem value="PM_ONLY">Afternoon</SelectItem>
-                            <SelectItem value="AM_AND_PM">Whole Day</SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-
-            </div>
-
-
-
-
-
-
-
-
-
-
-
-
-            {filteredEvents ? (
+            {/* CARDS SECTION */}
+            {/* CARDS SECTION */}
+            {/* CARDS SECTION */}
+            {filteredEvents.length != 0 ? (
                 <div className="flex flex-col gap-3 md:grid grid-cols-2">
-                    {/* RENDER EVENT CARDS */}
-                    {/* RENDER EVENT CARDS */}
                     {/* RENDER EVENT CARDS */}
                     {filteredEvents.map((event, index) => (
                         <div key={index} className="p-4 border rounded-lg flex flex-col gap-2 backdrop-contrast-50 backdrop-opacity-25 ">
@@ -295,12 +285,10 @@ export default function EventsPage() {
                     ))}
                 </div>
             ) : (
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col mx-auto gap-4 p-20 opacity-50">
                     <p>No events</p>
                 </div>
             )}
-
-
 
             <ToastContainer />
         </div>
