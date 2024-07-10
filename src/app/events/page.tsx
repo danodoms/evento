@@ -262,7 +262,7 @@ export default function EventsPage() {
                                         <DropdownMenuContent>
                                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                             <DropdownMenuSeparator />
-                                            <DropdownMenuItem asChild ><EventFormDialog /></DropdownMenuItem>
+                                            <DropdownMenuItem asChild ><EventFormDialog event={event} /></DropdownMenuItem>
                                             <DropdownMenuItem><Trash className="size-4 mr-2" />Delete</DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>

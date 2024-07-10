@@ -45,7 +45,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ReactQueryProvider>
-            <ReactQueryDevtools />
+            {/* <ReactQueryDevtools /> */}
 
             <Header />
 

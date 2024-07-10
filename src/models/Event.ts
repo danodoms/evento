@@ -38,3 +38,19 @@ export async function addEvent(
   console.log("Added event:", data);
   return data;
 }
+
+export async function updateEvent(event: Event): Promise<Event | null> {
+  const { data, error } = await supabase
+    .from("events")
+    .update(event)
+    .eq("id", event.id)
+    .single(); // Use .single() if you expect only one row to be updated
+
+  if (error) {
+    console.error("Error updating event:", error);
+    return null;
+  }
+
+  console.log("Updated event:", data);
+  return data as Event;
+}

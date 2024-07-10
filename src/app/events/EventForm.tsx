@@ -43,7 +43,7 @@ import {
 
 import { cn } from "@/lib/utils"
 
-import { eventDuration, addEvent, Event } from "@/models/Event";
+import { eventDuration, addEvent, Event, updateEvent } from "@/models/Event";
 import { MapPin } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 
@@ -75,17 +75,25 @@ const eventTypes: eventType[] = [
     }
 ]
 
+type EventFormProps = {
+    event?: Event;
+}
 
 
-
-export function EventForm() {
+export function EventForm({ event }: EventFormProps) {
+    // const isEditMode = !!event;
 
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
+        defaultValues: event ? {
+            name: event.name,
+            date: new Date(event.date),
+            description: event.description,
+            location: event.location,
+            duration: event.duration,
+        } : {
             name: "",
-            date: new Date(),
             description: "",
             location: "",
         },
@@ -110,8 +118,14 @@ export function EventForm() {
             duration: values.duration,
         }
 
-        await addEvent(event);
-        form.reset();
+        if (event) {
+            await updateEvent(event)
+        } else {
+            await addEvent(event);
+            form.reset();
+        }
+
+
 
         // addStudent({
         //     school_id: values.school_id,
@@ -268,7 +282,8 @@ export function EventForm() {
                 />
                 <Button type="submit" disabled={form.formState.isSubmitting} className="w-full">
                     {
-                        form.formState.isSubmitting ? "Submitting..." : "Submit"
+                        event ? (form.formState.isSubmitting ? "Saving changes..." : "Save changes") : (form.formState.isSubmitting ? "Submitting..." : "Submit")
+
                     }
                 </Button>
             </form>
