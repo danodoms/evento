@@ -39,7 +39,10 @@ export default function BottomNav() {
                 {/* <Link href="/history" className="button flex flex-col items-center  focus:outline-none">
                     <History />
                 </Link> */}
-                {/* <ModeToggle className={}/> */}
+                <div className="p-0">
+                    <ModeToggle />
+                </div>
+
 
             </div>
         </nav>

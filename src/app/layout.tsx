@@ -47,9 +47,9 @@ export default function RootLayout({
           <ReactQueryProvider>
             {/* <ReactQueryDevtools /> */}
 
-            <Header />
+            {/* <Header /> */}
 
-            <main className="pt-14 pb-14 max-w-7xl mx-auto">
+            <main className="pb-14  max-w-7xl mx-auto">
               <div className="p-3">
                 {children}
               </div>
