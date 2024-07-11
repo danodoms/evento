@@ -158,7 +158,7 @@ export default function EventsPage() {
                                 </div>
                                 <div className="flex gap-2 items-center">
                                     <DropdownMenu>
-                                        <DropdownMenuTrigger className="border rounded-full px-4 text-sm flex gap-2 items-center"><Ellipsis className=" " /></DropdownMenuTrigger>
+                                        <DropdownMenuTrigger className=" rounded-full text-sm flex gap-2 items-center"><Ellipsis className=" " /></DropdownMenuTrigger>
                                         <DropdownMenuContent>
                                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                             <DropdownMenuSeparator />

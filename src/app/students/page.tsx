@@ -25,7 +25,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 
 import { format, parseISO, getMonth, getYear } from 'date-fns';
-import { MapPin, Clock, Calendar, Pencil, Trash, UserRound, Building2, Ellipsis } from "lucide-react";
+import { MapPin, Clock, Calendar, Pencil, Trash, UserRound, Building2, Ellipsis, Plus, Filter } from "lucide-react";
 
 import Link from "next/link"
 
@@ -54,6 +54,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import StudentFormDialog from "./StudentFormDialog";
 
+import {
+    Sheet,
+    SheetClose,
+    SheetContent,
+    SheetDescription,
+    SheetFooter,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet";
+
 
 
 
@@ -81,54 +92,121 @@ export default function StudentsPage() {
 
     const [filter, setFilter] = useState<string>('');
     const [departmentFilter, setDepartmentFilter] = useState<string>('all');
+    const [statusFilter, setStatusFilter] = useState<'active' | 'inactive'>('active');
 
 
     const filteredStudents = students.filter(student => {
-        return (
-            student.name.toLowerCase().includes(filter.toLowerCase()) &&
-            (departmentFilter !== 'all' ? student.dept_id?.toString() === departmentFilter : true)
-        );
+        const matchesSearch = student.name.toLowerCase().includes(filter.toLowerCase()) ||
+            student.school_id.toString().includes(filter.toLowerCase());
+
+        const matchesStatus = statusFilter === 'active' ? student.is_active : !student.is_active;
+
+        const matchesDepartment = departmentFilter === 'all' || student.dept_id?.toString() === departmentFilter;
+
+
+        return matchesSearch && matchesStatus && matchesDepartment;
     });
 
+
+
+
+
+    const resetFilters = () => {
+        setStatusFilter('active');
+        setDepartmentFilter('all');
+    };
+
+    const countActiveFilters = () => {
+        let count = 0;
+        if (statusFilter !== 'active') count++;
+        if (departmentFilter !== 'all') count++;
+        return count;
+    };
+
+
+
     return (
-        <div className="flex flex-col gap-4">
-            <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold tracking-tight">Students</h1>
+        <div className="flex flex-col gap-3">
+            <div className="flex justify-between gap-2 items-center">
+                {/* <h1 className="text-2xl font-bold tracking-tight">Students</h1>
                 <Link href="/students/create" className="flex gap-2 items-center button font-semibold border p-2 rounded-lg">
                     <UserRound className="mr size-4" />Add Student
+                </Link> */}
+                <h1 className="text-2xl font-bold tracking-tight mr-auto">Students</h1>
+                <Link href="/students/create">
+                    <Button variant={"ghost"}><Plus className="size-4" />Add</Button>
                 </Link>
+                <Sheet>
+                    <SheetTrigger asChild>
+                        <Button variant="outline"><Filter className="mr-2 size-4" />Filter
+                            {countActiveFilters() > 0 && (
+                                <Badge variant={"destructive"} className="ml-2">
+                                    {countActiveFilters()}
+                                </Badge>
+                            )}
+                        </Button>
+                    </SheetTrigger>
+                    <SheetContent className="flex h-full justify-center flex-col">
+                        <SheetHeader>
+                            <SheetTitle>Filter Students</SheetTitle>
+                            <SheetDescription className="text-balance">Select filters to apply</SheetDescription>
+                        </SheetHeader>
+                        <div className="flex gap-1 flex-col justify-evenly py-4">
+
+                            {/* ADD FILTERS HERE */}
+                            <p className="text-xs opacity-50">Status</p>
+
+                            <Select onValueChange={(value: "active" | "inactive") => setStatusFilter(value)} value={statusFilter}>
+                                <SelectTrigger className="">
+                                    <SelectValue placeholder="All Departments" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Status</SelectLabel>
+                                        <SelectItem value="active">Active</SelectItem>
+                                        <SelectItem value="inactive">Inactive</SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+
+                            <p className="text-xs mt-2 opacity-50">Department</p>
+
+                            <Select onValueChange={value => setDepartmentFilter(value)} value={departmentFilter}>
+                                <SelectTrigger className="">
+                                    <SelectValue placeholder="All Departments" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Departments</SelectLabel>
+                                        <SelectItem value="all">All Departments</SelectItem>
+                                        {departments.map(department => (
+                                            <SelectItem key={department.id} value={department.id.toString()}>{department.short_name}</SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+
+                        </div>
+                        <SheetFooter className="flex gap-2 flex-col">
+                            <SheetClose asChild>
+                                <Button type="submit" className="w-full mx-auto">Apply Filters</Button>
+                            </SheetClose>
+                            <Button className="mt-20 w-full" onClick={resetFilters} variant={"ghost"}>Reset Filters</Button>
+                        </SheetFooter>
+                    </SheetContent>
+                </Sheet>
             </div>
-
-
-
-
-
-
-
 
 
 
             <div className="flex gap-2 justify-evenly">
 
 
-                <Input type="text" placeholder="Filter by name" onChange={e => setFilter(e.target.value)} value={filter} />
+                <Input type="text" placeholder="Search" onChange={e => setFilter(e.target.value)} value={filter} />
 
 
 
-                <Select onValueChange={value => setDepartmentFilter(value)} value={departmentFilter}>
-                    <SelectTrigger className="">
-                        <SelectValue placeholder="All Departments" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectLabel>Departments</SelectLabel>
-                            <SelectItem value="all">All Departments</SelectItem>
-                            {departments.map(department => (
-                                <SelectItem key={department.id} value={department.id.toString()}>{department.short_name}</SelectItem>
-                            ))}
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
+
             </div>
 
 
@@ -139,7 +217,7 @@ export default function StudentsPage() {
 
 
             {filteredStudents ? (
-                <div className="flex flex-col gap-3 md:grid md:grid-cols-2 lg:grid-cols-3">
+                <div className="flex flex-col gap-3 md:grid md:grid-cols-2 lg:grid-cols-3 overflow-y-auto max-h-screen rounded-md">
                     {filteredStudents.map((student, index) => (
                         <div key={index} className="p-4 border rounded-lg flex flex-col gap-2 backdrop-contrast-50 backdrop-opacity-25">
                             <div className="flex justify-between items-center">
@@ -149,7 +227,7 @@ export default function StudentsPage() {
                                 </div>
                                 <div className="flex gap-2 items-center">
                                     <DropdownMenu>
-                                        <DropdownMenuTrigger className="border rounded-full px-4 text-sm flex gap-2 items-center"><Ellipsis className=" " /></DropdownMenuTrigger>
+                                        <DropdownMenuTrigger className=" rounded-full text-sm flex gap-2 items-center"><Ellipsis className=" " /></DropdownMenuTrigger>
                                         <DropdownMenuContent>
                                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                             <DropdownMenuSeparator />

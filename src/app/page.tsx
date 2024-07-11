@@ -44,10 +44,13 @@ export default function Home() {
 
       {/* TOP SECTION */}
 
+      <h1 className="font-bold text-3xl text-pretty">
+        evento
+      </h1>
 
-      <div className="flex flex-col gap-2 p-4 border rounded-lg ">
+      <div className="flex flex-col gap-2 rounded-lg ">
 
-        <h1 className="text-2xl text-pretty  items-center gap-2">
+        <h2 className="text-2xl text-pretty  items-center gap-2">
           Welcome to
           <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-500 to-blue-500"> {appName}</span>
 
@@ -56,7 +59,7 @@ export default function Home() {
           <div className="w-full leading-relaxed rounded-md flex justify-between text-xs pt-1 ">
             Streamlining university events for students.
           </div>
-        </h1>
+        </h2>
 
 
 

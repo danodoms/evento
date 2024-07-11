@@ -5,7 +5,7 @@ import { ModeToggle } from "./ModeToggle"
 export default function BottomNav() {
     return (
         <nav className="fixed bottom-0 w-full bg-background border-t z-100">
-            <div className="max-w-lg mx-auto flex justify-around items-center p-3">
+            <div className="max-w-lg mx-auto flex justify-around items-center p-1">
 
                 <Link href="/" className="button flex flex-col items-centerfocus:outline-none">
                     <House />
@@ -42,9 +42,9 @@ export default function BottomNav() {
                 {/* <Link href="/history" className="button flex flex-col items-center  focus:outline-none">
                     <History />
                 </Link> */}
-                <div className="p-0">
-                    <ModeToggle />
-                </div>
+
+                <ModeToggle compactMode={true} />
+
 
 
             </div>
