@@ -65,6 +65,8 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet";
 
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
 
 
 
@@ -89,6 +91,7 @@ export default function StudentsPage() {
         return department ? department.short_name : undefined;
     }
 
+    const [isCompactView, setIsCompactView] = useState(false);
 
     const [filter, setFilter] = useState<string>('');
     const [departmentFilter, setDepartmentFilter] = useState<string>('all');
@@ -118,6 +121,7 @@ export default function StudentsPage() {
 
     const countActiveFilters = () => {
         let count = 0;
+        if (isCompactView) count++;
         if (statusFilter !== 'active') count++;
         if (departmentFilter !== 'all') count++;
         return count;
@@ -133,6 +137,8 @@ export default function StudentsPage() {
                     <UserRound className="mr size-4" />Add Student
                 </Link> */}
                 <h1 className="text-2xl font-bold tracking-tight mr-auto">Students</h1>
+
+
                 <Link href="/students/create">
                     <Button variant={"ghost"}><Plus className="size-4" />Add</Button>
                 </Link>
@@ -151,10 +157,15 @@ export default function StudentsPage() {
                             <SheetTitle>Filter Students</SheetTitle>
                             <SheetDescription className="text-balance">Select filters to apply</SheetDescription>
                         </SheetHeader>
-                        <div className="flex gap-1 flex-col justify-evenly py-4">
+                        <div className="flex gap-1 flex-col justify-evenly py-4 " >
+
+                            <div className="flex items-center justify-between space-x-2 border rounded-md p-2">
+                                <Label htmlFor="compact-view">Compact View</Label>
+                                <Switch checked={isCompactView} onCheckedChange={setIsCompactView} id="compact-mode" />
+                            </div>
 
                             {/* ADD FILTERS HERE */}
-                            <p className="text-xs opacity-50">Status</p>
+                            <p className="text-xs mt-2 opacity-50">Status</p>
 
                             <Select onValueChange={(value: "active" | "inactive") => setStatusFilter(value)} value={statusFilter}>
                                 <SelectTrigger className="">

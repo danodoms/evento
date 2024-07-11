@@ -5,7 +5,7 @@ const supabase = createClient();
 export interface Student {
   id: number;
   created_at: string | null;
-  is_active: boolean;
+  is_active: boolean | undefined;
   school_id: string;
   name: string;
   dept_id: number | null;

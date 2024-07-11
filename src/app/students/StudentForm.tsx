@@ -65,6 +65,7 @@ export function StudentForm({ student }: StudentFormProps) {
         if (student) {
             await updateStudent({
                 id: student.id,
+                is_active: student.is_active,
                 school_id: values.school_id,
                 name: values.name,
                 dept_id: Number(values.dept_id),
@@ -72,6 +73,7 @@ export function StudentForm({ student }: StudentFormProps) {
         } else {
             await addStudent({
                 school_id: values.school_id,
+                is_active: undefined,
                 name: values.name,
                 dept_id: Number(values.dept_id),
             })
