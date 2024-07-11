@@ -46,12 +46,19 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 
-import SelectFilterComponent from "./SelectFilterComponent";
+import SelectFilter from "@/components/SelectFilter";
+import { Value } from "@radix-ui/react-select";
+
+
+import { eventDuration } from "@/models/Event"
 
 
 
 
 export default function EventsPage() {
+
+
+
     const { data: events = [], error, isLoading } = useQuery<Event[]>({
         queryKey: ["events"],
         queryFn: getEvents,
@@ -69,10 +76,19 @@ export default function EventsPage() {
 
     const [statusFilter, setStatusFilter] = useState<'active' | 'inactive'>('active');
     const [filter, setFilter] = useState<string>('');
-    const [durationFilter, setDurationFilter] = useState<string>('all');
+    const [durationFilter, setDurationFilter] = useState<eventDuration | "all">('all');
     const [monthFilter, setMonthFilter] = useState<string>('all');
     const [yearFilter, setYearFilter] = useState<string>('all');
 
+    const convertDuration = (duration: string): eventDuration | undefined => {
+        if (duration.toLowerCase() == "morning") {
+            return "AM_ONLY"
+        } else if (duration.toLowerCase() == "afternoon") {
+            return "PM_ONLY"
+        } else if (duration.toLowerCase() == "whole day") {
+            return "AM_AND_PM"
+        }
+    }
 
     const uniqueMonths = useMemo(() => {
         const months = events.map(event => getMonth(parseISO(event.date)));
@@ -103,7 +119,7 @@ export default function EventsPage() {
         return (
             event.name.toLowerCase().includes(filter.toLowerCase()) &&
             (statusFilter == 'active' ? event.is_active == true : event.is_active == false) &&
-            (durationFilter !== 'all' ? event.duration === durationFilter : true) &&
+            (durationFilter !== 'all' ? event.duration === convertDuration(durationFilter) : true) &&
             (monthFilter !== 'all' ? extractMonthName(event.date) === monthFilter : true) &&
             (yearFilter !== 'all' ? getYear(eventDate) === Number(yearFilter) : true)
         );
@@ -152,8 +168,6 @@ export default function EventsPage() {
     return (
         <div className="flex flex-col gap-4">
             {/* HEADER SECTION */}
-            {/* HEADER SECTION */}
-            {/* HEADER SECTION */}
             <div className="flex gap-2 items-center">
 
                 <h1 className="text-2xl font-bold tracking-tight mr-auto">Events</h1>
@@ -162,8 +176,6 @@ export default function EventsPage() {
                     <Button variant={"ghost"}>  <Plus className="size-4" />Add</Button>
                 </Link>
 
-                {/* FILTER SECTION */}
-                {/* FILTER SECTION */}
                 {/* FILTER SECTION */}
                 <Sheet>
                     <SheetTrigger asChild>
@@ -184,78 +196,18 @@ export default function EventsPage() {
                         </SheetHeader>
 
                         <div className="flex gap-4 flex-col justify-evenly py-4">
+
                             {/* STATUS FILTER */}
-                            <Select onValueChange={(value: "active" | "inactive") => setStatusFilter(value)} value={statusFilter}>
-                                <SelectTrigger className="">
-                                    <SelectValue placeholder="Select Status" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectGroup>
-                                        <SelectLabel>Status</SelectLabel>
-                                        <SelectItem value="active">Active</SelectItem>
-                                        <SelectItem value="inactive">Inactive</SelectItem>
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
-
-
-
-                            {/* <Select onValueChange={value => setYearFilter(value)} value={yearFilter}>
-                                <SelectTrigger className="">
-                                    <SelectValue placeholder="All Years" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectGroup>
-                                        <SelectLabel>Years</SelectLabel>
-                                        <SelectItem value="all">All Years</SelectItem>
-                                        {uniqueYears.map(year => (
-                                            <SelectItem key={year} value={year.toString()}>{year}</SelectItem>
-                                        ))}
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select> */}
+                            <SelectFilter label="Status" items={["Inactive"]} value={statusFilter} setValue={setStatusFilter} defaultValue={{ label: "Active", value: "active" }} />
 
                             {/* YEAR FILTER */}
-                            <SelectFilterComponent label="Years" items={uniqueYears} value={yearFilter} setValue={setYearFilter} defaultValue={{ label: "All Years", value: "all" }} />
-
-
-                            {/* <Select onValueChange={value => setMonthFilter(value)} value={monthFilter}>
-                                <SelectTrigger className="">
-                                    <SelectValue placeholder="All Months" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectGroup>
-                                        <SelectLabel>Months</SelectLabel>
-                                        <SelectItem value="all">All Months</SelectItem>
-                                        {uniqueMonths.map(month => (
-                                            <SelectItem key={month} value={month.toString()}>{format(new Date(0, month), "MMMM")}</SelectItem>
-                                        ))}
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select> */}
-
-
+                            <SelectFilter label="Year" items={uniqueYears} value={yearFilter} setValue={setYearFilter} defaultValue={{ label: "All Years", value: "all" }} />
 
                             {/* MONTH FILTER */}
-                            <SelectFilterComponent label="Months" items={convertMonthsToNames(uniqueMonths)} value={monthFilter} setValue={setMonthFilter} defaultValue={{ label: "All Months", value: "all" }} />
-
-
+                            <SelectFilter label="Month" items={convertMonthsToNames(uniqueMonths)} value={monthFilter} setValue={setMonthFilter} defaultValue={{ label: "All Months", value: "all" }} />
 
                             {/* DURATION FILTER */}
-                            <Select onValueChange={value => setDurationFilter(value)} value={durationFilter}>
-                                <SelectTrigger className="">
-                                    <SelectValue className="text-xs" placeholder="All Durations" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectGroup>
-                                        <SelectLabel>Durations</SelectLabel>
-                                        <SelectItem value="all">All Durations</SelectItem>
-                                        <SelectItem value="AM_ONLY">Morning</SelectItem>
-                                        <SelectItem value="PM_ONLY">Afternoon</SelectItem>
-                                        <SelectItem value="AM_AND_PM">Whole Day</SelectItem>
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
+                            <SelectFilter label="Duration" items={["Morning", "Afternoon", "Whole day"]} value={durationFilter} setValue={setDurationFilter} defaultValue={{ label: "All Durations", value: "all" }} />
 
                         </div>
                         <SheetFooter className="flex gap-2 flex-col">
@@ -272,14 +224,8 @@ export default function EventsPage() {
                     </SheetContent>
                 </Sheet>
 
-
-
             </div>
 
-
-
-            {/* CARDS SECTION */}
-            {/* CARDS SECTION */}
             {/* CARDS SECTION */}
             {
                 filteredEvents.length != 0 ? (

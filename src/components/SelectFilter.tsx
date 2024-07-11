@@ -23,7 +23,7 @@ type SelectFilterComponentProps = {
     };
 };
 
-export default function SelectFilterComponent({
+export default function SelectFilter({
     label,
     items,
     value,
