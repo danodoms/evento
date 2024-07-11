@@ -25,7 +25,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 
 import { format, parseISO, getMonth, getYear } from 'date-fns';
-import { MapPin, Clock, Calendar, Pencil, Trash, UserRound, Building2 } from "lucide-react";
+import { MapPin, Clock, Calendar, Pencil, Trash, UserRound, Building2, Ellipsis } from "lucide-react";
 
 import Link from "next/link"
 
@@ -41,13 +41,18 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-
-
-
-import { Student, getAllStudents } from "@/models/Student";
+import { Student, deactivateStudent, getAllStudents } from "@/models/Student";
 import { Department, getDepartments } from "@/models/Department";
 import { Input } from "@/components/ui/input";
-
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import StudentFormDialog from "./StudentFormDialog";
 
 
 
@@ -143,8 +148,15 @@ export default function StudentsPage() {
                                     <p className="font-bold text-sm">{student.school_id}</p>
                                 </div>
                                 <div className="flex gap-2 items-center">
-                                    <Link href="#" className="text-xs border p-2 rounded-full flex gap-1"><Trash className="size-4" /></Link>
-                                    <Link href="#" className="text-xs border p-2 rounded-full flex gap-1"><Pencil className="size-4" /></Link>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger className="border rounded-full px-4 text-sm flex gap-2 items-center"><Ellipsis className=" " /></DropdownMenuTrigger>
+                                        <DropdownMenuContent>
+                                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuItem asChild><StudentFormDialog student={student} /></DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => deactivateStudent(student)}><Trash className="size-4 mr-2" />Delete</DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
                                 </div>
                             </div>
 

@@ -27,15 +27,18 @@ import {
 import { Department, getDepartments } from "@/models/Department";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { addStudent } from "@/models/Student";
+import { addStudent, Student, updateStudent } from "@/models/Student";
 import { ToastContainer, toast } from "react-toastify";
 
 const formSchema = studentSchema;
 
+type StudentFormProps = {
+    student?: Student;
+}
 
 
 
-export function StudentForm() {
+export function StudentForm({ student }: StudentFormProps) {
 
     const { data: departments = [], error, isLoading } = useQuery<Department[]>({
         queryKey: ["departments"],
@@ -44,43 +47,49 @@ export function StudentForm() {
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
-            school_id: "",
-            name: "",
-            dept_id: "0",
-        },
+        defaultValues: student ?
+            {
+                name: student.name,
+                school_id: student.school_id,
+                dept_id: student.dept_id?.toString(),
+            } : {
+                school_id: "",
+                name: "",
+                dept_id: "0",
+            },
     });
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values);
 
-
-        // if (values.school_id === "") {
-        //     toast.error("School ID is required");
-        //     return;
-        // }
-
-        //add the student to database from the values
-        await addStudent({
-            school_id: values.school_id,
-            name: values.name,
-            dept_id: null,
-        })
-            .then((student) => {
-                if (student === "SCHOOL_ID_EXISTS") {
-                    console.log("School ID already exists");
-                    toast.error("School ID already in use");
-                } else {
-                    console.log("Student added successfully");
-                    toast.success("Student added successfully");
-                    form.reset();
-                }
+        if (student) {
+            await updateStudent({
+                id: student.id,
+                school_id: values.school_id,
+                name: values.name,
+                dept_id: Number(values.dept_id),
             })
-            .catch((error) => {
-                console.error("Error adding student:", error);
-            });
-
-
+        } else {
+            await addStudent({
+                school_id: values.school_id,
+                name: values.name,
+                dept_id: Number(values.dept_id),
+            })
+                .then((student) => {
+                    if (student === "SCHOOL_ID_EXISTS") {
+                        console.log("School ID already exists");
+                        toast.error("School ID already in use");
+                    } else {
+                        console.log("Student added successfully");
+                        toast.success("Student added successfully");
+                        form.reset();
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error adding student:", error);
+                });
+            form.reset();
+        }
 
     }
 
@@ -152,7 +161,8 @@ export function StudentForm() {
                 />
                 <Button type="submit" disabled={form.formState.isSubmitting} className="w-full">
                     {
-                        form.formState.isSubmitting ? "Submitting..." : "Submit"
+                        student ? (form.formState.isSubmitting ? "Saving changes..." : "Save changes") : (form.formState.isSubmitting ? "Submitting..." : "Submit")
+
                     }
                 </Button>
             </form>

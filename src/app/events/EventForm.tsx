@@ -107,7 +107,7 @@ export function EventForm({ event }: EventFormProps) {
         console.log("pass")
         console.log(values);
 
-        const event: Event = {
+        const newEvent: Event = {
             id: undefined,
             is_active: undefined,
             created_at: undefined,
@@ -119,32 +119,23 @@ export function EventForm({ event }: EventFormProps) {
         }
 
         if (event) {
-            await updateEvent(event)
+            const eventToUpdate: Event = {
+                id: event.id,
+                is_active: values.is_active,
+                created_at: undefined,
+                name: values.name,
+                date: format(values.date, "yyyy-MM-dd"),
+                description: values.description,
+                location: values.location,
+                duration: values.duration,
+            }
+
+            console.log("event to update: ", eventToUpdate);
+            await updateEvent(eventToUpdate)
         } else {
-            await addEvent(event);
+            await addEvent(newEvent);
             form.reset();
         }
-
-
-
-        // addStudent({
-        //     school_id: values.school_id,
-        //     name: values.name,
-        //     dept_id: null,
-        // })
-        //     .then((student) => {
-        //         if (student === "SCHOOL_ID_EXISTS") {
-        //             console.log("School ID already exists");
-        //             toast.error("School ID already in use");
-        //         } else {
-        //             console.log("Student added successfully");
-        //             toast.success("Student added successfully");
-        //             form.reset();
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         console.error("Error adding student:", error);
-        //     });
     }
 
 

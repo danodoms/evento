@@ -4,7 +4,7 @@ const supabase = createClient();
 
 export interface Student {
   id: number;
-  created_at: string;
+  created_at: string | null;
   school_id: string;
   name: string;
   dept_id: number | null;
@@ -86,4 +86,40 @@ export async function schoolIdAlreadyExists(
   }
 
   return data ? true : false;
+}
+
+export async function updateStudent(
+  student: Omit<Student, "created_at">
+): Promise<Student | null> {
+  const { data, error } = await supabase
+    .from("students")
+    .update(student)
+    .eq("id", student.id)
+    .single();
+
+  if (error) {
+    console.error("Error updating student:", error);
+    return null;
+  }
+
+  console.log("Updated student:", data);
+  return data as Student;
+}
+
+export async function deactivateStudent(
+  student: Student
+): Promise<Student | null> {
+  const { data, error } = await supabase
+    .from("students")
+    .update({ is_active: false })
+    .eq("id", student.id)
+    .single();
+
+  if (error) {
+    console.error("Error deactivating student:", error);
+    return null;
+  }
+
+  console.log("Deactivated student:", data);
+  return data as Student;
 }

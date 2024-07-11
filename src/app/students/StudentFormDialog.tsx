@@ -25,24 +25,24 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 
-import { EventForm } from "./EventForm"
-import { Event } from "@/models/Event"
+import { StudentForm } from "./StudentForm"
 
 import useMediaQuery from '@custom-react-hooks/use-media-query';
+import { Student } from "@/models/Student"
 
 
 
-type EventFormDialogProps = {
-    event?: Event;
+type StudentFormDialogProps = {
+    student?: Student;
 }
 
 
-const EventFormDialog = ({ event }: EventFormDialogProps) => {
+const StudentFormDialog = ({ student }: StudentFormDialogProps) => {
 
     const isDesktop = useMediaQuery("(min-width: 768px)")
 
-    const title = "Edit event";
-    const description = "Make changes to the event here. Click save when you're done.";
+    const title = "Edit student";
+    const description = "Make changes to the student here. Click save when you're done.";
 
 
     if (isDesktop) {
@@ -61,7 +61,7 @@ const EventFormDialog = ({ event }: EventFormDialogProps) => {
                     </DialogHeader>
 
 
-                    <EventForm event={event} />
+                    <StudentForm student={student} />
 
                     {/* <DialogFooter>
                 <Button type="submit">Save changes</Button>
@@ -83,7 +83,7 @@ const EventFormDialog = ({ event }: EventFormDialogProps) => {
                 </DrawerHeader>
 
                 <div className="p-4">
-                    <EventForm event={event} />
+                    <StudentForm student={student} />
                 </div>
 
                 <DrawerFooter>
@@ -99,4 +99,4 @@ const EventFormDialog = ({ event }: EventFormDialogProps) => {
 
 }
 
-export default EventFormDialog;
+export default StudentFormDialog;
