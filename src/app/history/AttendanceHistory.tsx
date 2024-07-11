@@ -31,7 +31,7 @@ const AttendanceHistory: React.FC<AttendanceHistoryProps> = ({ title = "Recent s
                 {title}
             </h1> */}
 
-            {attendanceRecords.map((record: AttendanceRecord) => (
+            {attendanceRecords?.map((record: AttendanceRecord) => (
                 record.time_out ? (
                     <TimeOutCard key={record.id} result={record} />
                 ) : (

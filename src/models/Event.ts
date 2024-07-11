@@ -54,3 +54,19 @@ export async function updateEvent(event: Event): Promise<Event | null> {
   console.log("Updated event:", data);
   return data as Event;
 }
+
+export async function deactivateEvent(event: Event): Promise<Event | null> {
+  const { data, error } = await supabase
+    .from("events")
+    .update({ is_active: false })
+    .eq("id", event.id)
+    .single(); // Use .single() if you expect only one row to be updated
+
+  if (error) {
+    console.error("Error deactivating event:", error);
+    return null;
+  }
+
+  console.log("Deactivated event:", data);
+  return data as Event;
+}

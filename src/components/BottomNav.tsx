@@ -17,14 +17,17 @@ export default function BottomNav() {
 
                 </Link> */}
 
-                <Link href="/scan" className="button flex flex-col items-center  focus:outline-none">
-                    <Scan />
 
-                </Link>
 
 
                 <Link href="/students" className="button flex flex-col items-center  focus:outline-none">
                     <UsersRound />
+
+                </Link>
+
+
+                <Link href="/scan" className="button flex flex-col items-center  focus:outline-none">
+                    <Scan />
 
                 </Link>
 

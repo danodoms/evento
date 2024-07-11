@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { EventForm } from "./EventForm";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import { Event, getEvents } from "@/models/Event";
+import { deactivateEvent, Event, getEvents } from "@/models/Event";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { format, parseISO, getMonth, getYear } from 'date-fns';
@@ -30,16 +30,6 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
-    Drawer,
-    DrawerClose,
-    DrawerContent,
-    DrawerDescription,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerTitle,
-    DrawerTrigger,
-} from "@/components/ui/drawer"
-import {
     Button
 } from "@/components/ui/button"
 
@@ -56,15 +46,12 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 
+import SelectFilterComponent from "./SelectFilterComponent";
 
 
 
 
 export default function EventsPage() {
-    // const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-    // const handleOpenDialog = () => setDialogOpen(true);
-    // const handleCloseDialog = () => setDialogOpen(false);
-
     const { data: events = [], error, isLoading } = useQuery<Event[]>({
         queryKey: ["events"],
         queryFn: getEvents,
@@ -117,7 +104,7 @@ export default function EventsPage() {
             event.name.toLowerCase().includes(filter.toLowerCase()) &&
             (statusFilter == 'active' ? event.is_active == true : event.is_active == false) &&
             (durationFilter !== 'all' ? event.duration === durationFilter : true) &&
-            (monthFilter !== 'all' ? getMonth(eventDate) === Number(monthFilter) : true) &&
+            (monthFilter !== 'all' ? extractMonthName(event.date) === monthFilter : true) &&
             (yearFilter !== 'all' ? getYear(eventDate) === Number(yearFilter) : true)
         );
     });
@@ -128,6 +115,13 @@ export default function EventsPage() {
         setDurationFilter('all');
         setMonthFilter('all');
         setYearFilter('all');
+    }
+
+    function extractMonthName(dateString: string): string {
+        // Parse the date string into a Date object
+        const date = parseISO(dateString);
+        // Format the date to get the full month name
+        return format(date, 'MMMM');
     }
 
 
@@ -146,6 +140,15 @@ export default function EventsPage() {
         return format(parsedDate, dateFormat);
     }
 
+    function convertMonthsToNames(months: number[]): string[] {
+        return months.map(month => {
+            // Create a date object for the given month and an arbitrary year and day
+            const date = new Date(2021, month, 1);
+            // Format the date to get the month name
+            return format(date, 'MMMM');
+        });
+    }
+
     return (
         <div className="flex flex-col gap-4">
             {/* HEADER SECTION */}
@@ -153,16 +156,15 @@ export default function EventsPage() {
             {/* HEADER SECTION */}
             <div className="flex gap-2 items-center">
 
-
                 <h1 className="text-2xl font-bold tracking-tight mr-auto">Events</h1>
-
 
                 <Link href="/events/create" >
                     <Button variant={"ghost"}>  <Plus className="size-4" />Add</Button>
                 </Link>
 
-
-
+                {/* FILTER SECTION */}
+                {/* FILTER SECTION */}
+                {/* FILTER SECTION */}
                 <Sheet>
                     <SheetTrigger asChild>
                         <Button variant="outline"><Filter className="mr-2 size-4" />Filter
@@ -197,8 +199,8 @@ export default function EventsPage() {
                             </Select>
 
 
-                            {/* YEAR FILTER */}
-                            <Select onValueChange={value => setYearFilter(value)} value={yearFilter}>
+
+                            {/* <Select onValueChange={value => setYearFilter(value)} value={yearFilter}>
                                 <SelectTrigger className="">
                                     <SelectValue placeholder="All Years" />
                                 </SelectTrigger>
@@ -211,10 +213,13 @@ export default function EventsPage() {
                                         ))}
                                     </SelectGroup>
                                 </SelectContent>
-                            </Select>
+                            </Select> */}
 
-                            {/* MONTH FILTER */}
-                            <Select onValueChange={value => setMonthFilter(value)} value={monthFilter}>
+                            {/* YEAR FILTER */}
+                            <SelectFilterComponent label="Years" items={uniqueYears} value={yearFilter} setValue={setYearFilter} defaultValue={{ label: "All Years", value: "all" }} />
+
+
+                            {/* <Select onValueChange={value => setMonthFilter(value)} value={monthFilter}>
                                 <SelectTrigger className="">
                                     <SelectValue placeholder="All Months" />
                                 </SelectTrigger>
@@ -227,7 +232,14 @@ export default function EventsPage() {
                                         ))}
                                     </SelectGroup>
                                 </SelectContent>
-                            </Select>
+                            </Select> */}
+
+
+
+                            {/* MONTH FILTER */}
+                            <SelectFilterComponent label="Months" items={convertMonthsToNames(uniqueMonths)} value={monthFilter} setValue={setMonthFilter} defaultValue={{ label: "All Months", value: "all" }} />
+
+
 
                             {/* DURATION FILTER */}
                             <Select onValueChange={value => setDurationFilter(value)} value={durationFilter}>
@@ -266,17 +278,6 @@ export default function EventsPage() {
 
 
 
-
-
-
-
-
-
-            {/* FILTER SECTION */}
-            {/* FILTER SECTION */}
-            {/* FILTER SECTION */}
-
-
             {/* CARDS SECTION */}
             {/* CARDS SECTION */}
             {/* CARDS SECTION */}
@@ -294,26 +295,15 @@ export default function EventsPage() {
                                     </div>
                                     <div className="flex gap-2 items-center">
 
-                                        {/* <Link href="#" className="text-xs border p-2 rounded-full flex gap-1"><Trash className="size-4" /></Link>
-                                    <Link href="#" className="text-xs border p-2 rounded-full flex gap-1"><Pencil className="size-4" /></Link> */}
-
-                                        {/* <p className="text-xs opacity-50">Added on {formatIsoDate(event.created_at, false)}</p> */}
                                         <DropdownMenu>
                                             <DropdownMenuTrigger className="border rounded-full px-4 text-sm flex gap-2 items-center"><Ellipsis className=" " /></DropdownMenuTrigger>
                                             <DropdownMenuContent>
                                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                                 <DropdownMenuSeparator />
                                                 <DropdownMenuItem asChild ><EventFormDialog event={event} /></DropdownMenuItem>
-                                                <DropdownMenuItem><Trash className="size-4 mr-2" />Delete</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => deactivateEvent(event)}><Trash className="size-4 mr-2" />Delete</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
-
-                                        {/* 
-                                    <Popover>
-                                        <PopoverTrigger>Open</PopoverTrigger>
-                                        <PopoverContent>Place content for the popover here.</PopoverContent>
-                                    </Popover> */}
-
 
                                     </div>
                                 </div>
@@ -346,3 +336,7 @@ export default function EventsPage() {
         </div >
     );
 }
+
+
+
+
