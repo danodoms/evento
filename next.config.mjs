@@ -5,13 +5,13 @@ import { skip } from "node:test";
 import withPWA from "next-pwa";
 
 const nextConfig = {
-  // "experimental.webpackBuildWorker": true,
-  reactStrictMode: true,
-  ...withPWA({
-    dest: "public",
-    register: true,
-    skipWaiting: true,
-  }),
+	// "experimental.webpackBuildWorker": true,
+	reactStrictMode: true,
+	...withPWA({
+		dest: "public",
+		register: true,
+		skipWaiting: true,
+	}),
 };
 
 export default nextConfig;

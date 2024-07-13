@@ -1,18 +1,18 @@
 "use client";
 
-import { useRef, useState, useEffect } from 'react';
-import { Html5QrcodeScanner, Html5QrcodeResult, Html5QrcodeScannerState } from 'html5-qrcode';
 import { StudentMissingModal } from '@/components/modals/StudentMissingModal';
-import { Student, getAllStudents, getStudentBySchoolId } from '@/models/Student';
 import { createQueuedAttendanceRecord } from '@/models/Attendance';
-import { successSound, failSound, networkErrorSound, offlineSound } from '@/utils/sound';
+import type { QueuedAttendance } from '@/models/Attendance';
+import { type Student, getAllStudents, getStudentBySchoolId } from '@/models/Student';
 import useQueuedAttendanceStore from '@/store/useQueuedAttendanceStore';
-import { QueuedAttendance } from '@/models/Attendance';
+import { failSound, networkErrorSound, offlineSound, successSound } from '@/utils/sound';
+import { type Html5QrcodeResult, Html5QrcodeScanner, Html5QrcodeScannerState } from 'html5-qrcode';
+import { useEffect, useRef, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { fulfillWithTimeLimit, throwErrorAfterTimeout } from '@/utils/utils';
-import { set } from 'zod';
 import { useQuery } from '@tanstack/react-query';
+import { set } from 'zod';
 
 interface ModalContent {
     desc: string;

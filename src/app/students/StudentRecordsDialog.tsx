@@ -1,188 +1,185 @@
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
 
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-    DialogFooter
-} from "@/components/ui/dialog"
+	Drawer,
+	DrawerClose,
+	DrawerContent,
+	DrawerDescription,
+	DrawerFooter,
+	DrawerHeader,
+	DrawerTitle,
+	DrawerTrigger,
+} from "@/components/ui/drawer";
 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+import { StudentForm } from "./StudentForm";
+
+import { log } from "console";
 import {
-    Drawer,
-    DrawerClose,
-    DrawerContent,
-    DrawerDescription,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerTitle,
-    DrawerTrigger,
-} from "@/components/ui/drawer"
-
-
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-
-import { StudentForm } from "./StudentForm"
-
-import useMediaQuery from '@custom-react-hooks/use-media-query';
-import { Student } from "@/models/Student"
-import { TableProperties } from "lucide-react"
-import { getAllAttendanceRecords, AttendanceRecord } from "@/models/Attendance"
-import { useQuery } from "@tanstack/react-query"
-import { log } from "console"
+	Table,
+	TableBody,
+	TableCaption,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table";
 import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
-import { format, parseISO } from "date-fns"
-import { Event, getEvents } from "@/models/Event"
-
-
+	type AttendanceRecord,
+	getAllAttendanceRecords,
+} from "@/models/Attendance";
+import { type Event, getEvents } from "@/models/Event";
+import type { Student } from "@/models/Student";
+import useMediaQuery from "@custom-react-hooks/use-media-query";
+import { useQuery } from "@tanstack/react-query";
+import { format, parseISO } from "date-fns";
+import { TableProperties } from "lucide-react";
 
 type StudentRecordsDialogProps = {
-    student: Student;
-}
-
-
-
+	student: Student;
+};
 
 const StudentRecordsDialog = ({ student }: StudentRecordsDialogProps) => {
+	const {
+		data: attendanceRecords = [],
+		error: attendanceRecordsError,
+		isLoading: isAttendanceRecordsLoading,
+	} = useQuery<AttendanceRecord[]>({
+		queryKey: ["attendanceRecords"],
+		queryFn: getAllAttendanceRecords,
+	});
 
-    const { data: attendanceRecords = [], error: attendanceRecordsError, isLoading: isAttendanceRecordsLoading } = useQuery<AttendanceRecord[]>({
-        queryKey: ["attendanceRecords"],
-        queryFn: getAllAttendanceRecords,
-    });
+	const {
+		data: events = [],
+		error: eventsError,
+		isLoading: isEventsLoading,
+	} = useQuery<Event[]>({
+		queryKey: ["events"],
+		queryFn: getEvents,
+	});
 
-    const { data: events = [], error: eventsError, isLoading: isEventsLoading } = useQuery<Event[]>({
-        queryKey: ["events"],
-        queryFn: getEvents,
-    });
+	const getStudentAttendanceRecords = (student: Student) => {
+		const records = attendanceRecords.filter(
+			(record) => record.student_id === student.id,
+		);
+		console.log("student records: ", records);
 
+		return records;
+	};
 
-    const getStudentAttendanceRecords = (student: Student) => {
-        const records = attendanceRecords.filter(record => record.student_id === student.id)
-        console.log("student records: ", records);
+	const getEventNameFromDate = (date: string) => {
+		const event = events.find((event) => event.date === date);
+		return event ? event.name : formatDate(date);
+	};
 
-        return records
-    }
+	const formatDate = (dateString: string): string =>
+		format(parseISO(dateString), "MMMM d, yyyy");
 
-    const getEventNameFromDate = (date: string) => {
-        const event = events.find(event => event.date === date)
-        return event ? event.name : formatDate(date)
-    }
+	const isDesktop = useMediaQuery("(min-width: 768px)");
 
-    const formatDate = (dateString: string): string => format(parseISO(dateString), "MMMM d, yyyy");
+	const title = "Edit student";
+	const description =
+		"Make changes to the student here. Click save when you're done.";
 
+	if (isDesktop) {
+		return (
+			<Dialog>
+				<DialogTrigger>
+					{/* <Button variant="ghost" className="">Edit</Button> */}
+					<div className="flex gap-1 items-center">
+						<TableProperties className="size-4" />
+						<p className="text-xs font-bold">Records</p>
+					</div>
+				</DialogTrigger>
+				<DialogContent className="sm:max-w-[425px]">
+					<DialogHeader>
+						<DialogTitle>{title}</DialogTitle>
+						<DialogDescription className="text-balance">
+							{description}
+						</DialogDescription>
+					</DialogHeader>
 
-    const isDesktop = useMediaQuery("(min-width: 768px)")
+					{/* <StudentForm student={student} /> */}
 
-    const title = "Edit student";
-    const description = "Make changes to the student here. Click save when you're done.";
-
-
-    if (isDesktop) {
-        return (
-
-            <Dialog>
-                <DialogTrigger>
-                    {/* <Button variant="ghost" className="">Edit</Button> */}
-                    <div className="flex gap-1 items-center">
-                        <TableProperties className="size-4" />
-                        <p className="text-xs font-bold">Records</p>
-
-                    </div>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                    <DialogHeader>
-                        <DialogTitle>{title}</DialogTitle>
-                        <DialogDescription className="text-balance">
-                            {description}
-                        </DialogDescription>
-                    </DialogHeader>
-
-
-                    {/* <StudentForm student={student} /> */}
-
-                    {/* <DialogFooter>
+					{/* <DialogFooter>
                 <Button type="submit">Save changes</Button>
             </DialogFooter> */}
-                </DialogContent>
-            </Dialog>
-        )
-    }
+				</DialogContent>
+			</Dialog>
+		);
+	}
 
-    return (
-        <Drawer>
-            <DrawerTrigger>
-                {/* <Button variant="ghost" className="">Edit</Button> */}
-                <div className="flex gap-1 items-center rounded-full border px-3 py-1">
-                    <TableProperties className="size-4" />
-                    <p className="text-xs font-bold">View Records</p>
-                </div>
-            </DrawerTrigger>
-            <DrawerContent>
-                <DrawerHeader>
-                    <DrawerTitle className="text-xl">{student?.name}</DrawerTitle>
-                    <p className="text-xs font-semibold leading-loose">{student?.school_id}</p>
-                    {/* <DrawerDescription className="text-balance text-xs px-4">Viewing attendance records</DrawerDescription> */}
-                </DrawerHeader>
+	return (
+		<Drawer>
+			<DrawerTrigger>
+				{/* <Button variant="ghost" className="">Edit</Button> */}
+				<div className="flex gap-1 items-center rounded-full border px-3 py-1">
+					<TableProperties className="size-4" />
+					<p className="text-xs font-bold">View Records</p>
+				</div>
+			</DrawerTrigger>
+			<DrawerContent>
+				<DrawerHeader>
+					<DrawerTitle className="text-xl">{student?.name}</DrawerTitle>
+					<p className="text-xs font-semibold leading-loose">
+						{student?.school_id}
+					</p>
+					{/* <DrawerDescription className="text-balance text-xs px-4">Viewing attendance records</DrawerDescription> */}
+				</DrawerHeader>
 
-                <div className="p-4 max-h-96 overflow-y-auto">
+				<div className="p-4 max-h-96 overflow-y-auto">
+					{getStudentAttendanceRecords(student).length > 0 ? (
+						<Table>
+							{/* <TableCaption>A list of your recent invoices.</TableCaption> */}
+							<TableHeader>
+								<TableRow>
+									<TableHead>Date</TableHead>
+									<TableHead>In</TableHead>
+									<TableHead>Out</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody className="">
+								{getStudentAttendanceRecords(student).map((record) => (
+									<TableRow>
+										<TableCell className="font-medium">
+											{getEventNameFromDate(record.date)}
+										</TableCell>
+										<TableCell>{record.time_in}</TableCell>
+										<TableCell>{record.time_out}</TableCell>
+										{/* <TableCell className="text-right">$250.00</TableCell> */}
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
+					) : (
+						<div className="flex items-center justify-center h-full">
+							<p className="text-center text-sm">No records found</p>
+						</div>
+					)}
+				</div>
 
-                    {getStudentAttendanceRecords(student).length > 0 ? (
-                        <Table >
-                            {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Date</TableHead>
-                                    <TableHead>In</TableHead>
-                                    <TableHead>Out</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody className="">
-
-                                {getStudentAttendanceRecords(student).map(record => (
-                                    <TableRow>
-                                        <TableCell className="font-medium">{getEventNameFromDate(record.date)}</TableCell>
-                                        <TableCell>{record.time_in}</TableCell>
-                                        <TableCell>{record.time_out}</TableCell>
-                                        {/* <TableCell className="text-right">$250.00</TableCell> */}
-                                    </TableRow>
-                                ))}
-
-                            </TableBody>
-                        </Table>
-                    ) : (
-                        <div className="flex items-center justify-center h-full">
-                            <p className="text-center text-sm">No records found</p>
-                        </div>
-                    )}
-
-
-
-
-
-                </div>
-
-                <DrawerFooter>
-                    {/* <Button>Submit</Button> */}
-                    <DrawerClose>
-                        <Button variant="ghost" className="w-full">Close</Button>
-                    </DrawerClose>
-                </DrawerFooter>
-            </DrawerContent>
-        </Drawer>
-    )
-
-
-}
+				<DrawerFooter>
+					{/* <Button>Submit</Button> */}
+					<DrawerClose>
+						<Button variant="ghost" className="w-full">
+							Close
+						</Button>
+					</DrawerClose>
+				</DrawerFooter>
+			</DrawerContent>
+		</Drawer>
+	);
+};
 
 export default StudentRecordsDialog;
