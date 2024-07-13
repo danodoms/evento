@@ -27,19 +27,19 @@ export async function getEvents(): Promise<Event[]> {
 
 export async function addEvent(
   event: Omit<Event, "id" | "created_at">
-): Promise<Event | null> {
+): Promise<Event> {
   const { data, error } = await supabase.from("events").insert(event).single(); // Use .single() if you expect only one row to be inserted
 
   if (error) {
     console.error("Error adding event:", error);
-    return null;
+    throw new Error("Error adding event");
   }
 
   console.log("Added event:", data);
   return data;
 }
 
-export async function updateEvent(event: Event): Promise<Event | null> {
+export async function updateEvent(event: Event): Promise<Event> {
   const { data, error } = await supabase
     .from("events")
     .update(event)
@@ -48,7 +48,7 @@ export async function updateEvent(event: Event): Promise<Event | null> {
 
   if (error) {
     console.error("Error updating event:", error);
-    return null;
+    throw new Error("Error updating event");
   }
 
   console.log("Updated event:", data);

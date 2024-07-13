@@ -8,6 +8,6 @@ export const studentSchema = z.object({
   name: z
     .string()
     .min(1, "Name is required")
-    .regex(/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces"),
+    .regex(/^[a-zA-Z.\s]+$/, "Name can only contain letters, spaces, and dots"),
   dept_id: z.string().optional(),
 });

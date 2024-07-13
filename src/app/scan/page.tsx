@@ -1,8 +1,6 @@
 
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { Html5QrcodeScanner, Html5QrcodeSupportedFormats, Html5QrcodeScanType } from 'html5-qrcode';
 import Scanner from '@/app/scan/Scanner';
 import AttendanceQueueSection from '@/app/scan/AttendanceQueueSection';
 import useQueuedAttendanceStore from '@/store/useQueuedAttendanceStore';

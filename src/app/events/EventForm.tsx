@@ -77,10 +77,12 @@ const eventTypes: eventType[] = [
 
 type EventFormProps = {
     event?: Event;
+    handleClose: () => void;
+    handleError: (message: string) => void
 }
 
 
-export function EventForm({ event }: EventFormProps) {
+export function EventForm({ event, handleClose, handleError }: EventFormProps) {
     // const isEditMode = !!event;
 
 
@@ -132,9 +134,26 @@ export function EventForm({ event }: EventFormProps) {
 
             console.log("event to update: ", eventToUpdate);
             await updateEvent(eventToUpdate)
+                .then(() => {
+                    handleClose();
+                    console.log("event form dialog should close now")
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    handleError && handleError("Error updating event")
+                });
+
         } else {
-            await addEvent(newEvent);
-            form.reset();
+            await addEvent(newEvent)
+                .then(() => {
+                    handleClose();
+                    console.log("event form dialog should close now")
+                    form.reset();
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    handleError && handleError("Error adding event")
+                });
         }
     }
 

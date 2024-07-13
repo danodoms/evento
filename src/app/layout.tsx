@@ -7,7 +7,7 @@ import Header from "@/components/Header";
 import { cn } from "@/lib/utils"
 import { ReactQueryProvider } from "./ReactQueryProvider";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-
+import { Toaster } from "@/components/ui/toaster"
 
 
 const fontSans = FontSans({
@@ -49,10 +49,11 @@ export default function RootLayout({
 
             {/* <Header /> */}
 
-            <main className="max-w-7xl mx-auto">
+            <main className="pb-14 max-w-7xl mx-auto">
               <div className="p-3">
                 {children}
               </div>
+              <Toaster />
             </main>
 
             <BottomNav />

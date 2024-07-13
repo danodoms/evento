@@ -29,26 +29,45 @@ import { EventForm } from "./EventForm"
 import { Event } from "@/models/Event"
 
 import useMediaQuery from '@custom-react-hooks/use-media-query';
+import { useState } from "react"
+import { useToast } from "@/components/ui/use-toast"
+
 
 
 
 type EventFormDialogProps = {
     event?: Event;
+
 }
 
 
 const EventFormDialog = ({ event }: EventFormDialogProps) => {
-
+    const [isOpen, setIsOpen] = useState<boolean>(false)
     const isDesktop = useMediaQuery("(min-width: 768px)")
 
     const title = "Edit event";
     const description = "Make changes to the event here. Click save when you're done.";
+    const { toast } = useToast()
 
+    const handleClose = () => {
+        setIsOpen(false);
+        toast({
+            description: "Your changes have been saved!",
+            duration: 2250
+        })
+    }
+
+    const handleError = (message: string) => {
+        toast({
+            description: message,
+            duration: 2250
+        })
+    }
 
     if (isDesktop) {
         return (
 
-            <Dialog>
+            <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogTrigger>
                     <Button variant="ghost" className="">Edit</Button>
                 </DialogTrigger>
@@ -61,7 +80,7 @@ const EventFormDialog = ({ event }: EventFormDialogProps) => {
                     </DialogHeader>
 
 
-                    <EventForm event={event} />
+                    <EventForm event={event} handleClose={handleClose} handleError={handleError} />
 
                     {/* <DialogFooter>
                 <Button type="submit">Save changes</Button>
@@ -72,7 +91,7 @@ const EventFormDialog = ({ event }: EventFormDialogProps) => {
     }
 
     return (
-        <Drawer>
+        <Drawer open={isOpen} onOpenChange={setIsOpen}>
             <DrawerTrigger>
                 <Button variant="ghost" className="">Edit</Button>
             </DrawerTrigger>
@@ -83,7 +102,7 @@ const EventFormDialog = ({ event }: EventFormDialogProps) => {
                 </DrawerHeader>
 
                 <div className="p-4">
-                    <EventForm event={event} />
+                    <EventForm event={event} handleClose={handleClose} handleError={handleError} />
                 </div>
 
                 <DrawerFooter>
