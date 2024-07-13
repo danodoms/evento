@@ -25,7 +25,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 
 import { format, parseISO, getMonth, getYear } from 'date-fns';
-import { MapPin, Clock, Calendar, Pencil, Trash, UserRound, Building2, Ellipsis, Plus, Filter } from "lucide-react";
+import { MapPin, Clock, Calendar, Pencil, Trash, UserRound, Building2, Ellipsis, Plus, Filter, TableProperties } from "lucide-react";
 
 import Link from "next/link"
 
@@ -67,6 +67,7 @@ import {
 
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
+import StudentRecordsDialog from "./StudentRecordsDialog";
 
 
 
@@ -211,17 +212,8 @@ export default function StudentsPage() {
 
 
             <div className="flex gap-2 justify-evenly">
-
-
                 <Input type="text" placeholder="Search" onChange={e => setFilter(e.target.value)} value={filter} />
-
-
-
-
             </div>
-
-
-
 
 
 
@@ -236,7 +228,15 @@ export default function StudentsPage() {
                                     <UserRound className="size-5" />
                                     <p className="font-bold text-sm">{student.school_id}</p>
                                 </div>
-                                <div className="flex gap-2 items-center">
+                                <div className="flex gap-4 items-center">
+                                    {/* <div className="flex gap-1 items-center">
+                                        <TableProperties className="size-4" />
+                                        <p className="text-xs font-bold">Records</p>
+
+                                    </div> */}
+
+                                    <StudentRecordsDialog student={student} />
+
                                     <DropdownMenu>
                                         <DropdownMenuTrigger className=" rounded-full text-sm flex gap-2 items-center"><Ellipsis className=" " /></DropdownMenuTrigger>
                                         <DropdownMenuContent>

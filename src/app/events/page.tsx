@@ -72,7 +72,17 @@ export default function EventsPage() {
     const uniqueMonths = Array.from(new Set(events.map(event => getMonth(parseISO(event.date)))));
     const uniqueYears = Array.from(new Set(events.map(event => getYear(parseISO(event.date)))));
 
-    const filteredEvents = events.filter(event => {
+
+
+
+    const sortEventsByDate = (events: Event[]): Event[] => {
+        return events.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    };
+
+
+
+
+    const filteredEvents = sortEventsByDate(events.filter(event => {
         const eventDate = parseISO(event.date);
         return (
             event.name.toLowerCase().includes(filter.toLowerCase()) &&
@@ -81,7 +91,9 @@ export default function EventsPage() {
             (monthFilter !== 'all' ? format(eventDate, 'MMMM') === monthFilter : true) &&
             (yearFilter !== 'all' ? getYear(eventDate) === Number(yearFilter) : true)
         );
-    });
+    }))
+
+
 
     const resetFilters = () => {
         setStatusFilter('active');
