@@ -123,10 +123,9 @@ const StudentRecordsDialog = ({ student }: StudentRecordsDialogProps) => {
         <Drawer>
             <DrawerTrigger>
                 {/* <Button variant="ghost" className="">Edit</Button> */}
-                <div className="flex gap-1 items-center">
+                <div className="flex gap-1 items-center rounded-full border px-3 py-1">
                     <TableProperties className="size-4" />
-                    <p className="text-xs font-bold">Records</p>
-
+                    <p className="text-xs font-bold">View Records</p>
                 </div>
             </DrawerTrigger>
             <DrawerContent>
@@ -136,36 +135,39 @@ const StudentRecordsDialog = ({ student }: StudentRecordsDialogProps) => {
                     {/* <DrawerDescription className="text-balance text-xs px-4">Viewing attendance records</DrawerDescription> */}
                 </DrawerHeader>
 
-                <div className="p-4">
-                    {/* <StudentForm student={student} /> */}
+                <div className="p-4 max-h-96 overflow-y-auto">
 
-
-                    {/* {getStudentAttendanceRecords(student).map(record => ( */}
-
-                    <Table className="max-h-5vh overflow-y-scroll">
-                        {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Date</TableHead>
-                                <TableHead>In</TableHead>
-                                <TableHead>Out</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-
-                            {getStudentAttendanceRecords(student).map(record => (
+                    {getStudentAttendanceRecords(student).length > 0 ? (
+                        <Table >
+                            {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
+                            <TableHeader>
                                 <TableRow>
-                                    <TableCell className="font-medium">{getEventNameFromDate(record.date)}</TableCell>
-                                    <TableCell>{record.time_in}</TableCell>
-                                    <TableCell>{record.time_out}</TableCell>
-                                    {/* <TableCell className="text-right">$250.00</TableCell> */}
+                                    <TableHead>Date</TableHead>
+                                    <TableHead>In</TableHead>
+                                    <TableHead>Out</TableHead>
                                 </TableRow>
-                            ))}
+                            </TableHeader>
+                            <TableBody className="">
 
-                        </TableBody>
-                    </Table>
+                                {getStudentAttendanceRecords(student).map(record => (
+                                    <TableRow>
+                                        <TableCell className="font-medium">{getEventNameFromDate(record.date)}</TableCell>
+                                        <TableCell>{record.time_in}</TableCell>
+                                        <TableCell>{record.time_out}</TableCell>
+                                        {/* <TableCell className="text-right">$250.00</TableCell> */}
+                                    </TableRow>
+                                ))}
 
-                    {/* ))} */}
+                            </TableBody>
+                        </Table>
+                    ) : (
+                        <div className="flex items-center justify-center h-full">
+                            <p className="text-center text-sm">No records found</p>
+                        </div>
+                    )}
+
+
+
 
 
                 </div>

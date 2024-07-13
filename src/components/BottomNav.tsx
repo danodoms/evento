@@ -1,53 +1,60 @@
-import { House, HouseIcon, Scan, History, GanttChart, UsersRound, CalendarFold, GanttChartIcon } from "lucide-react"
-import Link from "next/link"
-import { ModeToggle } from "./ModeToggle"
+"use client";
+
+import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { House, Scan, UsersRound, CalendarFold } from "lucide-react";
+import Link from "next/link";
+import { ModeToggle } from "./ModeToggle";
+import { unknown } from "zod";
 
 export default function BottomNav() {
+    const pathname = usePathname();
+    const [activeLink, setActiveLink] = useState("");
+
+    useEffect(() => {
+        if (pathname) {
+            if (pathname === "/") {
+                setActiveLink("home");
+            } else if (pathname === "/students") {
+                setActiveLink("students");
+            } else if (pathname === "/scan") {
+                setActiveLink("scan");
+            } else if (pathname === "/events") {
+                setActiveLink("events");
+            }
+        }
+
+    }, [pathname]);
+
+    const linkClasses = (link: string) => `
+        flex flex-col items-center  
+        ${activeLink === link ? "opacity-100" : "opacity-50"}
+        transition-all duration-125 ease-in-out hover:opacity-100
+    `;
+
     return (
-        <nav className="fixed bottom-0 w-full bg-background border-t z-100">
-            <div className="max-w-lg mx-auto flex justify-around items-center p-1">
-
-                <Link href="/" className="button flex flex-col items-centerfocus:outline-none">
-                    <House />
-
+        <nav className="fixed bottom-0 w-full bg-background border-t z-50">
+            <div className="max-w-lg mx-auto flex justify-around items-center p-2">
+                <Link href="/" className={linkClasses("home")}>
+                    <House size={24} />
+                    {/* <span className="text-xs mt-1">Home</span> */}
                 </Link>
-
-                {/* <Link href="/attendance" className="button flex flex-col items-center  focus:outline-none">
-                    <GanttChart />
-
-                </Link> */}
-
-
-
-
-                <Link href="/students" className="button flex flex-col items-center  focus:outline-none">
-                    <UsersRound />
-
+                <Link href="/students" className={linkClasses("students")}>
+                    <UsersRound size={24} />
+                    {/* <span className="text-xs mt-1">Students</span> */}
                 </Link>
-
-
-                <Link href="/scan" className="button flex flex-col items-center  focus:outline-none">
-                    <Scan />
-
+                <Link href="/scan" className={linkClasses("scan")}>
+                    <Scan size={24} />
+                    {/* <span className="text-xs mt-1">Scan</span> */}
                 </Link>
-
-
-                <Link href="/events" className="button flex flex-col items-center  focus:outline-none">
-                    <CalendarFold />
-
+                <Link href="/events" className={linkClasses("events")}>
+                    <CalendarFold size={24} />
+                    {/* <span className="text-xs mt-1">Events</span> */}
                 </Link>
-
-
-
-                {/* <Link href="/history" className="button flex flex-col items-center  focus:outline-none">
-                    <History />
-                </Link> */}
-
-                <ModeToggle compactMode={true} />
-
-
-
+                <div className="opacity-50 hover:opacity-100 transition-opacity duration-200 w-6">
+                    <ModeToggle compactMode={true} />
+                </div>
             </div>
         </nav>
-    )
+    );
 }

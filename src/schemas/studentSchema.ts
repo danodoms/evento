@@ -4,7 +4,7 @@ export const studentSchema = z.object({
   school_id: z
     .string()
     .min(1, "School ID is required")
-    .regex(/^[0-9-]+$/, "School ID can only contain numbers and hyphens"),
+    .regex(/^\d{4}-\d{4}$/, "Incorrect school ID format, ex: 1234-5678"),
   name: z
     .string()
     .min(1, "Name is required")

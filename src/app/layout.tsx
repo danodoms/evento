@@ -49,7 +49,7 @@ export default function RootLayout({
 
             {/* <Header /> */}
 
-            <main className="pb-14  max-w-7xl mx-auto">
+            <main className="max-w-7xl mx-auto">
               <div className="p-3">
                 {children}
               </div>
