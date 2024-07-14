@@ -74,13 +74,27 @@ export function StudentForm({ student, handleClose, handleError }: StudentFormPr
 				is_active: student.is_active,
 				school_id: values.school_id,
 				name: values.name,
-				dept_id: Number(values.dept_id),
+				dept_id: values.dept_id != "0" ? Number(values.dept_id) : null,
 			})
-				.then(() => {
+				.then((student) => {
+					if (student === "SCHOOL_ID_EXISTS") {
+						console.log("School ID already exists");
+						handleError?.("School ID already in use");
+					} else {
+						console.log("Student updated successfully");
+						form.reset();
+						handleClose?.()
+					}
+
 					handleClose?.();
 				})
-				.catch(() => {
-					handleError?.("Error updating student");
+				.catch((error) => {
+					if (error?.code === "23505") {
+						console.log("School ID already exists");
+						handleError?.("School ID already in use");
+					} else {
+						handleError?.("Error updating student");
+					}
 				})
 			return
 		}

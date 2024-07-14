@@ -271,11 +271,6 @@ export default function StudentsPage() {
 									<p className="font-semibold text-sm">{student.school_id}</p>
 								</div>
 								<div className="flex gap-4 items-center">
-									{/* <div className="flex gap-1 items-center">
-                                        <TableProperties className="size-4" />
-                                        <p className="text-xs font-bold">Records</p>
-
-                                    </div> */}
 
 									<StudentRecordsDialog student={student} />
 

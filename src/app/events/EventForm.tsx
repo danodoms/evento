@@ -75,8 +75,8 @@ const eventTypes: eventType[] = [
 
 type EventFormProps = {
 	event?: Event;
-	handleClose: () => void;
-	handleError: (message: string) => void;
+	handleClose?: () => void;
+	handleError?: (message: string) => void;
 };
 
 export function EventForm({ event, handleClose, handleError }: EventFormProps) {
@@ -128,7 +128,7 @@ export function EventForm({ event, handleClose, handleError }: EventFormProps) {
 			console.log("event to update: ", eventToUpdate);
 			await updateEvent(eventToUpdate)
 				.then(() => {
-					handleClose();
+					handleClose?.();
 					console.log("event form dialog should close now");
 				})
 				.catch((error) => {
@@ -138,7 +138,7 @@ export function EventForm({ event, handleClose, handleError }: EventFormProps) {
 		} else {
 			await addEvent(newEvent)
 				.then(() => {
-					handleClose();
+					handleClose?.();
 					console.log("event form dialog should close now");
 					form.reset();
 				})

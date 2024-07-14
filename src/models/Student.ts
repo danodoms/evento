@@ -81,6 +81,7 @@ export async function updateStudent(
 
   if (error) {
     console.error("Error updating student:", error);
+    throw error;
   }
 
   console.log("Updated student:", data);

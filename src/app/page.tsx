@@ -13,6 +13,8 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import type React from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
 
 import { Badge } from "@/components/ui/badge";
 import AttendanceHistory from "./history/AttendanceHistory";
@@ -43,26 +45,34 @@ const buttons: UiButton[] = [
 
 export default function Home() {
 	return (
-		<section className="flex flex-col gap-4">
+		<section className="flex flex-col gap-4 p-2">
 			{/* TOP SECTION */}
 
-			<h1 className="font-bold text-3xl text-pretty">evento</h1>
+			<div className="flex justify-between items-center gap-4 mb-8">
+				<h1 className="font-bold text-xl text-pretty">evento</h1>
+				<Avatar>
+					<AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+					<AvatarFallback>CN</AvatarFallback>
+				</Avatar>
+			</div>
+
+
 
 			<div className="flex flex-col gap-2 rounded-lg ">
-				<h2 className="text-2xl text-pretty  items-center gap-2">
-					Welcome to
-					<span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-500 to-blue-500">
+				<h2 className="text-2xl text-pretty  font-bold items-center gap-2">
+					Welcome to {appName}
+					{/* <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-500 to-blue-500">
 						{" "}
 						{appName}
-					</span>
-					<div className="w-full leading-relaxed rounded-md flex justify-between text-xs pt-1 ">
+					</span> */}
+					<div className="w-full leading-relaxed rounded-md font-normal flex justify-between text-sm pt-1 mb-2 ">
 						Streamlining university events for students.
 					</div>
 				</h2>
 
-				<Separator />
+				{/* <Separator /> */}
 
-				<div className="w-full leading-relaxed rounded-md flex justify-between text-xs opacity-70 text-pretty">
+				<div className="w-full leading-relaxed rounded-md flex justify-between text-xs opacity-70 text-balance">
 					An internal web app for Davao Oriental State University Banaybanay
 					Campus Student Council.
 				</div>
@@ -87,7 +97,7 @@ export default function Home() {
 					Dashboard
 				</div>
 
-				<div className="w-full rounded-md p-4 flex justify-between bg-destructive">
+				<div className="w-full rounded-md p-4 flex justify-between border">
 					<p>No Upcoming Event</p>
 
 					<CalendarX />
