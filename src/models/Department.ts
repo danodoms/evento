@@ -18,3 +18,5 @@ export async function getDepartments(): Promise<Department[]> {
 	console.log("All departments", data);
 	return data as Department[];
 }
+
+

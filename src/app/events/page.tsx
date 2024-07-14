@@ -29,6 +29,7 @@ import {
 	type Event,
 	deactivateEvent,
 	type eventDuration,
+	getAttendanceForDate,
 	getEvents,
 } from "@/models/Event";
 import { format, getMonth, getYear, parseISO } from "date-fns";
@@ -39,11 +40,14 @@ import {
 	Filter,
 	MapPin,
 	Plus,
+	TableProperties,
 	Trash,
+	FileBarChart2
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import EventFormDialog from "./EventFormDialog";
+import { generateCSV } from "@/utils/utils";
 
 export default function EventsPage() {
 	const {
@@ -80,6 +84,12 @@ export default function EventsPage() {
 				return "Unknown";
 		}
 	};
+
+	const handleGenerateLogs = async (event: Event) => {
+		await getAttendanceForDate(event.date).then((data: object) => {
+			generateCSV(data, event.name.concat("_").concat(event.date));
+		});
+	}
 
 	const convertDuration = (duration: string): eventDuration | undefined => {
 		const lowerCaseDuration = duration.toLowerCase();
@@ -242,9 +252,16 @@ export default function EventsPage() {
 							<div className="flex justify-between items-center">
 								<div className="flex gap-2 items-center">
 									<Calendar className="size-5" />
-									<p className="font-bold text-sm">{formatDate(event.date)}</p>
+									<p className="font-semibold text-sm">{formatDate(event.date)}</p>
+
 								</div>
 								<div className="flex gap-2 items-center">
+									<div className="flex gap-1 items-center rounded-full border px-3 py-1" onClick={() => {
+										handleGenerateLogs(event)
+									}}>
+										<FileBarChart2 className="size-4" />
+										<p className="text-xs font-bold">Export Logs</p>
+									</div>
 									<DropdownMenu>
 										<DropdownMenuTrigger className=" rounded-full text-sm flex gap-2 items-center">
 											<Ellipsis className=" " />

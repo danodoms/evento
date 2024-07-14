@@ -70,3 +70,19 @@ export async function deactivateEvent(event: Event): Promise<Event | null> {
 	console.log("Deactivated event:", data);
 	return data as Event;
 }
+
+
+export async function getAttendanceForDate(attendanceDate: string): Promise<object> {
+	const { data, error } = await supabase.rpc('get_attendance_by_date', {
+		attendance_date: attendanceDate,
+	  });
+	
+  
+	if (error) {
+	  console.error('Error fetching attendance', error);
+	  throw error
+	}
+
+	return data as object
+}
+  

@@ -237,3 +237,5 @@ export async function getAllAttendanceRecords(): Promise<AttendanceRecord[]> {
 	console.log("All attendance records: ", data);
 	return data as AttendanceRecord[];
 }
+
+

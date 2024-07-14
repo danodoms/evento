@@ -49,7 +49,7 @@ export default function Home() {
 			{/* TOP SECTION */}
 
 			<div className="flex justify-between items-center gap-4 mb-8">
-				<h1 className="font-bold text-xl text-pretty">evento</h1>
+				<h1 className="font-bold text-xl text-pretty">{appName}</h1>
 				<Avatar>
 					<AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
 					<AvatarFallback>CN</AvatarFallback>
