@@ -151,7 +151,7 @@ const StudentRecordsDialog = ({ student }: StudentRecordsDialogProps) => {
 							</TableHeader>
 							<TableBody className="">
 								{getStudentAttendanceRecords(student).map((record) => (
-									<TableRow>
+									<TableRow key={record.id}>
 										<TableCell className="font-medium">
 											{getEventNameFromDate(record.date)}
 										</TableCell>

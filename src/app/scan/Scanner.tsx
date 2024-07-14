@@ -159,7 +159,7 @@ export default function Scanner() {
 
     return (
         <div className="flex flex-col items-center justify-center">
-            <div id="reader" ref={setScannerRef} className="w-full max-w-sm rounded"></div>
+            <div id="reader" ref={setScannerRef} className="w-full max-w-sm rounded" />
             {modalContent && (
                 <StudentMissingModal
                     subtitle={modalContent.subtitle}

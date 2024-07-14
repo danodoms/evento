@@ -82,11 +82,17 @@ export default function EventsPage() {
 	};
 
 	const convertDuration = (duration: string): eventDuration | undefined => {
-		if (duration.toLowerCase() == "morning") {
+		const lowerCaseDuration = duration.toLowerCase();
+
+		if (lowerCaseDuration === "morning") {
 			return "AM_ONLY";
-		} else if (duration.toLowerCase() == "afternoon") {
+		}
+
+		if (lowerCaseDuration === "afternoon") {
 			return "PM_ONLY";
-		} else if (duration.toLowerCase() == "whole day") {
+		}
+
+		if (lowerCaseDuration === "whole day") {
 			return "AM_AND_PM";
 		}
 	};
@@ -109,7 +115,7 @@ export default function EventsPage() {
 			const eventDate = parseISO(event.date);
 			return (
 				event.name.toLowerCase().includes(filter.toLowerCase()) &&
-				(statusFilter == "active" ? event.is_active : !event.is_active) &&
+				(statusFilter === "active" ? event.is_active : !event.is_active) &&
 				(durationFilter !== "all"
 					? event.duration === convertDuration(durationFilter)
 					: true) &&
@@ -228,9 +234,9 @@ export default function EventsPage() {
 			</div>
 			{filteredEvents.length ? (
 				<div className="flex flex-col gap-3 md:grid grid-cols-2 overflow-y-auto max-h-screen rounded-md">
-					{filteredEvents.map((event, index) => (
+					{filteredEvents.map((event) => (
 						<div
-							key={index}
+							key={event.id}
 							className="p-4 border rounded-lg flex flex-col gap-2 backdrop-contrast-50 backdrop-opacity-25"
 						>
 							<div className="flex justify-between items-center">

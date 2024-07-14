@@ -34,9 +34,11 @@ const formSchema = studentSchema;
 
 type StudentFormProps = {
 	student?: Student;
+	handleClose?: () => void;
+	handleError?: (message: string) => void;
 };
 
-export function StudentForm({ student }: StudentFormProps) {
+export function StudentForm({ student, handleClose, handleError }: StudentFormProps) {
 	const {
 		data: departments = [],
 		error,
@@ -50,20 +52,22 @@ export function StudentForm({ student }: StudentFormProps) {
 		resolver: zodResolver(formSchema),
 		defaultValues: student
 			? {
-					name: student.name,
-					school_id: student.school_id,
-					dept_id: student.dept_id?.toString(),
-				}
+				name: student.name,
+				school_id: student.school_id,
+				dept_id: student.dept_id?.toString(),
+			}
 			: {
-					school_id: "",
-					name: "",
-					dept_id: "0",
-				},
+				school_id: "",
+				name: "",
+				dept_id: "0",
+			},
 	});
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		console.log(values);
 
+
+		//UPDATE THE STUDENT
 		if (student) {
 			await updateStudent({
 				id: student.id,
@@ -71,29 +75,40 @@ export function StudentForm({ student }: StudentFormProps) {
 				school_id: values.school_id,
 				name: values.name,
 				dept_id: Number(values.dept_id),
-			});
-		} else {
-			await addStudent({
-				school_id: values.school_id,
-				is_active: undefined,
-				name: values.name,
-				dept_id: Number(values.dept_id),
 			})
-				.then((student) => {
-					if (student === "SCHOOL_ID_EXISTS") {
-						console.log("School ID already exists");
-						toast.error("School ID already in use");
-					} else {
-						console.log("Student added successfully");
-						toast.success("Student added successfully");
-						form.reset();
-					}
+				.then(() => {
+					handleClose?.();
 				})
-				.catch((error) => {
-					console.error("Error adding student:", error);
-				});
-			form.reset();
+				.catch(() => {
+					handleError?.("Error updating student");
+				})
+			return
 		}
+
+
+		//ADD THE STUDENT
+		await addStudent({
+			school_id: values.school_id,
+			is_active: undefined,
+			name: values.name,
+			dept_id: values.dept_id != "0" ? Number(values.dept_id) : null,
+		})
+			.then((student) => {
+				if (student === "SCHOOL_ID_EXISTS") {
+					console.log("School ID already exists");
+					toast.error("School ID already in use");
+				} else {
+					console.log("Student added successfully");
+					toast.success("Student added successfully");
+					form.reset();
+					handleClose?.()
+				}
+			})
+			.catch((error) => {
+				toast.error("Error adding student");
+				console.error("Error adding student:", error);
+				handleError?.("Error adding student");
+			});
 	}
 
 	return (

@@ -80,23 +80,22 @@ type EventFormProps = {
 };
 
 export function EventForm({ event, handleClose, handleError }: EventFormProps) {
-	// const isEditMode = !!event;
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: event
 			? {
-					name: event.name,
-					date: new Date(event.date),
-					description: event.description,
-					location: event.location,
-					duration: event.duration,
-				}
+				name: event.name,
+				date: new Date(event.date),
+				description: event.description,
+				location: event.location,
+				duration: event.duration,
+			}
 			: {
-					name: "",
-					description: "",
-					location: "",
-				},
+				name: "",
+				description: "",
+				location: "",
+			},
 	});
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -134,7 +133,7 @@ export function EventForm({ event, handleClose, handleError }: EventFormProps) {
 				})
 				.catch((error) => {
 					console.error("Error fetching data:", error);
-					handleError && handleError("Error updating event");
+					handleError?.("Error updating event");
 				});
 		} else {
 			await addEvent(newEvent)
@@ -145,7 +144,7 @@ export function EventForm({ event, handleClose, handleError }: EventFormProps) {
 				})
 				.catch((error) => {
 					console.error("Error fetching data:", error);
-					handleError && handleError("Error adding event");
+					handleError?.("Error adding event");
 				});
 		}
 	}

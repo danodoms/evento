@@ -268,7 +268,7 @@ export default function StudentsPage() {
 							<div className="flex justify-between items-center">
 								<div className="flex gap-2 items-center">
 									<UserRound className="size-5" />
-									<p className="font-bold text-sm">{student.school_id}</p>
+									<p className="font-semibold text-sm">{student.school_id}</p>
 								</div>
 								<div className="flex gap-4 items-center">
 									{/* <div className="flex gap-1 items-center">
