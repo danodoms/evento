@@ -55,6 +55,7 @@ import {
 	type Student,
 	deactivateStudent,
 	getAllStudents,
+	getFilteredPaginatedStudents,
 } from "@/models/Student";
 import StudentFormDialog from "./StudentFormDialog";
 
@@ -72,7 +73,8 @@ import {
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import StudentRecordsDialog from "./StudentRecordsDialog";
-import Search from "@/components/Search";
+import Search from "@/app/students/Search";
+import PaginationComponent from "./Pagination";
 
 type StudentsPageProps = {
 	searchParams?: {
@@ -93,8 +95,8 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 		error: studentsError,
 		isLoading: isStudentsLoading,
 	} = useQuery<Student[]>({
-		queryKey: ["students"],
-		queryFn: getAllStudents,
+		queryKey: ["paginatedStudents", query, currentPage],
+		queryFn: () => getFilteredPaginatedStudents(currentPage, query),
 	});
 
 	const {
@@ -257,8 +259,9 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 				</Sheet>
 			</div>
 
-			<div className="flex gap-2 justify-evenly">
+			<div className="flex gap-2 flex-col justify-evenly">
 				<Search />
+				<PaginationComponent totalPages={2} />
 			</div>
 
 			{filteredStudents ? (

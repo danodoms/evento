@@ -56,7 +56,7 @@ const StudentRecordsDialog = ({ student }: StudentRecordsDialogProps) => {
 		error: attendanceRecordsError,
 		isLoading: isAttendanceRecordsLoading,
 	} = useQuery<Attendance[]>({
-		queryKey: ["studentAttendanceRecords"],
+		queryKey: ["studentAttendanceRecords", student.id],
 		queryFn: () => getAttendanceRecordsByStudentId(student.id),
 	});
 

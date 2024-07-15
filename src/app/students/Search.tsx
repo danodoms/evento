@@ -1,5 +1,5 @@
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
-import { Input } from './ui/input';
+import { Input } from '../../components/ui/input';
 import { useDebouncedCallback } from 'use-debounce';
 
 export default function Search() {
@@ -11,6 +11,7 @@ export default function Search() {
     const handleSearch = useDebouncedCallback((term) => {
         console.log(term);
         const params = new URLSearchParams(searchParams);
+        params.set('page', '1');
         if (term) {
             params.set('query', term);
         } else {

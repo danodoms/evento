@@ -105,3 +105,28 @@ export async function deactivateStudent(
   console.log("Deactivated student:", data);
   return data as Student;
 }
+
+export async function getFilteredPaginatedStudents(
+  currentPage: number,
+  query: string,
+  // deptId: number | null,
+  // isActive: boolean | null,
+  limit: number = 10
+): Promise<Student[]> {
+  const { data, error } = await supabase
+    .from("students")
+    .select("*")
+    .or(`name.ilike.%${query}%,school_id.ilike.%${query}%`)
+    // .ilike("name", `%${query}%`)
+    // .eq("dept_id", deptId)
+    // .order("name", { ascending: true })
+    .range((currentPage - 1) * limit, currentPage * limit);
+
+  if (error) {
+    console.error("Error fetching filtered students:", error);
+    throw error;
+  }
+
+  console.log("Fetched filtered students:", data);
+  return data as Student[];
+}
