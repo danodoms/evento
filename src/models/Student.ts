@@ -2,14 +2,14 @@ import { createClient } from "@/utils/supabase/client";
 
 const supabase = createClient();
 
-export interface Student {
+export type Student = {
   id: number;
   created_at: string | null;
   is_active: boolean | undefined;
   school_id: string;
   name: string;
   dept_id: number | null;
-}
+};
 
 export async function getStudentByIdNum(idNum: string) {
   const { data, error } = await supabase

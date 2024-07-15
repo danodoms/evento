@@ -36,11 +36,11 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import {
-	type AttendanceRecord,
-	getAllAttendanceRecords,
+	Attendance,
+	getAttendanceRecordsByStudentId,
 } from "@/models/Attendance";
-import { type Event, getEvents } from "@/models/Event";
-import type { Student } from "@/models/Student";
+import { Event, getEvents } from "@/models/Event";
+import { Student } from "@/models/Student";
 import useMediaQuery from "@custom-react-hooks/use-media-query";
 import { useQuery } from "@tanstack/react-query";
 import { format, parseISO } from "date-fns";
@@ -55,9 +55,9 @@ const StudentRecordsDialog = ({ student }: StudentRecordsDialogProps) => {
 		data: attendanceRecords = [],
 		error: attendanceRecordsError,
 		isLoading: isAttendanceRecordsLoading,
-	} = useQuery<AttendanceRecord[]>({
-		queryKey: ["attendanceRecords"],
-		queryFn: getAllAttendanceRecords,
+	} = useQuery<Attendance[]>({
+		queryKey: ["studentAttendanceRecords"],
+		queryFn: () => getAttendanceRecordsByStudentId(student.id),
 	});
 
 	const {
@@ -68,15 +68,6 @@ const StudentRecordsDialog = ({ student }: StudentRecordsDialogProps) => {
 		queryKey: ["events"],
 		queryFn: getEvents,
 	});
-
-	const getStudentAttendanceRecords = (student: Student) => {
-		const records = attendanceRecords.filter(
-			(record) => record.student_id === student.id,
-		);
-		console.log("student records: ", records);
-
-		return records;
-	};
 
 	const getEventNameFromDate = (date: string) => {
 		const event = events.find((event) => event.date === date);
@@ -135,11 +126,11 @@ const StudentRecordsDialog = ({ student }: StudentRecordsDialogProps) => {
 					<p className="text-xs font-semibold leading-loose">
 						{student?.school_id}
 					</p>
-					{/* <DrawerDescription className="text-balance text-xs px-4">Viewing attendance records</DrawerDescription> */}
+					<DrawerDescription className="text-balance text-xs px-4">Viewing attendance records</DrawerDescription>
 				</DrawerHeader>
 
 				<div className="p-4 max-h-96 overflow-y-auto">
-					{getStudentAttendanceRecords(student).length > 0 ? (
+					{attendanceRecords.length > 0 ? (
 						<Table>
 							{/* <TableCaption>A list of your recent invoices.</TableCaption> */}
 							<TableHeader>
@@ -150,7 +141,7 @@ const StudentRecordsDialog = ({ student }: StudentRecordsDialogProps) => {
 								</TableRow>
 							</TableHeader>
 							<TableBody className="">
-								{getStudentAttendanceRecords(student).map((record) => (
+								{attendanceRecords?.map((record) => (
 									<TableRow key={record.id}>
 										<TableCell className="font-medium">
 											{getEventNameFromDate(record.date)}

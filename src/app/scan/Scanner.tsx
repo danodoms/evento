@@ -84,7 +84,7 @@ export default function Scanner() {
             }
 
 
-            //The commented initiates an API call everytime, it is replaced by a client side filtering method to reduce API calls
+            //The commented initiates an API call everytime, it is replaced by a client side filtering method to reduce API calls and improve scanning responsiveness
             // const student = await throwErrorAfterTimeout(2000, () => getStudentByIdNum(decodedText), "TIME_LIMIT_REACHED");
             const student: Student | undefined = getStudentBySchoolId(studentsRef.current, decodedText);
 

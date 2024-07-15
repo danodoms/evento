@@ -34,7 +34,7 @@ const removeSingleQuotes = (str: string): string => {
 const generateStudents = (count: number, deptIds: number[]): Student[] => {
   const students: Student[] = [];
   const idYears = [2018, 2019, 2020, 2021, 2022, 2023];
-  const idSuffixStart = 2000;
+  const idSuffixStart = 1000;
 
   for (let i = 0; i < count; i++) {
     const student: Student = {
