@@ -5,6 +5,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { Separator } from "@/components/ui/separator";
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { BellIcon, CheckIcon } from "@radix-ui/react-icons";
 
@@ -71,8 +72,22 @@ import {
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import StudentRecordsDialog from "./StudentRecordsDialog";
+import Search from "@/components/Search";
 
-export default function StudentsPage() {
+type StudentsPageProps = {
+	searchParams?: {
+		query?: string;
+		page?: string;
+	};
+};
+
+export default function StudentsPage({ searchParams }: StudentsPageProps) {
+
+	const query = searchParams?.query || '';
+	const currentPage = Number(searchParams?.page) || 1;
+
+
+
 	const {
 		data: students = [],
 		error: studentsError,
@@ -91,6 +106,8 @@ export default function StudentsPage() {
 		queryFn: getDepartments,
 	});
 
+
+
 	function getDepartmentNameById(departmentId: number): string | undefined {
 		const department = departments.find((dept) => dept.id === departmentId);
 		return department ? department.short_name : undefined;
@@ -98,16 +115,16 @@ export default function StudentsPage() {
 
 	const [isCompactView, setIsCompactView] = useState(false);
 
-	const [filter, setFilter] = useState<string>("");
+	// const [filter, setFilter] = useState<string>("");
 	const [departmentFilter, setDepartmentFilter] = useState<string>("all");
 	const [statusFilter, setStatusFilter] = useState<"active" | "inactive">(
 		"active",
 	);
 
 	const filteredStudents = students.filter((student) => {
-		const matchesSearch =
-			student.name.toLowerCase().includes(filter.toLowerCase()) ||
-			student.school_id.toString().includes(filter.toLowerCase());
+		// const matchesSearch =
+		// 	student.name.toLowerCase().includes(filter.toLowerCase()) ||
+		// 	student.school_id.toString().includes(filter.toLowerCase());
 
 		const matchesStatus =
 			statusFilter === "active" ? student.is_active : !student.is_active;
@@ -116,7 +133,7 @@ export default function StudentsPage() {
 			departmentFilter === "all" ||
 			student.dept_id?.toString() === departmentFilter;
 
-		return matchesSearch && matchesStatus && matchesDepartment;
+		return matchesStatus && matchesDepartment;
 	});
 
 	const resetFilters = () => {
@@ -241,12 +258,7 @@ export default function StudentsPage() {
 			</div>
 
 			<div className="flex gap-2 justify-evenly">
-				<Input
-					type="text"
-					placeholder="Search"
-					onChange={(e) => setFilter(e.target.value)}
-					value={filter}
-				/>
+				<Search />
 			</div>
 
 			{filteredStudents ? (
