@@ -55,16 +55,23 @@ var generateDepartments = function (count) {
     }
     return departments;
 };
+// Function to remove single quotes from a string
+var removeSingleQuotes = function (str) {
+    return str.replace(/'/g, '');
+};
 var generateStudents = function (count, deptIds) {
     var students = [];
     var idYears = [2018, 2019, 2020, 2021, 2022, 2023];
-    var idSuffixStart = 1000;
+    var idSuffixStart = 2000;
     for (var i = 0; i < count; i++) {
-        students.push({
+        var student = {
             school_id: idYears[faker_1.faker.number.int({ min: 0, max: idYears.length - 1 })] + "-" + (idSuffixStart + i),
-            name: faker_1.faker.person.firstName() + " " + faker_1.faker.person.lastName(),
-            dept_id: faker_1.faker.helpers.arrayElement(deptIds),
-        });
+            name: "".concat(removeSingleQuotes(faker_1.faker.person.firstName()), " ").concat(removeSingleQuotes(faker_1.faker.person.lastName())),
+        };
+        if (deptIds.length > 0) {
+            student.dept_id = faker_1.faker.helpers.arrayElement(deptIds);
+        }
+        students.push(student);
     }
     return students;
 };
@@ -76,7 +83,7 @@ var generateEvents = function (count) {
             name: faker_1.faker.lorem.words(3),
             date: faker_1.faker.date.soon().toISOString().split('T')[0],
             description: faker_1.faker.lorem.sentence(),
-            location: faker_1.faker.location.streetAddress(),
+            location: "".concat(faker_1.faker.location.streetAddress()),
             duration: faker_1.faker.helpers.arrayElement(eventDurations),
         });
     }
@@ -86,7 +93,7 @@ var generateAttendance = function (count, studentIds) {
     var attendanceRecords = [];
     for (var i = 0; i < count; i++) {
         var timeIn = faker_1.faker.date.recent();
-        var timeOut = faker_1.faker.date.soon(1, timeIn);
+        var timeOut = faker_1.faker.date.soon({ refDate: timeIn });
         attendanceRecords.push({
             student_id: faker_1.faker.helpers.arrayElement(studentIds),
             time_in: timeIn.toISOString().split('T')[1],

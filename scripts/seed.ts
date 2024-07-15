@@ -20,20 +20,38 @@ const generateDepartments = (count:number) => {
   return departments;
 };
 
-const generateStudents = (count:number, deptIds:number[]) => {
-  const students = [];
+interface Student {
+  school_id: string;
+  name: string;
+  dept_id?: number; // dept_id is optional
+}
+
+// Function to remove single quotes from a string
+const removeSingleQuotes = (str: string): string => {
+  return str.replace(/'/g, '');
+};
+
+const generateStudents = (count: number, deptIds: number[]): Student[] => {
+  const students: Student[] = [];
   const idYears = [2018, 2019, 2020, 2021, 2022, 2023];
-  const idSuffixStart = 1000;
+  const idSuffixStart = 2000;
 
   for (let i = 0; i < count; i++) {
-    students.push({
+    const student: Student = {
       school_id: idYears[faker.number.int({ min: 0, max: idYears.length - 1 })] + "-" + (idSuffixStart + i),
-      name: faker.person.firstName() + " " + faker.person.lastName(),
-      dept_id: faker.helpers.arrayElement(deptIds),
-    });
+      name: `${removeSingleQuotes(faker.person.firstName())} ${removeSingleQuotes(faker.person.lastName())}`,
+    };
+
+    if (deptIds.length > 0) {
+      student.dept_id = faker.helpers.arrayElement(deptIds);
+    }
+
+    students.push(student);
   }
+
   return students;
 };
+
 
 const generateEvents = (count:number) => {
   const events = [];
@@ -43,7 +61,7 @@ const generateEvents = (count:number) => {
       name: faker.lorem.words(3),
       date: faker.date.soon().toISOString().split('T')[0],
       description: faker.lorem.sentence(),
-      location: faker.location.streetAddress(),
+      location: `${faker.location.streetAddress()}`,
       duration: faker.helpers.arrayElement(eventDurations),
     });
   }
@@ -54,7 +72,7 @@ const generateAttendance = (count:number, studentIds:number[]) => {
   const attendanceRecords = [];
   for (let i = 0; i < count; i++) {
     const timeIn = faker.date.recent();
-    const timeOut = faker.date.soon(1, timeIn);
+    const timeOut = faker.date.soon({refDate: timeIn});
     attendanceRecords.push({
       student_id: faker.helpers.arrayElement(studentIds),
       time_in: timeIn.toISOString().split('T')[1],
