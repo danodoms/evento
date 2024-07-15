@@ -27,30 +27,60 @@ export default function PaginationComponent({ totalPages }: { totalPages: number
     };
 
     return (
-        <Pagination>
-            <PaginationContent>
-                <PaginationItem>
-                    <PaginationPrevious onClick={() => window.location.href = createPageURL(currentPage - 1)} isActive={currentPage === 1} />
-                </PaginationItem>
-                {/* <PaginationItem>
-                    <PaginationLink href="#">1</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                    <PaginationLink href="#" isActive>
-                        2
-                    </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                    <PaginationLink href="#">3</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                    <PaginationEllipsis />
-                </PaginationItem> */}
-                <PaginationItem>
-                    <PaginationNext onClick={() => window.location.href = createPageURL(currentPage + 1)} />
-                </PaginationItem>
-            </PaginationContent>
-        </Pagination>
+
+        <div className='flex gap-2'>
+            {/* <div>
+                <div className='border p-4 rounded-md'>
+                    5 items
+                </div>
+            </div> */}
+
+            <Pagination className='flex w-full'>
+                <PaginationContent className='flex w-full justify-center'>
+
+                    {currentPage > 1 && (
+                        <PaginationItem className='mr-auto'>
+                            <Link href={createPageURL(currentPage - 1)}>
+                                <PaginationPrevious />
+                            </Link>
+                        </PaginationItem>
+                    )}
+
+
+                    <PaginationItem>
+                        <PaginationLink href="#">1</PaginationLink>
+                    </PaginationItem>
+
+                    <PaginationItem>
+                        <PaginationLink href="#" isActive>
+                            2
+                        </PaginationLink>
+                    </PaginationItem>
+
+                    <PaginationItem>
+                        <PaginationLink href="#">3</PaginationLink>
+                    </PaginationItem>
+
+                    <PaginationItem>
+                        <PaginationLink href="#">4</PaginationLink>
+                    </PaginationItem>
+                    <PaginationItem>
+                        <PaginationLink href="#">5</PaginationLink>
+                    </PaginationItem>
+
+                    <PaginationItem>
+                        <PaginationEllipsis />
+                    </PaginationItem>
+
+                    <PaginationItem className='ml-auto'>
+                        <Link href={createPageURL(currentPage + 1)}>
+                            <PaginationNext />
+                        </Link>
+                    </PaginationItem>
+                </PaginationContent>
+            </Pagination>
+        </div>
+
 
     )
 }

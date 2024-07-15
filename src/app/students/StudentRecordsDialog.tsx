@@ -123,10 +123,10 @@ const StudentRecordsDialog = ({ student }: StudentRecordsDialogProps) => {
 			<DrawerContent>
 				<DrawerHeader>
 					<DrawerTitle className="text-xl">{student?.name}</DrawerTitle>
-					<p className="text-xs font-semibold leading-loose">
+					<p className="text-xs tracking-wide">
 						{student?.school_id}
 					</p>
-					<DrawerDescription className="text-balance text-xs px-4">Viewing attendance records</DrawerDescription>
+					<DrawerDescription className="text-balance text-xs px-4"></DrawerDescription>
 				</DrawerHeader>
 
 				<div className="p-4 max-h-96 overflow-y-auto">
@@ -136,8 +136,8 @@ const StudentRecordsDialog = ({ student }: StudentRecordsDialogProps) => {
 							<TableHeader>
 								<TableRow>
 									<TableHead>Date</TableHead>
-									<TableHead>In</TableHead>
-									<TableHead>Out</TableHead>
+									<TableHead>Time In</TableHead>
+									<TableHead>Time Out</TableHead>
 								</TableRow>
 							</TableHeader>
 							<TableBody className="">
@@ -155,7 +155,7 @@ const StudentRecordsDialog = ({ student }: StudentRecordsDialogProps) => {
 						</Table>
 					) : (
 						<div className="flex items-center justify-center h-full">
-							<p className="text-center text-sm">No records found</p>
+							<p className="text-center text-sm border px-4 py-2 rounded-full">No records found</p>
 						</div>
 					)}
 				</div>

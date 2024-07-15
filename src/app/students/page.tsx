@@ -75,6 +75,8 @@ import { Switch } from "@/components/ui/switch";
 import StudentRecordsDialog from "./StudentRecordsDialog";
 import Search from "@/app/students/Search";
 import PaginationComponent from "./Pagination";
+import Loading from "@/components/Loading";
+import { stat } from "fs/promises";
 
 type StudentsPageProps = {
 	searchParams?: {
@@ -88,6 +90,11 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 	const query = searchParams?.query || '';
 	const currentPage = Number(searchParams?.page) || 1;
 
+	const [departmentFilter, setDepartmentFilter] = useState<string>("all");
+	const [statusFilter, setStatusFilter] = useState<"active" | "inactive">(
+		"active",
+	);
+	const [isCompactView, setIsCompactView] = useState(false);
 
 
 	const {
@@ -95,8 +102,8 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 		error: studentsError,
 		isLoading: isStudentsLoading,
 	} = useQuery<Student[]>({
-		queryKey: ["paginatedStudents", query, currentPage],
-		queryFn: () => getFilteredPaginatedStudents(currentPage, query),
+		queryKey: ["paginatedStudents", query, currentPage, departmentFilter, statusFilter],
+		queryFn: () => getFilteredPaginatedStudents(currentPage, query, departmentFilter !== "all" ? Number(departmentFilter) : null, statusFilter === "active"),
 	});
 
 	const {
@@ -109,34 +116,10 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 	});
 
 
-
 	function getDepartmentNameById(departmentId: number): string | undefined {
 		const department = departments.find((dept) => dept.id === departmentId);
 		return department ? department.short_name : undefined;
 	}
-
-	const [isCompactView, setIsCompactView] = useState(false);
-
-	// const [filter, setFilter] = useState<string>("");
-	const [departmentFilter, setDepartmentFilter] = useState<string>("all");
-	const [statusFilter, setStatusFilter] = useState<"active" | "inactive">(
-		"active",
-	);
-
-	const filteredStudents = students.filter((student) => {
-		// const matchesSearch =
-		// 	student.name.toLowerCase().includes(filter.toLowerCase()) ||
-		// 	student.school_id.toString().includes(filter.toLowerCase());
-
-		const matchesStatus =
-			statusFilter === "active" ? student.is_active : !student.is_active;
-
-		const matchesDepartment =
-			departmentFilter === "all" ||
-			student.dept_id?.toString() === departmentFilter;
-
-		return matchesStatus && matchesDepartment;
-	});
 
 	const resetFilters = () => {
 		setStatusFilter("active");
@@ -150,6 +133,8 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 		if (departmentFilter !== "all") count++;
 		return count;
 	};
+
+
 
 	return (
 		<div className="flex flex-col gap-3">
@@ -261,12 +246,15 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 
 			<div className="flex gap-2 flex-col justify-evenly">
 				<Search />
-				<PaginationComponent totalPages={2} />
+
 			</div>
 
-			{filteredStudents ? (
+
+
+
+			{students ? (
 				<div className="flex flex-col gap-3 md:grid md:grid-cols-2 lg:grid-cols-3 overflow-y-auto max-h-screen rounded-md">
-					{filteredStudents.map((student, index) => (
+					{students.map((student, index) => (
 						<div
 							key={index}
 							className="p-4 border rounded-lg flex flex-col gap-2 backdrop-contrast-50 backdrop-opacity-25"
@@ -325,6 +313,8 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 					<p>No events</p>
 				</div>
 			)}
+
+			<PaginationComponent totalPages={2} />
 
 			<ToastContainer />
 		</div>
