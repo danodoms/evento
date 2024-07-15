@@ -1,0 +1,828 @@
+[
+  {
+    "schemaName": "net",
+    "tableName": "_http_response",
+    "predictions": [
+      {
+        "input": "net http_response content",
+        "column": "content",
+        "shape": "INTERNET_HTTP_STATUS_CODE",
+        "confidence": 0.5648147463798523,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "net http_response content_type",
+        "column": "content_type",
+        "shape": "SYSTEM_MIME_TYPE",
+        "confidence": 0.6386346817016602,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "net http_response error_msg",
+        "column": "error_msg",
+        "shape": "INTERNET_HTTP_STATUS_CODE",
+        "confidence": 0.7,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "storage",
+    "tableName": "buckets",
+    "predictions": [
+      {
+        "input": "storage buckets allowed_mime_types",
+        "column": "allowed_mime_types",
+        "shape": "SYSTEM_FILE_TYPE",
+        "confidence": 0.5756442546844482,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "storage buckets id",
+        "column": "id",
+        "shape": "UUID",
+        "confidence": 0.9959561228752136,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "storage buckets name",
+        "column": "name",
+        "shape": "SYSTEM_DIRECTORY_PATH",
+        "confidence": 0.6744478940963745,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "storage buckets owner_id",
+        "column": "owner_id",
+        "shape": "UUID",
+        "confidence": 0.9927984476089478,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "departments",
+    "predictions": [
+      {
+        "input": "public departments name",
+        "column": "name",
+        "shape": "COMMERCE_DEPARTMENT",
+        "confidence": 0.3343520760536194,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public departments short_name",
+        "column": "short_name",
+        "shape": "COMPANY_NAME",
+        "confidence": 0.8331312537193298,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "events",
+    "predictions": [
+      {
+        "input": "public events description",
+        "column": "description",
+        "shape": "COMMERCE_PRODUCT_DESCRIPTION",
+        "confidence": 0.830777645111084,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public events location",
+        "column": "location",
+        "shape": "LOCATION_BUILDING_NUMBER",
+        "confidence": 0.8354268074035645,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public events name",
+        "column": "name",
+        "shape": "COMMERCE_PRODUCT_NAME",
+        "confidence": 0.8025853633880615,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "auth",
+    "tableName": "flow_state",
+    "predictions": [
+      {
+        "input": "auth flow_state auth_code",
+        "column": "auth_code",
+        "shape": "TOKEN",
+        "confidence": 1,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth flow_state authentication_method",
+        "column": "authentication_method",
+        "shape": "TOKEN",
+        "confidence": 0.8245275616645813,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth flow_state code_challenge",
+        "column": "code_challenge",
+        "shape": "TAX_CODE",
+        "confidence": 0.6225445866584778,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth flow_state provider_access_token",
+        "column": "provider_access_token",
+        "shape": "TOKEN",
+        "confidence": 0.9929266571998596,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth flow_state provider_refresh_token",
+        "column": "provider_refresh_token",
+        "shape": "TOKEN",
+        "confidence": 0.9932703375816345,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth flow_state provider_type",
+        "column": "provider_type",
+        "shape": "AUTHENTICATION_PROVIDER",
+        "confidence": 1,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "supabase_functions",
+    "tableName": "hooks",
+    "predictions": [
+      {
+        "input": "supabase_functions hooks hook_name",
+        "column": "hook_name",
+        "shape": "SYSTEM_FILE_NAME",
+        "confidence": 0.6265440583229065,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "net",
+    "tableName": "http_request_queue",
+    "predictions": [
+      {
+        "input": "net http_request_queue method",
+        "column": "method",
+        "shape": "INTERNET_HTTP_METHOD",
+        "confidence": 0.9809377789497375,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "net http_request_queue url",
+        "column": "url",
+        "shape": "IMAGE_URL",
+        "confidence": 0.9554980397224426,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "auth",
+    "tableName": "identities",
+    "predictions": [
+      {
+        "input": "auth identities provider",
+        "column": "provider",
+        "shape": "INTERNET_DOMAIN_NAME",
+        "confidence": 0.9332965016365051,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth identities provider_id",
+        "column": "provider_id",
+        "shape": "UUID",
+        "confidence": 0.9941206574440002,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "auth",
+    "tableName": "instances",
+    "predictions": [
+      {
+        "input": "auth instances raw_base_config",
+        "column": "raw_base_config",
+        "shape": "SYSTEM_FILE_TYPE",
+        "confidence": 0.9731855988502502,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "pgsodium",
+    "tableName": "key",
+    "predictions": [
+      {
+        "input": "pgsodium key comment",
+        "column": "comment",
+        "shape": "POST_COMMENT",
+        "confidence": 1,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "pgsodium key name",
+        "column": "name",
+        "shape": "PASSWORD",
+        "confidence": 0.8643802404403687,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "pgsodium key user_data",
+        "column": "user_data",
+        "shape": "META_DATA",
+        "confidence": 0.8757388591766357,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "realtime",
+    "tableName": "messages",
+    "predictions": [
+      {
+        "input": "realtime messages extension",
+        "column": "extension",
+        "shape": "SYSTEM_FILE_EXT",
+        "confidence": 0.9911905527114868,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "realtime messages topic",
+        "column": "topic",
+        "shape": "DATABASE_COLUMN",
+        "confidence": 0.249317079782486,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "auth",
+    "tableName": "mfa_amr_claims",
+    "predictions": [
+      {
+        "input": "auth mfa_amr_claims authentication_method",
+        "column": "authentication_method",
+        "shape": "TOKEN",
+        "confidence": 0.9601773023605347,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "auth",
+    "tableName": "mfa_factors",
+    "predictions": [
+      {
+        "input": "auth mfa_factors friendly_name",
+        "column": "friendly_name",
+        "shape": "PERSON_FULL_NAME",
+        "confidence": 0.959611177444458,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth mfa_factors secret",
+        "column": "secret",
+        "shape": "PASSWORD",
+        "confidence": 0.9392874240875244,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "storage",
+    "tableName": "migrations",
+    "predictions": [
+      {
+        "input": "storage migrations hash",
+        "column": "hash",
+        "shape": "HASH",
+        "confidence": 0.915229082107544,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "storage migrations name",
+        "column": "name",
+        "shape": "SYSTEM_FILE_NAME",
+        "confidence": 0.9778550863265991,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "supabase_functions",
+    "tableName": "migrations",
+    "predictions": [
+      {
+        "input": "supabase_functions migrations version",
+        "column": "version",
+        "shape": "SYSTEM_SEMVER",
+        "confidence": 0.9810158610343933,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "storage",
+    "tableName": "objects",
+    "predictions": [
+      {
+        "input": "storage objects name",
+        "column": "name",
+        "shape": "DATABASE_COLUMN",
+        "confidence": 0.7,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "storage objects owner_id",
+        "column": "owner_id",
+        "shape": "UUID",
+        "confidence": 0.9949594736099243,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "storage objects version",
+        "column": "version",
+        "shape": "SYSTEM_SEMVER",
+        "confidence": 0.9876784682273865,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "auth",
+    "tableName": "one_time_tokens",
+    "predictions": [
+      {
+        "input": "auth one_time_tokens relates_to",
+        "column": "relates_to",
+        "shape": "TIMEZONE",
+        "confidence": 0.5541596412658691,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth one_time_tokens token_hash",
+        "column": "token_hash",
+        "shape": "HASH",
+        "confidence": 0.9906495213508606,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "auth",
+    "tableName": "refresh_tokens",
+    "predictions": [
+      {
+        "input": "auth refresh_tokens parent",
+        "column": "parent",
+        "shape": "DATABASE_COLUMN",
+        "confidence": 0.9276586771011353,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth refresh_tokens token",
+        "column": "token",
+        "shape": "TOKEN",
+        "confidence": 0.9929530024528503,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth refresh_tokens user_id",
+        "column": "user_id",
+        "shape": "UUID",
+        "confidence": 0.9917271137237549,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "storage",
+    "tableName": "s3_multipart_uploads",
+    "predictions": [
+      {
+        "input": "storage s_3_multipart_uploads id",
+        "column": "id",
+        "shape": "UUID",
+        "confidence": 0.8652965426445007,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "storage s_3_multipart_uploads key",
+        "column": "key",
+        "shape": "SYSTEM_FILE_NAME",
+        "confidence": 0.7,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "storage s_3_multipart_uploads owner_id",
+        "column": "owner_id",
+        "shape": "UUID",
+        "confidence": 0.7541124820709229,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "storage s_3_multipart_uploads upload_signature",
+        "column": "upload_signature",
+        "shape": "SYSTEM_FILE_NAME",
+        "confidence": 0.204882800579071,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "storage s_3_multipart_uploads version",
+        "column": "version",
+        "shape": "SYSTEM_SEMVER",
+        "confidence": 0.9020141363143921,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "storage",
+    "tableName": "s3_multipart_uploads_parts",
+    "predictions": [
+      {
+        "input": "storage s_3_multipart_uploads_parts etag",
+        "column": "etag",
+        "shape": "SYSTEM_FILE_NAME",
+        "confidence": 0.3147349059581757,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "storage s_3_multipart_uploads_parts key",
+        "column": "key",
+        "shape": "SYSTEM_FILE_PATH",
+        "confidence": 0.1395908743143082,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "storage s_3_multipart_uploads_parts owner_id",
+        "column": "owner_id",
+        "shape": "SYSTEM_FILE_NAME",
+        "confidence": 0.2599887549877167,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "storage s_3_multipart_uploads_parts version",
+        "column": "version",
+        "shape": "SYSTEM_SEMVER",
+        "confidence": 0.862582266330719,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "auth",
+    "tableName": "saml_providers",
+    "predictions": [
+      {
+        "input": "auth saml_providers entity_id",
+        "column": "entity_id",
+        "shape": "UUID",
+        "confidence": 0.9951319694519043,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth saml_providers metadata_url",
+        "column": "metadata_url",
+        "shape": "IMAGE_URL",
+        "confidence": 0.9846875071525574,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth saml_providers metadata_xml",
+        "column": "metadata_xml",
+        "shape": "SYSTEM_FILE_TYPE",
+        "confidence": 0.8458219170570374,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth saml_providers name_id_format",
+        "column": "name_id_format",
+        "shape": "UUID",
+        "confidence": 0.6650523543357849,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "auth",
+    "tableName": "saml_relay_states",
+    "predictions": [
+      {
+        "input": "auth saml_relay_states for_email",
+        "column": "for_email",
+        "shape": "EMAIL",
+        "confidence": 0.9856274127960205,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth saml_relay_states redirect_to",
+        "column": "redirect_to",
+        "shape": "URL",
+        "confidence": 1,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth saml_relay_states request_id",
+        "column": "request_id",
+        "shape": "UUID",
+        "confidence": 0.9707423448562622,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "auth",
+    "tableName": "schema_migrations",
+    "predictions": [
+      {
+        "input": "auth schema_migrations version",
+        "column": "version",
+        "shape": "SYSTEM_SEMVER",
+        "confidence": 0.9860692024230957,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "supabase_migrations",
+    "tableName": "schema_migrations",
+    "predictions": [
+      {
+        "input": "supabase_migrations schema_migrations name",
+        "column": "name",
+        "shape": "SYSTEM_FILE_NAME",
+        "confidence": 0.9641029834747314,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "supabase_migrations schema_migrations statements",
+        "column": "statements",
+        "shape": "SYSTEM_FILE_PATH",
+        "confidence": 0.9192330241203308,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "supabase_migrations schema_migrations version",
+        "column": "version",
+        "shape": "SYSTEM_SEMVER",
+        "confidence": 0.9852260947227478,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "vault",
+    "tableName": "secrets",
+    "predictions": [
+      {
+        "input": "vault secrets name",
+        "column": "name",
+        "shape": "DATABASE_SCHEMA",
+        "confidence": 0,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "vault secrets secret",
+        "column": "secret",
+        "shape": "PASSWORD",
+        "confidence": 0.9757916927337646,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "auth",
+    "tableName": "sessions",
+    "predictions": [
+      {
+        "input": "auth sessions tag",
+        "column": "tag",
+        "shape": "PASSWORD",
+        "confidence": 0.5701985955238342,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth sessions user_agent",
+        "column": "user_agent",
+        "shape": "USER_AGENT",
+        "confidence": 0.9931508302688599,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "auth",
+    "tableName": "sso_domains",
+    "predictions": [
+      {
+        "input": "auth sso_domains domain",
+        "column": "domain",
+        "shape": "INTERNET_DOMAIN_NAME",
+        "confidence": 0.8652669191360474,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "auth",
+    "tableName": "sso_providers",
+    "predictions": [
+      {
+        "input": "auth sso_providers resource_id",
+        "column": "resource_id",
+        "shape": "UUID",
+        "confidence": 0.9908947944641113,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "students",
+    "predictions": [
+      {
+        "input": "public students name",
+        "column": "name",
+        "shape": "COMMERCE_PRODUCT_NAME",
+        "confidence": 0.764229416847229,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public students school_id",
+        "column": "school_id",
+        "shape": "UUID",
+        "confidence": 0.9980993866920471,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "auth",
+    "tableName": "users",
+    "predictions": [
+      {
+        "input": "auth users aud",
+        "column": "aud",
+        "shape": "AUTHENTICATION_PROVIDER",
+        "confidence": 0,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth users confirmation_token",
+        "column": "confirmation_token",
+        "shape": "TOKEN",
+        "confidence": 0.9940432906150818,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth users email",
+        "column": "email",
+        "shape": "EMAIL",
+        "confidence": 0.994260311126709,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth users email_change",
+        "column": "email_change",
+        "shape": "EMAIL",
+        "confidence": 0.9721580743789673,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth users email_change_token_new",
+        "column": "email_change_token_new",
+        "shape": "TOKEN",
+        "confidence": 0.9904540777206421,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth users encrypted_password",
+        "column": "encrypted_password",
+        "shape": "PASSWORD",
+        "confidence": 0.9887174367904663,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth users recovery_token",
+        "column": "recovery_token",
+        "shape": "TOKEN",
+        "confidence": 0.9935053586959839,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "auth users role",
+        "column": "role",
+        "shape": "ROLE",
+        "confidence": 0.9707857370376587,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "users",
+    "predictions": [
+      {
+        "input": "public users email",
+        "column": "email",
+        "shape": "EMAIL",
+        "confidence": 0.9942367076873779,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  }
+]
