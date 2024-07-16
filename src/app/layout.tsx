@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactQueryProvider } from "./ReactQueryProvider";
+import Sidebar from "@/components/Sidebar";
 
 const fontSans = FontSans({
 	subsets: ["latin"],
@@ -48,12 +49,24 @@ export default function RootLayout({
 
 						{/* <Header /> */}
 
-						<main className="pb-14 max-w-7xl mx-auto">
-							<div className="p-3">{children}</div>
+
+
+
+
+
+						<main className="pb-14 lg:pb-0 lg:flex">
+							<div className="hidden lg:block">
+								<Sidebar />
+							</div>
+							<div className="p-3 grow h-screen">{children}</div>
 							<Toaster />
 						</main>
 
-						<BottomNav />
+
+						<div className="lg:invisible">
+							<BottomNav />
+						</div>
+
 					</ReactQueryProvider>
 				</ThemeProvider>
 			</body>

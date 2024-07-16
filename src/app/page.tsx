@@ -95,7 +95,7 @@ export default function Home() {
 		<section className="flex flex-col gap-4 p-2">
 			{/* TOP SECTION */}
 
-			<div className="flex justify-between items-center gap-4 mb-8">
+			<div className="flex justify-between items-center gap-4 mb-8 lg:hidden">
 				<h1 className="font-bold text-xl text-pretty">{appName}</h1>
 				<Avatar>
 					<AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />

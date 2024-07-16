@@ -253,7 +253,7 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 
 
 			{students ? (
-				<div className="flex flex-col gap-3 md:grid md:grid-cols-2 lg:grid-cols-3 overflow-y-auto max-h-screen rounded-md">
+				<div className="flex flex-col gap-3 md:grid md:grid-cols-2 lg:grid-cols-3 overflow-y-auto max-h-screen rounded-md w-full">
 					{students.map((student, index) => (
 						<div
 							key={index}
