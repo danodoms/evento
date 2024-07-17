@@ -10,6 +10,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactQueryProvider } from "./ReactQueryProvider";
 import Sidebar from "@/components/Sidebar";
 
+
 const fontSans = FontSans({
 	subsets: ["latin"],
 	variable: "--font-sans",

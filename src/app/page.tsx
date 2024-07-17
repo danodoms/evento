@@ -42,6 +42,7 @@ import {
 
 // import { Badge } from "@/components/ui/badge";
 import AttendanceHistory from "./history/AttendanceHistory";
+import Account from "@/components/Account";
 
 interface UiButton {
 	name: string;
@@ -97,10 +98,12 @@ export default function Home() {
 
 			<div className="flex justify-between items-center gap-4 mb-8 lg:hidden">
 				<h1 className="font-bold text-xl text-pretty">{appName}</h1>
-				<Avatar>
+				{/* <Avatar>
 					<AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
 					<AvatarFallback>CN</AvatarFallback>
-				</Avatar>
+				</Avatar> */}
+
+				<Account />
 			</div>
 
 
