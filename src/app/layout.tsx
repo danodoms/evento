@@ -50,18 +50,17 @@ export default function RootLayout({
 						{/* <Header /> */}
 
 
-
-
-
-
 						<main className="pb-14 lg:pb-0 lg:flex">
 							<div className="hidden lg:block">
 								<Sidebar />
 							</div>
-							<div className="p-3 grow h-screen">{children}</div>
+
+							<div className="p-3 grow h-screen">
+								{children}
+							</div>
+
 							<Toaster />
 						</main>
-
 
 						<div className="lg:invisible">
 							<BottomNav />
