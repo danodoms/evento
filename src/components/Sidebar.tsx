@@ -42,7 +42,7 @@ export default function Sidebar() {
                     evento
                 </p>
 
-                <div className="p-3 mb-2 rounded-lg items-center hover:bg-neutral-500 hover:bg-opacity-20 flex">
+                <div className="p-3 rounded-lg items-center hover:bg-neutral-500 hover:bg-opacity-20 flex">
                     <Account />
                 </div>
 
@@ -50,7 +50,7 @@ export default function Sidebar() {
                     <Lock className="size-5" />Manage Access
                 </Link>
 
-                <Separator className="my-1" />
+                <Separator className="" />
 
                 <Link href="/" className={linkClasses("home")}>
                     <House className="size-5" />Home
