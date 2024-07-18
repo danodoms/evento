@@ -20,3 +20,16 @@ export async function getAllUsers(): Promise<User[]> {
   console.log("All users", data);
   return data as User[];
 }
+
+export function convertRole(role: number): string {
+  switch (role) {
+    case 0:
+      return "Admin";
+    case 1:
+      return "Officer";
+    case 2:
+      return "Representative";
+    default:
+      return "undefined";
+  }
+}

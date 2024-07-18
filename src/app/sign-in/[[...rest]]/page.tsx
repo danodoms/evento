@@ -22,7 +22,7 @@ export default function SignInPage() {
 
         <div className="h-screen w-full flex items-center justify-center gap-8 flex-wrap flex-col">
             <div className="rounded-lg items-center justify-center flex flex-col">
-                <h1 className="font-extrabold lg:text-7xl text-6xl ">
+                <h1 className="font-extrabold lg:text-7xl text-6xl">
                     evento
                 </h1>
                 <p className="text-balance mt-1 text-sm">Streamlining university events for students</p>
@@ -35,7 +35,7 @@ export default function SignInPage() {
 
             <SignIn />
 
-            <p className=" opacity-50">
+            <p className=" opacity-50 ">
                 Only authorized emails can login
             </p>
         </div>

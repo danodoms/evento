@@ -41,12 +41,21 @@ import {
     TableProperties,
     Trash,
     FileBarChart2,
-    Crown
+    Crown,
+    ShieldCheck,
+    BadgeCheck,
+    Award,
+    ChevronsUpDown
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import EventFormDialog from "@/app/events/EventFormDialog"
-import { getAllUsers, type User } from "@/models/User";
+import { getAllUsers, type User, convertRole } from "@/models/User";
+import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 
 
 
@@ -76,6 +85,19 @@ export default function AdminPage() {
         return count;
     };
 
+
+    const getIconByRole = (role: number) => {
+        switch (role) {
+            case 0:
+                return <Crown className="size-5" />;
+            case 1:
+                return <Award className="size-5" />;
+            case 2:
+                return <BadgeCheck className="size-5" />;
+            default:
+                return null; // Return null or handle other cases as needed
+        }
+    };
 
 
     return (
@@ -134,6 +156,26 @@ export default function AdminPage() {
                     </SheetContent>
                 </Sheet>
             </div>
+
+
+            <div className="p-4 border rounded-lg flex flex-col gap-2 ">
+                <h2 className="">
+                    About User roles
+                </h2>
+
+                <Separator className="my-1" />
+
+                <div className="text-xs flex flex-col gap-3 ">
+                    <p><Crown className="inline-block mr-2" />Admin: Full access</p>
+
+                    <p><Award className="inline-block mr-2" />Officer: Scanning and adding students</p>
+
+                    <p><BadgeCheck className="inline-block mr-2" />Representative: Scan module only</p>
+                </div>
+            </div>
+
+
+
             {users.length ? (
                 <div className="flex flex-col gap-3 md:grid grid-cols-2 overflow-y-auto max-h-screen rounded-md">
                     {users.map((user) => (
@@ -143,8 +185,13 @@ export default function AdminPage() {
                         >
                             <div className="flex justify-between items-center">
                                 <div className="flex gap-2 items-center">
-                                    <Crown className="size-5" />
-                                    <p className="font-semibold text-sm">{user.role}</p>
+
+
+                                    {/* <Crown className="size-5" /> */}
+
+                                    {getIconByRole(user.role)}
+
+                                    <p className="font-semibold text-sm">{convertRole(user.role)}</p>
 
                                 </div>
                                 <div className="flex gap-2 items-center">
