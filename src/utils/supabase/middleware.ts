@@ -54,7 +54,16 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  await supabase.auth.getUser();
+  //await supabase.auth.getUser();
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session) {
+    console.log("👋👋👋 No session found, redirecting to login", session);
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
 
   return response;
 }

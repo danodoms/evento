@@ -44,11 +44,17 @@ export default function Account() {
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 {/* <Button variant="outline">Open</Button> */}
-                <div>
+                <div className="flex flex-wrap gap-3 items-center">
                     <Avatar>
-                        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                        <AvatarImage src="https://github.com/shadcn.png" alt={user?.email} />
                         <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
+
+                    <div className="items-center">
+                        <p className="text-xs opacity-50">Logged in as</p>
+                        <p className="text-sm"> {user?.email ?? "user"}</p>
+                    </div>
+
 
                     {user !== null ?
                         (<p>

@@ -33,14 +33,18 @@ export default function Sidebar() {
     `;
 
 
-    if (pathname === "/") {
+    if (pathname !== "/login") {
         return (
-            <nav className="border-r p-3 flex-col flex gap-1 h-full">
+            <nav className="border-r p-3 flex-col flex gap-1 h-full w-72">
                 <p className="font-bold text-2xl p-3">
                     evento
                 </p>
 
-                <Account />
+                <div className="p-3 mb-2 rounded-lg items-center hover:bg-neutral-500 hover:bg-opacity-20 flex">
+                    <Account />
+                </div>
+
+                {/* <Separator className="" /> */}
 
                 <Link href="/" className={linkClasses("home")}>
                     <House className="size-5" />Home
@@ -59,7 +63,7 @@ export default function Sidebar() {
                 </Link>
 
 
-                {/* <Separator className="mb-20" /> */}
+
                 {/* 
                 <Link href="/scan" className="p-3 rounded-lg hover:bg-neutral-500 hover:bg-opacity-20 transition-all font-semibold w-full flex gap-2">
                     <Scan />Departments
