@@ -65,3 +65,19 @@ export async function updateUser(
   console.log("Updated user:", data);
   return data as unknown;
 }
+
+export async function deactivateUser(user: User): Promise<User | null> {
+  const { data, error } = await supabase
+    .from("users")
+    .update({ is_active: false })
+    .eq("id", user.id)
+    .single();
+
+  if (error) {
+    console.error("Error deactivating user:", error);
+    return null;
+  }
+
+  console.log("Deactivated user:", data);
+  return data as User;
+}

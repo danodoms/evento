@@ -50,12 +50,13 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import EventFormDialog from "@/app/events/EventFormDialog"
-import { getAllUsers, type User, convertRole } from "@/models/User";
+import { getAllUsers, type User, convertRole, deactivateUser } from "@/models/User";
 import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@/components/ui/collapsible"
+import UserFormDialog from "./UserFormDialog";
 
 
 
@@ -203,12 +204,12 @@ export default function AdminPage() {
                                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                             <DropdownMenuSeparator />
                                             <DropdownMenuItem asChild>
-                                                {/* <EventFormDialog event={event} /> */}
+                                                <UserFormDialog user={user} />
                                             </DropdownMenuItem>
-                                            {/* <DropdownMenuItem onClick={ }>
+                                            <DropdownMenuItem onClick={() => deactivateUser(user)}>
                                                 <Trash className="size-4 mr-2" />
                                                 Delete
-                                            </DropdownMenuItem> */}
+                                            </DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </div>
