@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { createClient } from "@/utils/supabase/client";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 
 import { Button } from "@/components/ui/button"
@@ -22,23 +23,17 @@ import {
 } from "@/components/ui/dropdown-menu"
 import LoginButton from "./LogoutButton";
 import LoginLogoutButton from "./LogoutButton";
-import { User } from "@supabase/supabase-js";
-
+import { set } from "date-fns";
+import { useAuth, useUser } from "@clerk/nextjs";
 
 
 export default function Account() {
+    const { isLoaded, isSignedIn, user } = useUser();
 
-    const [user, setUser] = useState<User | null>(null);
-    const supabase = createClient();
-    useEffect(() => {
-        const fetchUser = async () => {
-            const {
-                data: { user },
-            } = await supabase.auth.getUser();
-            setUser(user);
-        };
-        fetchUser();
-    }, []);
+    if (!isLoaded || !isSignedIn) {
+        return <>NO USER FOUND</>;
+    }
+
 
     return (
         <DropdownMenu>
@@ -46,19 +41,19 @@ export default function Account() {
                 {/* <Button variant="outline">Open</Button> */}
                 <div className="flex flex-wrap gap-3 items-center">
                     <Avatar>
-                        <AvatarImage src="https://github.com/shadcn.png" alt={user?.email} />
+                        <AvatarImage src={user?.imageUrl} alt="user-profile" />
                         <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
 
                     <div className="items-center">
                         <p className="text-xs opacity-50">Logged in as</p>
-                        <p className="text-sm"> {user?.email ?? "user"}</p>
+                        <p className="text-sm"> {user?.fullName ?? "user"}</p>
                     </div>
 
 
                     {user !== null ?
                         (<p>
-                            {user.email ?? "user"}
+                            {/* {user.email ?? "user"} */}
                         </p>)
                         :
                         (<div>
@@ -69,7 +64,7 @@ export default function Account() {
                 </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
-                <DropdownMenuLabel>{user?.email ?? "user"}</DropdownMenuLabel>
+                <DropdownMenuLabel>null</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
                     <LoginLogoutButton />

@@ -10,6 +10,8 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactQueryProvider } from "./ReactQueryProvider";
 import Sidebar from "@/components/Sidebar";
 
+import { ClerkProvider } from '@clerk/nextjs'
+
 
 const fontSans = FontSans({
 	subsets: ["latin"],
@@ -32,44 +34,46 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
-			<body
-				className={cn(
-					"h-screen bg-background font-sans antialiased ",
-					fontSans.variable,
-				)}
-			>
-				<ThemeProvider
-					attribute="class"
-					defaultTheme="system"
-					enableSystem
-					disableTransitionOnChange
+		<ClerkProvider>
+			<html lang="en">
+				<body
+					className={cn(
+						"h-screen bg-background font-sans antialiased ",
+						fontSans.variable,
+					)}
 				>
-					<ReactQueryProvider>
-						{/* <ReactQueryDevtools /> */}
+					<ThemeProvider
+						attribute="class"
+						defaultTheme="system"
+						enableSystem
+						disableTransitionOnChange
+					>
+						<ReactQueryProvider>
+							{/* <ReactQueryDevtools /> */}
 
-						{/* <Header /> */}
+							{/* <Header /> */}
 
 
-						<main className="pb-14 lg:pb-0 lg:flex">
-							<div className="hidden lg:block">
-								<Sidebar />
+							<main className="pb-14 lg:pb-0 lg:flex">
+								<div className="hidden lg:block">
+									<Sidebar />
+								</div>
+
+								<div className="p-3 grow h-screen">
+									{children}
+								</div>
+
+								<Toaster />
+							</main>
+
+							<div className="lg:invisible">
+								<BottomNav />
 							</div>
 
-							<div className="p-3 grow h-screen">
-								{children}
-							</div>
-
-							<Toaster />
-						</main>
-
-						<div className="lg:invisible">
-							<BottomNav />
-						</div>
-
-					</ReactQueryProvider>
-				</ThemeProvider>
-			</body>
-		</html>
+						</ReactQueryProvider>
+					</ThemeProvider>
+				</body>
+			</html>
+		</ClerkProvider>
 	);
 }

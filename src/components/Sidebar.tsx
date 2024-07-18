@@ -33,7 +33,7 @@ export default function Sidebar() {
     `;
 
 
-    if (pathname !== "/login") {
+    if (pathname !== "/sign-in") {
         return (
             <nav className="border-r p-3 flex-col flex gap-1 h-full w-72">
                 <p className="font-bold text-2xl p-3">
