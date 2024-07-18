@@ -104,7 +104,7 @@ export default function AdminPage() {
         <div className="flex flex-col gap-4">
             <div className="flex gap-2 items-center">
                 <h1 className="text-2xl font-bold tracking-tight mr-auto">Manage Access</h1>
-                <Link href="/events/create">
+                <Link href="/admin/create">
                     <Button variant={"ghost"}>
                         <Plus className="size-4" />
                         Add
@@ -216,7 +216,7 @@ export default function AdminPage() {
                             <Separator className="my-1" />
                             <h2 className="font-bold text-xl">{user.email}</h2>
                             <div className="text-xs text-balance truncate mt-1 opacity-50">
-                                Added on {format(user.created_at, 'MMMM dd, yyyy HH:mm:ss')}
+                                Added on {format(user?.created_at, 'MMMM dd, yyyy HH:mm:ss')}
                             </div>
                             {/* <div className="flex gap-2 flex-wrap mt-1">
                                 <Badge className="flex gap-1">
