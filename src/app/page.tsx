@@ -1,3 +1,6 @@
+
+"use client"
+
 import { Separator } from "@/components/ui/separator";
 import { appName } from "@/config";
 import {
@@ -40,33 +43,18 @@ import {
 } from "@/components/ui/carousel"
 
 
-// import { Badge } from "@/components/ui/badge";
+
 import AttendanceHistory from "./history/AttendanceHistory";
 import Account from "@/components/Account";
+import { getAllUsers, User } from "@/models/User";
+import { useQuery } from "@tanstack/react-query";
+import { useClerk, useUser } from "@clerk/nextjs";
 
 interface UiButton {
 	name: string;
 	iconName: React.ComponentType;
 	link: string;
 }
-
-const buttons: UiButton[] = [
-	{
-		name: "Attendance",
-		iconName: GanttChart,
-		link: "/attendance",
-	},
-	{
-		name: "Students",
-		iconName: UsersRound,
-		link: "/students",
-	},
-	{
-		name: "Events",
-		iconName: CalendarFold,
-		link: "/events",
-	},
-];
 
 const features = [
 	{
@@ -92,6 +80,42 @@ const features = [
 ];
 
 export default function Home() {
+
+	const {
+		data: users = [],
+		error,
+		isLoading,
+	} = useQuery<User[]>({
+		queryKey: ["users"],
+		queryFn: getAllUsers,
+	});
+
+	const { isLoaded, isSignedIn, user } = useUser();
+	const { signOut } = useClerk();
+
+	if (isLoaded && users.length != 0) {
+		const emailExists = (users: User[], email: string): boolean => {
+			return users.some(user => user.email === email);
+		};
+
+		if (emailExists(users, String(user?.primaryEmailAddress))) {
+			console.log("EMAIL IS AUTHORIZED")
+			console.log("EMAIL IS AUTHORIZED")
+			console.log("EMAIL IS AUTHORIZED")
+		} else {
+			console.log("EMAIL IS UNAUTHORIZED")
+			console.log("EMAIL IS UNAUTHORIZED")
+			console.log("EMAIL IS UNAUTHORIZED")
+			signOut({ redirectUrl: '/' })
+		}
+	}
+
+
+
+
+
+
+
 	return (
 		<section className="flex flex-col gap-4 p-2">
 			{/* TOP SECTION */}

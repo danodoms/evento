@@ -7,7 +7,7 @@ export type User = {
   email: string;
   role: number;
   is_active?: boolean;
-  created_at?: string;
+  created_at: string;
 };
 
 export async function getAllUsers(): Promise<User[]> {

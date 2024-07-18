@@ -25,37 +25,19 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet";
-import {
-    type Event,
-    deactivateEvent,
-    getEvents,
-} from "@/models/Event";
 import { format, getMonth, getYear, parseISO } from "date-fns";
 import {
-    Calendar,
-    Clock,
     Ellipsis,
     Filter,
-    MapPin,
     Plus,
-    TableProperties,
     Trash,
-    FileBarChart2,
     Crown,
-    ShieldCheck,
     BadgeCheck,
     Award,
-    ChevronsUpDown
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import EventFormDialog from "@/app/events/EventFormDialog"
 import { getAllUsers, type User, convertRole, deactivateUser } from "@/models/User";
-import {
-    Collapsible,
-    CollapsibleContent,
-    CollapsibleTrigger,
-} from "@/components/ui/collapsible"
 import UserFormDialog from "./UserFormDialog";
 
 
@@ -67,7 +49,7 @@ export default function AdminPage() {
         error,
         isLoading,
     } = useQuery<User[]>({
-        queryKey: ["events"],
+        queryKey: ["users"],
         queryFn: getAllUsers,
     });
 
