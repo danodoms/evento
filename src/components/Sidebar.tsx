@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { CalendarFold, House, Scan, UsersRound } from "lucide-react";
+import { CalendarFold, House, Scan, UsersRound, Lock } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -23,6 +23,8 @@ export default function Sidebar() {
                 setActiveLink("scan");
             } else if (pathname === "/events") {
                 setActiveLink("events");
+            } else if (pathname === "/admin") {
+                setActiveLink("admin");
             }
         }
     }, [pathname]);
@@ -44,7 +46,11 @@ export default function Sidebar() {
                     <Account />
                 </div>
 
-                {/* <Separator className="" /> */}
+                <Link href="/admin" className={linkClasses("admin")}>
+                    <Lock className="size-5" />Manage Access
+                </Link>
+
+                <Separator className="my-1" />
 
                 <Link href="/" className={linkClasses("home")}>
                     <House className="size-5" />Home

@@ -24,7 +24,7 @@ import {
 import LoginButton from "./LogoutButton";
 import LoginLogoutButton from "./LogoutButton";
 import { set } from "date-fns";
-import { useAuth, useUser } from "@clerk/nextjs";
+import { useAuth, useUser, UserButton } from "@clerk/nextjs";
 
 
 export default function Account() {
@@ -36,41 +36,15 @@ export default function Account() {
 
 
     return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                {/* <Button variant="outline">Open</Button> */}
-                <div className="flex flex-wrap gap-3 items-center">
-                    <Avatar>
-                        <AvatarImage src={user?.imageUrl} alt="user-profile" />
-                        <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
+        <div className="flex flex-wrap gap-3 items-center">
+            <div className="items-center lg:order-last">
+                <p className="text-xs opacity-50 hidden lg:block">Logged in as</p>
+                <p className="text-sm"> {user?.fullName ?? "user"}</p>
+            </div>
 
-                    <div className="items-center">
-                        <p className="text-xs opacity-50">Logged in as</p>
-                        <p className="text-sm"> {user?.fullName ?? "user"}</p>
-                    </div>
-
-
-                    {user !== null ?
-                        (<p>
-                            {/* {user.email ?? "user"} */}
-                        </p>)
-                        :
-                        (<div>
-                            <h1 className="text-destructive text-sm">No user logged in</h1>
-                        </div>)}
-
-
-                </div>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-                <DropdownMenuLabel>null</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                    <LoginLogoutButton />
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
+            <div className="flex items-center">
+                <UserButton />
+            </div>
+        </div>
     )
 }
-
