@@ -233,7 +233,7 @@ export default function Home() {
 				<span>Recent Scan Results</span>
 			</div>
 
-			<div className="overflow-auto h-80 rounded-lg">
+			<div className="overflow-auto max-h-96 overflow-y-auto rounded-lg">
 				<AttendanceHistory />
 			</div>
 		</section >

@@ -1,6 +1,5 @@
 'use client';
 
-import clsx from 'clsx';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 
@@ -12,10 +11,10 @@ import {
     PaginationLink,
     PaginationNext,
     PaginationPrevious,
-} from "@/components/ui/pagination"
+} from "@/components/ui/pagination";
 
-
-export default function PaginationComponent({ totalPages }: { totalPages: number }) {
+export default function PaginationComponent({ totalItems, itemsPerPage }: { totalItems: number, itemsPerPage: number }) {
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const currentPage = Number(searchParams.get('page')) || 1;
@@ -26,61 +25,67 @@ export default function PaginationComponent({ totalPages }: { totalPages: number
         return `${pathname}?${params.toString()}`;
     };
 
+    const renderPaginationItems = () => {
+        const paginationItems = [];
+        const maxButtons = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+        let endPage = startPage + maxButtons - 1;
+
+        if (endPage > totalPages) {
+            endPage = totalPages;
+            startPage = Math.max(1, endPage - maxButtons + 1);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            paginationItems.push(
+                <PaginationItem key={i}>
+                    <Link href={createPageURL(i)}>
+                        <PaginationLink isActive={i === currentPage}>{i}</PaginationLink>
+                    </Link>
+                </PaginationItem>
+            );
+        }
+
+        if (startPage > 1) {
+            paginationItems.unshift(
+                <PaginationItem key="startEllipsis">
+                    <PaginationEllipsis />
+                </PaginationItem>
+            );
+        }
+
+        if (endPage < totalPages) {
+            paginationItems.push(
+                <PaginationItem key="endEllipsis">
+                    <PaginationEllipsis />
+                </PaginationItem>
+            );
+        }
+
+        return paginationItems;
+    };
+
     return (
-
-        <div className='flex gap-2'>
-            {/* <div>
-                <div className='border p-4 rounded-md'>
-                    5 items
-                </div>
-            </div> */}
-
-            <Pagination className='flex w-full'>
-                <PaginationContent className='flex w-full justify-center'>
-
-                    {currentPage > 1 && (
-                        <PaginationItem className='mr-auto'>
-                            <Link href={createPageURL(currentPage - 1)}>
-                                <PaginationPrevious />
-                            </Link>
-                        </PaginationItem>
-                    )}
-
-
-                    <PaginationItem>
-                        <PaginationLink href="#">1</PaginationLink>
+        <Pagination className="w-full">
+            <PaginationContent className="justify-center">
+                {currentPage > 1 && (
+                    <PaginationItem className="mr-auto">
+                        <Link href={createPageURL(currentPage - 1)}>
+                            <PaginationPrevious />
+                        </Link>
                     </PaginationItem>
+                )}
 
-                    <PaginationItem>
-                        <PaginationLink href="#" isActive>
-                            2
-                        </PaginationLink>
-                    </PaginationItem>
+                {renderPaginationItems()}
 
-                    <PaginationItem>
-                        <PaginationLink href="#">3</PaginationLink>
-                    </PaginationItem>
-
-                    <PaginationItem>
-                        <PaginationLink href="#">4</PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                        <PaginationLink href="#">5</PaginationLink>
-                    </PaginationItem>
-
-                    <PaginationItem>
-                        <PaginationEllipsis />
-                    </PaginationItem>
-
-                    <PaginationItem className='ml-auto'>
+                {currentPage < totalPages && (
+                    <PaginationItem className="ml-auto">
                         <Link href={createPageURL(currentPage + 1)}>
                             <PaginationNext />
                         </Link>
                     </PaginationItem>
-                </PaginationContent>
-            </Pagination>
-        </div>
-
-
-    )
+                )}
+            </PaginationContent>
+        </Pagination>
+    );
 }

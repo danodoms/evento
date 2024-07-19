@@ -56,6 +56,7 @@ import {
 	deactivateStudent,
 	getAllStudents,
 	getFilteredPaginatedStudents,
+	getStudentRowCount,
 } from "@/models/Student";
 import StudentFormDialog from "./StudentFormDialog";
 
@@ -114,6 +115,15 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 		queryKey: ["departments"],
 		queryFn: getDepartments,
 	});
+
+
+	const {
+		data: studentRowCount = 0,
+	} = useQuery<number>({
+		queryKey: ["studentRowCount"],
+		queryFn: getStudentRowCount,
+	});
+
 
 
 	function getDepartmentNameById(departmentId: number): string | undefined {
@@ -246,14 +256,13 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 
 			<div className="flex gap-2 flex-col justify-evenly">
 				<Search />
-
 			</div>
 
 
 
 
 			{students ? (
-				<div className="flex flex-col gap-3 md:grid md:grid-cols-2 lg:grid-cols-3 overflow-y-auto max-h-screen rounded-md w-full">
+				<div className="flex flex-col gap-3 md:grid md:grid-cols-2 lg:grid-cols-3 overflow-y-auto rounded-md w-full">
 					{students.map((student, index) => (
 						<div
 							key={index}
@@ -307,14 +316,19 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 							</div>
 						</div>
 					))}
+
+
 				</div>
+
+
 			) : (
 				<div className="flex flex-col gap-4">
-					<p>No events</p>
+					<p>No students</p>
 				</div>
 			)}
 
-			<PaginationComponent totalPages={2} />
+
+			<PaginationComponent totalItems={studentRowCount} itemsPerPage={10} />
 
 			<ToastContainer />
 		</div>

@@ -53,21 +53,30 @@ export default function RootLayout({
 							{/* <Header /> */}
 
 
-							<main className="pb-14 lg:pb-0 lg:flex">
+							<main className=" lg:pb-0 lg:flex-row flex flex-col h-screen">
 								<div className="hidden lg:block">
 									<Sidebar />
 								</div>
 
-								<div className="p-3 grow h-screen">
+
+
+								<div className="overflow-auto h-full w-full p-3">
+
 									{children}
+
+
 								</div>
+
+								<div className="lg:hidden grow-0">
+									<BottomNav />
+								</div>
+
+
 
 								<Toaster />
 							</main>
 
-							<div className="lg:invisible">
-								<BottomNav />
-							</div>
+
 
 						</ReactQueryProvider>
 					</ThemeProvider>

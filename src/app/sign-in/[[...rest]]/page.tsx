@@ -20,7 +20,7 @@ export default function SignInPage() {
 
 
 
-        <div className="h-screen w-full flex items-center justify-center gap-8 flex-wrap flex-col">
+        <div className="w-full flex items-center justify-center gap-8 flex-wrap flex-col flex-auto h-full">
             <div className="rounded-lg items-center justify-center flex flex-col">
                 <h1 className="font-extrabold lg:text-7xl text-6xl">
                     evento
