@@ -256,7 +256,7 @@ export default function EventsPage() {
 
 								</div>
 								<div className="flex gap-2 items-center">
-									<div className="flex gap-1 items-center rounded-full border px-3 py-1" onClick={() => {
+									<div className="flex gap-1 items-center rounded-full border px-3 py-1 cursor-pointer" onClick={() => {
 										handleGenerateLogs(event)
 									}}>
 										<FileBarChart2 className="size-4" />
