@@ -21,6 +21,8 @@ export default function BottomNav() {
 				setActiveLink("scan");
 			} else if (pathname === "/events") {
 				setActiveLink("events");
+			} else if (pathname === "/admin") {
+				setActiveLink("admin");
 			}
 		}
 	}, [pathname]);
@@ -37,25 +39,27 @@ export default function BottomNav() {
 				<div className="max-w-lg mx-auto flex justify-around items-center p-2">
 					<Link href="/" className={linkClasses("home")}>
 						<House size={24} />
-						<span className="text-xs  scale-75 tracking-wider">Home</span>
+						<span className="text-xs  scale-75 tracking-wider font-semibold">Home</span>
 					</Link>
+
 					<Link href="/students" className={linkClasses("students")}>
 						<UsersRound size={24} />
-						<span className="text-xs  scale-75 tracking-wider">Students</span>
+						<span className="text-xs  scale-75 tracking-wider font-semibold">Students</span>
 					</Link>
+
 					<Link href="/scan" className={linkClasses("scan")}>
 						<Scan size={24} />
-						<span className="text-xs scale-75 tracking-wider">Scan</span>
+						<span className="text-xs scale-75 tracking-wider font-semibold">Scan</span>
 					</Link>
 
 					<Link href="/events" className={linkClasses("events")}>
 						<CalendarFold size={24} />
-						<span className="text-xs scale-75 tracking-wider">Events</span>
+						<span className="text-xs scale-75 tracking-wider font-semibold">Events</span>
 					</Link>
 
-					<Link href="/admin" className={linkClasses("events")}>
+					<Link href="/admin" className={linkClasses("admin")}>
 						<Lock size={24} />
-						<span className="text-xs scale-75 tracking-wider">Manage</span>
+						<span className="text-xs scale-75 tracking-wider font-semibold">Manage</span>
 					</Link>
 				</div>
 			</nav>
