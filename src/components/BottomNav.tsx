@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarFold, House, Scan, UsersRound } from "lucide-react";
+import { CalendarFold, House, Lock, Scan, UsersRound } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -47,13 +47,16 @@ export default function BottomNav() {
 						<Scan size={24} />
 						<span className="text-xs scale-75 tracking-wider">Scan</span>
 					</Link>
+
 					<Link href="/events" className={linkClasses("events")}>
 						<CalendarFold size={24} />
 						<span className="text-xs scale-75 tracking-wider">Events</span>
 					</Link>
-					<div className="opacity-50 hover:opacity-100 transition-opacity duration-200 w-6">
-						<ModeToggle compactMode={true} />
-					</div>
+
+					<Link href="/admin" className={linkClasses("events")}>
+						<Lock size={24} />
+						<span className="text-xs scale-75 tracking-wider">Manage</span>
+					</Link>
 				</div>
 			</nav>
 		);

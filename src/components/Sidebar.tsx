@@ -6,6 +6,7 @@ import { Separator } from "./ui/separator";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Account from "./Account";
+import { ModeToggle } from "./ModeToggle";
 
 
 export default function Sidebar() {
@@ -38,9 +39,17 @@ export default function Sidebar() {
     if (pathname !== "/sign-in") {
         return (
             <nav className="border-r p-3 flex-col flex gap-1 h-full w-72">
-                <p className="font-bold text-2xl p-3">
-                    evento
-                </p>
+
+                <div className="flex items-center gap-1">
+                    <p className="font-bold text-2xl py-3 pl-2 ">
+                        evento
+                    </p>
+
+                    <div className="opacity-50">
+                        <ModeToggle compactMode={true} />
+                    </div>
+                </div>
+
 
                 <div className="p-3 rounded-lg items-center hover:bg-neutral-500 hover:bg-opacity-20 flex">
                     <Account />

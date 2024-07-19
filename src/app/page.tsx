@@ -19,6 +19,7 @@ import { getAllUsers, User } from "@/models/User";
 import { useQuery } from "@tanstack/react-query";
 import { useClerk, useUser } from "@clerk/nextjs";
 import FeaturesCarousel from "@/components/FeaturesCarousel";
+import { ModeToggle } from "@/components/ModeToggle";
 
 interface UiButton {
 	name: string;
@@ -65,11 +66,13 @@ export default function Home() {
 			{/* TOP SECTION */}
 
 			<div className="flex justify-between items-center gap-4 mb-8 lg:hidden">
-				<h1 className="font-bold text-xl text-pretty">{appName}</h1>
-				{/* <Avatar>
-					<AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-					<AvatarFallback>CN</AvatarFallback>
-				</Avatar> */}
+				<div className="flex gap-2 items-center">
+					<h1 className="font-bold text-xl text-pretty">{appName}</h1>
+					<div className="opacity-50">
+						<ModeToggle compactMode={true} />
+					</div>
+				</div>
+
 
 				<Account />
 			</div>
