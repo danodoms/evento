@@ -1,5 +1,5 @@
-
 "use client"
+
 
 import { Separator } from "@/components/ui/separator";
 import { appName } from "@/config";
@@ -81,6 +81,7 @@ const features = [
 
 export default function Home() {
 
+
 	const {
 		data: users = [],
 		error,
@@ -109,10 +110,6 @@ export default function Home() {
 			signOut({ redirectUrl: '/' })
 		}
 	}
-
-
-
-
 
 
 

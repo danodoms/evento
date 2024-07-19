@@ -50,6 +50,18 @@ type StudentRecordsDialogProps = {
 	student: Student;
 };
 
+
+
+const formatDate = (dateString: string): string =>
+	format(parseISO(dateString), "MMMM d, yyyy");
+
+
+const getEventNameFromDate = (events: Event[], date: string) => {
+	const event = events.find((event) => event.date === date);
+	return event ? event.name : formatDate(date);
+};
+
+
 const StudentRecordsDialog = ({ student }: StudentRecordsDialogProps) => {
 	const {
 		data: attendanceRecords = [],
@@ -69,13 +81,8 @@ const StudentRecordsDialog = ({ student }: StudentRecordsDialogProps) => {
 		queryFn: getEvents,
 	});
 
-	const getEventNameFromDate = (date: string) => {
-		const event = events.find((event) => event.date === date);
-		return event ? event.name : formatDate(date);
-	};
 
-	const formatDate = (dateString: string): string =>
-		format(parseISO(dateString), "MMMM d, yyyy");
+
 
 	const isDesktop = useMediaQuery("(min-width: 768px)");
 
@@ -88,20 +95,20 @@ const StudentRecordsDialog = ({ student }: StudentRecordsDialogProps) => {
 			<Dialog>
 				<DialogTrigger>
 					{/* <Button variant="ghost" className="">Edit</Button> */}
-					<div className="flex gap-1 items-center">
-						<TableProperties className="size-4" />
-						<p className="text-xs font-bold">Records</p>
-					</div>
+					<Trigger />
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-[425px]">
 					<DialogHeader>
-						<DialogTitle>{title}</DialogTitle>
+						<DialogTitle>{student?.name}</DialogTitle>
+
+						<p className="text-xs tracking-wide">
+							{student?.school_id}
+						</p>
 						<DialogDescription className="text-balance">
-							{description}
 						</DialogDescription>
 					</DialogHeader>
 
-					{/* <StudentForm student={student} /> */}
+					<AttendanceRecordsSection attendanceRecords={attendanceRecords} events={events} />
 
 					{/* <DialogFooter>
                 <Button type="submit">Save changes</Button>
@@ -115,10 +122,7 @@ const StudentRecordsDialog = ({ student }: StudentRecordsDialogProps) => {
 		<Drawer>
 			<DrawerTrigger>
 				{/* <Button variant="ghost" className="">Edit</Button> */}
-				<div className="flex gap-1 items-center rounded-full border px-3 py-1">
-					<TableProperties className="size-4" />
-					<p className="text-xs font-bold">View Records</p>
-				</div>
+				<Trigger />
 			</DrawerTrigger>
 			<DrawerContent>
 				<DrawerHeader>
@@ -129,36 +133,7 @@ const StudentRecordsDialog = ({ student }: StudentRecordsDialogProps) => {
 					<DrawerDescription className="text-balance text-xs px-4"></DrawerDescription>
 				</DrawerHeader>
 
-				<div className="p-4 max-h-96 overflow-y-auto">
-					{attendanceRecords.length > 0 ? (
-						<Table>
-							{/* <TableCaption>A list of your recent invoices.</TableCaption> */}
-							<TableHeader>
-								<TableRow>
-									<TableHead>Date</TableHead>
-									<TableHead>Time In</TableHead>
-									<TableHead>Time Out</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody className="">
-								{attendanceRecords?.map((record) => (
-									<TableRow key={record.id}>
-										<TableCell className="font-medium">
-											{getEventNameFromDate(record.date)}
-										</TableCell>
-										<TableCell>{record.time_in}</TableCell>
-										<TableCell>{record.time_out}</TableCell>
-										{/* <TableCell className="text-right">$250.00</TableCell> */}
-									</TableRow>
-								))}
-							</TableBody>
-						</Table>
-					) : (
-						<div className="flex items-center justify-center h-full">
-							<p className="text-center text-sm border px-4 py-2 rounded-full">No records found</p>
-						</div>
-					)}
-				</div>
+				<AttendanceRecordsSection attendanceRecords={attendanceRecords} events={events} />
 
 				<DrawerFooter>
 					{/* <Button>Submit</Button> */}
@@ -172,5 +147,60 @@ const StudentRecordsDialog = ({ student }: StudentRecordsDialogProps) => {
 		</Drawer>
 	);
 };
+
+
+
+
+type AttendanceSectionProps = {
+	attendanceRecords: Attendance[];
+	events: Event[];
+}
+
+
+const Trigger = () => {
+	return (
+		<div className="flex gap-1 items-center rounded-full border px-3 py-1">
+			<TableProperties className="size-4" />
+			<p className="text-xs font-bold">View Records</p>
+		</div>
+	)
+}
+
+const AttendanceRecordsSection: React.FC<AttendanceSectionProps> = ({ attendanceRecords, events }) => {
+
+	return (
+		<div className="p-4 max-h-96 overflow-y-auto">
+			{attendanceRecords.length > 0 ? (
+				<Table>
+					{/* <TableCaption>A list of your recent invoices.</TableCaption> */}
+					<TableHeader>
+						<TableRow>
+							<TableHead>Date</TableHead>
+							<TableHead>Time In</TableHead>
+							<TableHead>Time Out</TableHead>
+						</TableRow>
+					</TableHeader>
+					<TableBody className="">
+						{attendanceRecords?.map((record) => (
+							<TableRow key={record.id}>
+								<TableCell className="font-medium">
+									{getEventNameFromDate(events, record.date)}
+								</TableCell>
+								<TableCell>{record.time_in}</TableCell>
+								<TableCell>{record.time_out}</TableCell>
+								{/* <TableCell className="text-right">$250.00</TableCell> */}
+							</TableRow>
+						))}
+					</TableBody>
+				</Table>
+			) : (
+				<div className="flex items-center justify-center h-full">
+					<p className="text-center text-sm border px-4 py-2 rounded-full">No records found</p>
+				</div>
+			)}
+		</div>
+	)
+
+}
 
 export default StudentRecordsDialog;

@@ -34,11 +34,18 @@ import {
     Crown,
     BadgeCheck,
     Award,
+    Info,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { getAllUsers, type User, convertRole, deactivateUser } from "@/models/User";
 import UserFormDialog from "./UserFormDialog";
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion"
 
 
 
@@ -141,7 +148,7 @@ export default function AdminPage() {
             </div>
 
 
-            <div className="p-4 border rounded-lg flex flex-col gap-2 ">
+            {/* <div className="p-4 border rounded-lg flex flex-col gap-2 ">
                 <h2 className="">
                     About User roles
                 </h2>
@@ -155,7 +162,28 @@ export default function AdminPage() {
 
                     <p><BadgeCheck className="inline-block mr-2" />Representative: Scan module only</p>
                 </div>
-            </div>
+            </div> */}
+
+
+            <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="item-1">
+                    <AccordionTrigger >
+                        <div className="flex gap-3 items-center">
+                            <Info />
+                            About roles
+                        </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                        <div className="text-xs flex flex-col gap-3 ">
+                            <p><Crown className="inline-block mr-2" />Admin: Full access</p>
+
+                            <p><Award className="inline-block mr-2" />Officer: Scanning and adding students</p>
+
+                            <p><BadgeCheck className="inline-block mr-2" />Representative: Scan module only</p>
+                        </div>
+                    </AccordionContent>
+                </AccordionItem>
+            </Accordion>
 
 
 
