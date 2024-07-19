@@ -1,6 +1,6 @@
 import { SignIn } from "@clerk/nextjs";
 
-import { CalendarDays, Download, Map, TriangleAlert } from "lucide-react";
+import { CalendarDays, Download, Map, TriangleAlert, Zap } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -42,7 +42,7 @@ export default function SignInPage() {
                 <h1 className="font-extrabold lg:text-7xl text-6xl">
                     evento
                 </h1>
-                <p className="text-balance  text-xs opacity-70">Streamlining university events</p>
+                <p className="text-balance  text-xs opacity-70 flex gap-1 items-center"><Zap className="size-3" />Streamlining university events</p>
 
 
                 <p className="text-sm text-center text-balance opacity-50 mt-6">An internal web app of Davao Oriental State   <br /> University
