@@ -46,11 +46,19 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion"
+import { useAuth } from "@/hooks/useAuth";
+import Unauthorized from "@/components/auth/Unauthorized";
 
 
 
 
 export default function AdminPage() {
+
+    const { currentUserRole } = useAuth()
+
+
+
+
     const {
         data: users = [],
         error,
@@ -92,6 +100,11 @@ export default function AdminPage() {
     const filteredUsers = users.filter(
         (user) => (statusFilter === "active" ? user.is_active : !user.is_active),
     );
+
+
+    if (currentUserRole !== "ADMIN") {
+        return <Unauthorized />
+    }
 
     return (
         <div className="flex flex-col gap-4">

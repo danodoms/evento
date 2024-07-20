@@ -21,16 +21,18 @@ export async function getAllUsers(): Promise<User[]> {
   return data as User[];
 }
 
-export function convertRole(role: number): string {
+export type role = "ADMIN" | "OFFICER" | "REPRESENTATIVE";
+
+export function convertRole(role: number): role {
   switch (role) {
     case 0:
-      return "Admin";
+      return "ADMIN";
     case 1:
-      return "Officer";
+      return "OFFICER";
     case 2:
-      return "Representative";
+      return "REPRESENTATIVE";
     default:
-      return "undefined";
+      return "REPRESENTATIVE";
   }
 }
 

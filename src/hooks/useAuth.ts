@@ -2,13 +2,18 @@ import { useClerk, useAuth as useClerkAuth, useUser } from "@clerk/nextjs";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getAllUsers, User } from "@/models/User"; // Adjust this import based on your actual implementation
+import { convertRole, getAllUsers, role, User } from "@/models/User"; // Adjust this import based on your actual implementation
 
 export function useAuth() {
   const { isSignedIn, isLoaded } = useClerkAuth();
   const { user } = useUser();
   const router = useRouter();
   const pathname = usePathname();
+
+  const [currentUserRole, setCurrentUserRole] =
+    useState<role>("REPRESENTATIVE");
+
+  //THIS SETS THE INITIAL SCREEN WHEN AUTHENTICATING:  when set to TRUE, it does not show the authenticating screen to authorized users but shows unauthorized users the homescreen briefly
   const [isAuthorized, setIsAuthorized] = useState(true);
   const { signOut } = useClerk();
 
@@ -23,6 +28,13 @@ export function useAuth() {
   const emailExists = (users: User[], email: string): boolean => {
     console.log("Finding this email: ", email);
     return users.some((user) => user.email === email && user.is_active);
+  };
+
+  const getUserRole = (users: User[], email: string): role => {
+    console.log("Finding role for this email: ", email);
+    const user = users.find((user) => user.email === email && user.is_active);
+
+    return user ? convertRole(user.role) : "REPRESENTATIVE";
   };
 
   useEffect(() => {
@@ -56,6 +68,9 @@ export function useAuth() {
         if (isUserAuthorized) {
           console.log("User authorized");
           setIsAuthorized(true);
+          setCurrentUserRole(() =>
+            getUserRole(authorizedUsers, String(user.primaryEmailAddress))
+          );
         } else {
           console.log("User not authorized");
           setIsAuthorized(false);
@@ -79,5 +94,6 @@ export function useAuth() {
     isLoaded: isLoaded && !isUsersLoading,
     isAuthorized,
     user,
+    currentUserRole,
   };
 }
