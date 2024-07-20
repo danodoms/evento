@@ -11,7 +11,7 @@ import { ReactQueryProvider } from "./ReactQueryProvider";
 import Sidebar from "@/components/Sidebar";
 
 import { ClerkProvider } from '@clerk/nextjs'
-import AuthGuard from "@/components/AuthGuard";
+import AuthGuard from "@/components/auth/AuthGuard";
 
 
 const fontSans = FontSans({

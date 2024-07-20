@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 import { useAuth } from '@/hooks/useAuth'; // Adjust the import path as needed
 import { usePathname } from 'next/navigation';
 import Unauthorized from './Unauthorized';
-import Loading from './Loading';
+import Loading from '../Loading';
 
 interface AuthGuardProps {
     children: ReactNode;
