@@ -1,4 +1,4 @@
-"use client"
+// "use client"
 
 
 import { Separator } from "@/components/ui/separator";
@@ -30,34 +30,34 @@ interface UiButton {
 
 export default function Home() {
 
-	const {
-		data: users = [],
-		error,
-		isLoading,
-	} = useQuery<User[]>({
-		queryKey: ["users"],
-		queryFn: getAllUsers,
-	});
+	// const {
+	// 	data: users = [],
+	// 	error,
+	// 	isLoading,
+	// } = useQuery<User[]>({
+	// 	queryKey: ["users"],
+	// 	queryFn: getAllUsers,
+	// });
 
-	const { isLoaded, isSignedIn, user } = useUser();
-	const { signOut } = useClerk();
+	// const { isLoaded, isSignedIn, user } = useUser();
+	// const { signOut } = useClerk();
 
-	if (isLoaded && users.length != 0) {
-		const emailExists = (users: User[], email: string): boolean => {
-			return users.some(user => user.email === email);
-		};
+	// if (isLoaded && users.length !== 0) {
+	// 	const emailExists = (users: User[], email: string): boolean => {
+	// 		return users.some(user => user.email === email && user.is_active);
+	// 	};
 
-		if (emailExists(users, String(user?.primaryEmailAddress))) {
-			console.log("EMAIL IS AUTHORIZED")
-			console.log("EMAIL IS AUTHORIZED")
-			console.log("EMAIL IS AUTHORIZED")
-		} else {
-			console.log("EMAIL IS UNAUTHORIZED")
-			console.log("EMAIL IS UNAUTHORIZED")
-			console.log("EMAIL IS UNAUTHORIZED")
-			signOut({ redirectUrl: '/' })
-		}
-	}
+	// 	if (emailExists(users, String(user?.primaryEmailAddress))) {
+	// 		console.log("EMAIL IS AUTHORIZED");
+	// 		console.log("EMAIL IS AUTHORIZED");
+	// 		console.log("EMAIL IS AUTHORIZED");
+	// 	} else {
+	// 		console.log("EMAIL IS UNAUTHORIZED");
+	// 		console.log("EMAIL IS UNAUTHORIZED");
+	// 		console.log("EMAIL IS UNAUTHORIZED");
+	// 		signOut({ redirectUrl: '/' });
+	// 	}
+	// }
 
 
 

@@ -89,6 +89,9 @@ export default function AdminPage() {
         }
     };
 
+    const filteredUsers = users.filter(
+        (user) => (statusFilter === "active" ? user.is_active : !user.is_active),
+    );
 
     return (
         <div className="flex flex-col gap-4">
@@ -187,9 +190,9 @@ export default function AdminPage() {
 
 
 
-            {users.length ? (
+            {filteredUsers.length ? (
                 <div className="flex flex-col gap-3 md:grid grid-cols-2 overflow-y-auto max-h-screen rounded-md">
-                    {users.map((user) => (
+                    {filteredUsers.map((user) => (
                         <div
                             key={user.id}
                             className="p-4 border rounded-lg flex flex-col gap-2 backdrop-contrast-50 backdrop-opacity-25"
@@ -203,6 +206,10 @@ export default function AdminPage() {
                                     {getIconByRole(user.role)}
 
                                     <p className="font-semibold text-sm">{convertRole(user.role)}</p>
+
+
+                                    {!user.is_active && <Badge variant="destructive">Deactivated</Badge>}
+
 
                                 </div>
                                 <div className="flex gap-2 items-center">
