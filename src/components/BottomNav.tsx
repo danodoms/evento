@@ -1,15 +1,18 @@
 "use client";
 
-import { CalendarFold, House, Lock, Scan, UsersRound } from "lucide-react";
+import { CalendarFold, House, Lock, Scan, QrCode, UsersRound } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { unknown } from "zod";
 import { ModeToggle } from "./ModeToggle";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function BottomNav() {
 	const pathname = usePathname();
 	const [activeLink, setActiveLink] = useState("");
+
+	const { currentUserRole } = useAuth()
 
 	useEffect(() => {
 		if (pathname) {
@@ -34,9 +37,9 @@ export default function BottomNav() {
     `;
 	if (pathname !== "/sign-in") {
 		return (
-			<nav className="w-full bg-background border-t z-50">
+			<nav className="w-full z-50">
 				{/* <nav className="fixed bottom-0 w-full bg-background border-t z-50"> */}
-				<div className="max-w-lg mx-auto flex justify-around items-center p-2">
+				<div className="max-w-lg mx-auto flex justify-around items-center px-2 pt-2 pb-1">
 					<Link href="/" className={linkClasses("home")}>
 						<House size={24} />
 						<span className="text-xs  scale-75 tracking-wider font-semibold">Home</span>
@@ -47,8 +50,9 @@ export default function BottomNav() {
 						<span className="text-xs  scale-75 tracking-wider font-semibold">Students</span>
 					</Link>
 
+
 					<Link href="/scan" className={linkClasses("scan")}>
-						<Scan size={24} />
+						<QrCode size={24} />
 						<span className="text-xs scale-75 tracking-wider font-semibold">Scan</span>
 					</Link>
 
@@ -57,10 +61,12 @@ export default function BottomNav() {
 						<span className="text-xs scale-75 tracking-wider font-semibold">Events</span>
 					</Link>
 
-					<Link href="/admin" className={linkClasses("admin")}>
-						<Lock size={24} />
-						<span className="text-xs scale-75 tracking-wider font-semibold">Manage</span>
-					</Link>
+					{currentUserRole === "ADMIN" &&
+						<Link href="/admin" className={linkClasses("admin")}>
+							<Lock size={24} />
+							<span className="text-xs scale-75 tracking-wider font-semibold">Manage</span>
+						</Link>
+					}
 				</div>
 			</nav>
 		);

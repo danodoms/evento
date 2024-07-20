@@ -13,10 +13,16 @@ import {
     PaginationPrevious,
 } from "@/components/ui/pagination";
 
-export default function PaginationComponent({ totalItems, itemsPerPage }: { totalItems: number, itemsPerPage: number }) {
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
+export default function PaginationComponent({ totalItems, itemsPerPage }: { totalItems: number | null, itemsPerPage: number }) {
     const pathname = usePathname();
     const searchParams = useSearchParams();
+
+    if (totalItems === null) {
+        return null;
+    }
+
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
     const currentPage = Number(searchParams.get('page')) || 1;
 
     const createPageURL = (pageNumber: number | string) => {

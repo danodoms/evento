@@ -21,16 +21,18 @@ export async function getAllUsers(): Promise<User[]> {
   return data as User[];
 }
 
-export function convertRole(role: number): string {
+export type role = "ADMIN" | "OFFICER" | "REPRESENTATIVE";
+
+export function convertRole(role: number): role {
   switch (role) {
     case 0:
-      return "Admin";
+      return "ADMIN";
     case 1:
-      return "Officer";
+      return "OFFICER";
     case 2:
-      return "Representative";
+      return "REPRESENTATIVE";
     default:
-      return "undefined";
+      return "REPRESENTATIVE";
   }
 }
 
@@ -79,5 +81,23 @@ export async function deactivateUser(user: User): Promise<User | null> {
   }
 
   console.log("Deactivated user:", data);
+  return data as User;
+}
+
+export async function toggleUserStatus(user: User): Promise<User | null> {
+  const newStatus = !user.is_active;
+
+  const { data, error } = await supabase
+    .from("users")
+    .update({ is_active: newStatus })
+    .eq("id", user.id)
+    .single();
+
+  if (error) {
+    console.error("Error toggling user status:", error);
+    return null;
+  }
+
+  console.log("Toggled user status:", data);
   return data as User;
 }

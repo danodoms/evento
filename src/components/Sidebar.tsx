@@ -7,12 +7,15 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Account from "./Account";
 import { ModeToggle } from "./ModeToggle";
+import { useAuth } from "@/hooks/useAuth";
 
 
 export default function Sidebar() {
 
     const pathname = usePathname();
     const [activeLink, setActiveLink] = useState("");
+
+    const { currentUserRole } = useAuth()
 
     useEffect(() => {
         if (pathname) {
@@ -39,7 +42,6 @@ export default function Sidebar() {
     if (pathname !== "/sign-in") {
         return (
             <nav className="border-r p-3 flex-col flex gap-1 h-full w-72">
-
                 <div className="flex items-center gap-1">
                     <p className="font-bold text-2xl py-3 pl-2 ">
                         evento
@@ -55,11 +57,18 @@ export default function Sidebar() {
                     <Account />
                 </div>
 
-                <Link href="/admin" className={linkClasses("admin")}>
-                    <Lock className="size-5" />Manage Access
-                </Link>
 
-                <Separator className="" />
+                {currentUserRole === "ADMIN" &&
+                    <>
+                        <Link href="/admin" className={linkClasses("admin")}>
+                            <Lock className="size-5" />Manage Access
+                        </Link>
+
+                        <Separator className="" />
+                    </>
+                }
+
+
 
                 <Link href="/" className={linkClasses("home")}>
                     <House className="size-5" />Home

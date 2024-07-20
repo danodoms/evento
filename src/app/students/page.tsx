@@ -56,7 +56,6 @@ import {
 	deactivateStudent,
 	getAllStudents,
 	getFilteredPaginatedStudents,
-	getStudentRowCount,
 } from "@/models/Student";
 import StudentFormDialog from "./StudentFormDialog";
 
@@ -99,10 +98,10 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 
 
 	const {
-		data: students = [],
+		data: { students = [], count: studentRowCount = null } = {},
 		error: studentsError,
 		isLoading: isStudentsLoading,
-	} = useQuery<Student[]>({
+	} = useQuery<{ students: Student[]; count: number | null }>({
 		queryKey: ["paginatedStudents", query, currentPage, departmentFilter, statusFilter],
 		queryFn: () => getFilteredPaginatedStudents(currentPage, query, departmentFilter !== "all" ? Number(departmentFilter) : null, statusFilter === "active"),
 	});
@@ -117,12 +116,12 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 	});
 
 
-	const {
-		data: studentRowCount = 0,
-	} = useQuery<number>({
-		queryKey: ["studentRowCount"],
-		queryFn: getStudentRowCount,
-	});
+	// const {
+	// 	data: studentRowCount = 0,
+	// } = useQuery<number>({
+	// 	queryKey: ["studentRowCount"],
+	// 	queryFn: getStudentRowCount,
+	// });
 
 
 
@@ -261,7 +260,7 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 
 
 
-			{students ? (
+			{students.length > 0 ? (
 				<div className="flex flex-col gap-3 md:grid md:grid-cols-2 lg:grid-cols-3 overflow-y-auto rounded-md w-full">
 					{students.map((student, index) => (
 						<div
@@ -322,7 +321,7 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 
 
 			) : (
-				<div className="flex flex-col gap-4">
+				<div className="flex flex-col mx-auto gap-4 p-20 opacity-50">
 					<p>No students</p>
 				</div>
 			)}
