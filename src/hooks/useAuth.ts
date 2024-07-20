@@ -9,7 +9,7 @@ export function useAuth() {
   const { user } = useUser();
   const router = useRouter();
   const pathname = usePathname();
-  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(true);
   const { signOut } = useClerk();
 
   const { data: authorizedUsers = [], isLoading: isUsersLoading } = useQuery<
