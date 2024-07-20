@@ -44,7 +44,7 @@ import { Student } from "@/models/Student";
 import useMediaQuery from "@custom-react-hooks/use-media-query";
 import { useQuery } from "@tanstack/react-query";
 import { format, parseISO } from "date-fns";
-import { TableProperties } from "lucide-react";
+import { TableProperties, CircleAlert } from "lucide-react";
 
 type StudentRecordsDialogProps = {
 	student: Student;
@@ -195,7 +195,7 @@ const AttendanceRecordsSection: React.FC<AttendanceSectionProps> = ({ attendance
 				</Table>
 			) : (
 				<div className="flex items-center justify-center h-full">
-					<p className="text-center text-sm border px-4 py-2 rounded-full">No records found</p>
+					<p className="text-center text-sm px-4 py-2 rounded-full flex items-center gap-2"><CircleAlert className="size-4" />No records found</p>
 				</div>
 			)}
 		</div>

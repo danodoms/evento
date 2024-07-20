@@ -35,10 +35,12 @@ import {
     BadgeCheck,
     Award,
     Info,
+    Ban,
+    Check,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { getAllUsers, type User, convertRole, deactivateUser } from "@/models/User";
+import { getAllUsers, type User, convertRole, toggleUserStatus } from "@/models/User";
 import UserFormDialog from "./UserFormDialog";
 import {
     Accordion,
@@ -63,6 +65,7 @@ export default function AdminPage() {
         data: users = [],
         error,
         isLoading,
+        refetch
     } = useQuery<User[]>({
         queryKey: ["users"],
         queryFn: getAllUsers,
@@ -82,6 +85,11 @@ export default function AdminPage() {
         if (statusFilter !== "active") count++;
         return count;
     };
+
+    const handleToggleUserStatus = (user: User) => {
+        toggleUserStatus(user);
+        refetch()
+    }
 
 
     const getIconByRole = (role: number) => {
@@ -233,12 +241,15 @@ export default function AdminPage() {
                                         <DropdownMenuContent>
                                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                             <DropdownMenuSeparator />
-                                            <DropdownMenuItem asChild>
+                                            <DropdownMenuItem asChild className="w-full">
                                                 <UserFormDialog user={user} />
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => deactivateUser(user)}>
-                                                <Trash className="size-4 mr-2" />
-                                                Delete
+                                            <DropdownMenuItem onClick={() => handleToggleUserStatus(user)}>
+                                                {user.is_active ? (
+                                                    <><Ban className="size-4 mr-2" />Deactivate</>
+                                                ) : (
+                                                    <><Check className="size-4 mr-2" />Activate</>
+                                                )}
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>

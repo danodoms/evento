@@ -83,3 +83,21 @@ export async function deactivateUser(user: User): Promise<User | null> {
   console.log("Deactivated user:", data);
   return data as User;
 }
+
+export async function toggleUserStatus(user: User): Promise<User | null> {
+  const newStatus = !user.is_active;
+
+  const { data, error } = await supabase
+    .from("users")
+    .update({ is_active: newStatus })
+    .eq("id", user.id)
+    .single();
+
+  if (error) {
+    console.error("Error toggling user status:", error);
+    return null;
+  }
+
+  console.log("Toggled user status:", data);
+  return data as User;
+}

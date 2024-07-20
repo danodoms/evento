@@ -34,6 +34,8 @@ type UserFormDialogProps = {
     user?: User;
 };
 
+import { PenLineIcon } from "lucide-react"
+
 const UserFormDialog = ({ user }: UserFormDialogProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -62,9 +64,7 @@ const UserFormDialog = ({ user }: UserFormDialogProps) => {
         return (
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogTrigger>
-                    <Button variant="ghost" className="">
-                        Edit
-                    </Button>
+                    <Trigger />
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
@@ -91,9 +91,7 @@ const UserFormDialog = ({ user }: UserFormDialogProps) => {
     return (
         <Drawer open={isOpen} onOpenChange={setIsOpen}>
             <DrawerTrigger>
-                <Button variant="ghost" className="">
-                    Edit
-                </Button>
+                <Trigger />
             </DrawerTrigger>
             <DrawerContent>
                 <DrawerHeader>
@@ -123,5 +121,14 @@ const UserFormDialog = ({ user }: UserFormDialogProps) => {
         </Drawer>
     );
 };
+
+
+function Trigger() {
+    return (
+        <Button variant="ghost" className="w-full flex gap-2">
+            <PenLineIcon className="size-4" />Edit
+        </Button>
+    )
+}
 
 export default UserFormDialog;
