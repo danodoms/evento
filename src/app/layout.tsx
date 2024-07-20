@@ -11,6 +11,7 @@ import { ReactQueryProvider } from "./ReactQueryProvider";
 import Sidebar from "@/components/Sidebar";
 
 import { ClerkProvider } from '@clerk/nextjs'
+import AuthGuard from "@/components/auth/AuthGuard";
 
 
 const fontSans = FontSans({
@@ -34,54 +35,60 @@ export default function RootLayout({
 }>) {
 	return (
 		<ClerkProvider afterSignOutUrl={"/sign-in"}>
-			<html lang="en">
-				<body
-					className={cn(
-						"h-screen bg-background font-sans antialiased ",
-						fontSans.variable,
-					)}
-				>
-					<ThemeProvider
-						attribute="class"
-						defaultTheme="system"
-						enableSystem
-						disableTransitionOnChange
+			<ReactQueryProvider>
+				<html lang="en">
+					<body
+
+						className={cn(
+							"h-screen bg-background font-sans antialiased ",
+							fontSans.variable,
+						)}
 					>
-						<ReactQueryProvider>
-							{/* <ReactQueryDevtools /> */}
 
-							{/* <Header /> */}
+						<ThemeProvider
+							attribute="class"
+							defaultTheme="system"
+							enableSystem
+							disableTransitionOnChange
+						>
+							<AuthGuard>
 
+								{/* <ReactQueryDevtools /> */}
 
-							<main className=" lg:pb-0 lg:flex-row flex flex-col h-screen">
-								<div className="hidden lg:block">
-									<Sidebar />
-								</div>
-
-
-
-								<div className="overflow-auto h-full w-full p-3">
-
-									{children}
+								{/* <Header /> */}
 
 
-								</div>
-
-								<div className="lg:hidden grow-0">
-									<BottomNav />
-								</div>
+								<main className=" lg:pb-0 lg:flex-row flex flex-col h-screen">
+									<div className="hidden lg:block">
+										<Sidebar />
+									</div>
 
 
 
-								<Toaster />
-							</main>
+									<div className="overflow-auto h-full w-full p-3">
+
+										{children}
+
+
+									</div>
+
+									<div className="lg:hidden grow-0">
+										<BottomNav />
+									</div>
 
 
 
-						</ReactQueryProvider>
-					</ThemeProvider>
-				</body>
-			</html>
-		</ClerkProvider>
+									<Toaster />
+								</main>
+
+
+
+							</AuthGuard>
+						</ThemeProvider>
+
+					</body>
+				</html>
+			</ReactQueryProvider>
+		</ClerkProvider >
 	);
 }
