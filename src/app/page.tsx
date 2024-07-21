@@ -8,6 +8,7 @@ import {
 	Heart,
 	QrCode,
 	Map,
+	RotateCw,
 
 } from "lucide-react";
 import Image from "next/image";
@@ -62,10 +63,10 @@ export default function Home() {
 
 
 	return (
-		<section className="flex flex-col gap-4 p-2">
+		<section className="flex flex-col p-2 gap-3 rounded-md ">
 			{/* TOP SECTION */}
 
-			<div className="flex justify-between items-center gap-4 mb-8 lg:hidden">
+			<div className="flex justify-between items-center gap-4 mb-8 lg:hidden  bg-opacity-80">
 				<div className="flex gap-2 items-center">
 					<h1 className="font-bold text-xl text-pretty">{appName}</h1>
 					<div className="opacity-50">
@@ -79,38 +80,10 @@ export default function Home() {
 
 
 
-			<div className="flex flex-col gap-2 rounded-lg -">
+			<div className="flex flex-col ">
 				<h2 className="text-4xl text-pretty  font-bold items-center gap-2">
 					Home
-					{/* <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-500 to-blue-500">
-						{" "}
-						{appName}
-					</span> */}
-					<div className="w-full leading-relaxed rounded-md font-normal flex justify-between text-sm pt-1 mb-2 ">
-						Streamlining university events for students.
-					</div>
 				</h2>
-
-				{/* <Separator /> */}
-
-				<div className="w-full leading-relaxed rounded-md flex justify-between text-xs opacity-70 text-balance">
-					An internal web app for Davao Oriental State University Banaybanay
-					Campus Student Council.
-				</div>
-
-				<div className="flex text-xs font-normal gap-1 opacity-50 pt-1 rounded-md items-center">
-					made with
-					<Heart className="size-3" />
-					by
-					<a
-						href="https://danodoms.vercel.app"
-						target="_blank"
-						className="underline"
-						rel="noreferrer"
-					>
-						danodoms
-					</a>
-				</div>
 			</div>
 
 
@@ -127,8 +100,8 @@ export default function Home() {
 				</div>
 			</div> */}
 
-			<div className="font-semibold text-pretty flex items-center gap-2">
-				<Map />
+			<div className="font-semibold text-pretty flex items-center text-sm mt-2 gap-2">
+				<Map className="size-5" />
 				<span>Explore Features</span>
 			</div>
 
@@ -149,13 +122,24 @@ export default function Home() {
         ))}
       </div> */}
 
-			<div className="font-semibold text-pretty flex items-center gap-2">
-				<QrCode />
+			<div className="flex justify-between">
 
-				<span>Recent Scan Results</span>
+
+
+				<div className="font-semibold text-pretty flex items-center text-sm mt-2 gap-2">
+					<QrCode className="size-5" />
+					<span>Recent Scan Results</span>
+				</div>
+
+				<div className="font-semibold text-pretty opacity-50 flex items-center text-sm mt-2 gap-2">
+					<RotateCw className="size-5" />
+					Refresh
+				</div>
 			</div>
 
-			<div className="overflow-auto max-h-96 overflow-y-auto rounded-lg">
+
+
+			<div className="overflow-auto flex-1 max-h-96 rounded-lg">
 				<AttendanceHistory />
 			</div>
 		</section >

@@ -2,6 +2,7 @@
 
 import TimeInCard from "@/components/TimeInCard";
 import TimeOutCard from "@/components/TimeOutCard";
+import { Separator } from "@/components/ui/separator";
 import { getAllAttendanceRecords } from "@/models/Attendance";
 import type { AttendanceRecord } from "@/models/Attendance";
 import { useQuery } from "@tanstack/react-query";
@@ -31,18 +32,27 @@ const AttendanceHistory: React.FC<AttendanceHistoryProps> = ({
 	}
 
 	return (
-		<section className="flex flex-col gap-2">
+		<section className="flex flex-col gap-2 h-full overflow-auto">
 			{/* <h1 className="font-semibold text-lg">
                 {title}
             </h1> */}
 
 			{attendanceRecords?.map((record: AttendanceRecord) =>
 				record.time_out ? (
-					<TimeOutCard key={record.id} result={record} />
+					<>
+						<TimeOutCard key={record.id} result={record} />
+						{/* <Separator /> */}
+					</>
+
 				) : (
-					<TimeInCard key={record.id} result={record} />
+					<>
+						<TimeInCard key={record.id} result={record} />
+						{/* <Separator /> */}
+					</>
 				),
 			)}
+
+
 		</section>
 	);
 };

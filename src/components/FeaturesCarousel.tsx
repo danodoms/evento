@@ -66,12 +66,12 @@ export default function FeaturesCarousel() {
 
 
     return (
-        <Carousel className="w-full ">
+        <Carousel >
             <CarouselContent>
                 {features.map((feature, index) => (
                     <CarouselItem key={index}>
 
-                        <Card className="bg-primary opacity-95 text-background ">
+                        <Card className="bg-primary opacity-95 text-background  border-0 outline-0 drop-shadow-none">
                             <CardHeader>
                                 <CardTitle className="flex gap-2 items-center">{feature.name} 	<CircleCheckBig className="size-5 " /></CardTitle>
                                 <CardDescription>{feature.description}</CardDescription>
