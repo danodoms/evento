@@ -162,7 +162,7 @@ export default function EventsPage() {
 	return (
 		<div className="flex flex-col gap-4">
 			<div className="flex gap-2 items-center">
-				<h1 className="text-2xl font-bold tracking-tight mr-auto">Events</h1>
+				<h1 className="text-3xl font-bold tracking-tight mr-auto">Events</h1>
 				<Link href="/events/create">
 					<Button variant={"ghost"}>
 						<Plus className="size-4" />
@@ -247,11 +247,11 @@ export default function EventsPage() {
 					{filteredEvents.map((event) => (
 						<div
 							key={event.id}
-							className="p-4 border rounded-lg flex flex-col gap-2 backdrop-contrast-50 backdrop-opacity-25"
+							className="p-4 rounded-lg flex flex-col gap-2 backdrop-contrast-50 backdrop-opacity-20"
 						>
 							<div className="flex justify-between items-center">
 								<div className="flex gap-2 items-center">
-									<Calendar className="size-5" />
+									<Calendar className="size-4" />
 									<p className="font-semibold text-sm">{formatDate(event.date)}</p>
 
 								</div>
@@ -280,18 +280,18 @@ export default function EventsPage() {
 									</DropdownMenu>
 								</div>
 							</div>
-							<Separator className="my-1" />
-							<h2 className="font-bold text-xl">{event.name}</h2>
-							<div className="text-xs text-balance truncate">
+							{/* <Separator className="my-1" /> */}
+							<h2 className="font-bold text-lg mt-2">{event.name}</h2>
+							<div className="text-xs text-balance truncate opacity-60">
 								{event.description || "No description"}
 							</div>
 							<div className="flex gap-2 flex-wrap mt-1">
-								<Badge className="flex gap-1">
+								<Badge className="flex gap-1" variant={"secondary"}>
 									<Clock className="size-3" />
 									{renderEventDuration(event.duration)}
 								</Badge>
 								{event.location && (
-									<Badge className="flex gap-1">
+									<Badge className="flex gap-1" variant={"secondary"}>
 										<MapPin className="size-3" />
 										{event.location}
 									</Badge>

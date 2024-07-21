@@ -44,7 +44,7 @@ import { Student } from "@/models/Student";
 import useMediaQuery from "@custom-react-hooks/use-media-query";
 import { useQuery } from "@tanstack/react-query";
 import { format, parseISO } from "date-fns";
-import { TableProperties, CircleAlert } from "lucide-react";
+import { TableProperties, CircleAlert, Eye, AlignLeft } from "lucide-react";
 
 type StudentRecordsDialogProps = {
 	student: Student;
@@ -159,9 +159,13 @@ type AttendanceSectionProps = {
 
 const Trigger = () => {
 	return (
-		<div className="flex gap-1 items-center rounded-full border px-3 py-1">
-			<TableProperties className="size-4" />
-			<p className="text-xs font-bold">View Records</p>
+		// <div className="flex gap-1 items-center rounded-full border px-3 py-1">
+		// 	<TableProperties className="size-4" />
+		// 	<p className="text-xs font-bold">View Records</p>
+		// </div>
+		<div className="flex gap-1 items-center rounded-full ">
+			<AlignLeft className="size-5" />
+			<p className="text-xs font-bold">Records</p>
 		</div>
 	)
 }

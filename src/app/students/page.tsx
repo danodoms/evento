@@ -20,6 +20,7 @@ import {
 	Clock,
 	Ellipsis,
 	Filter,
+	Hash,
 	MapPin,
 	Pencil,
 	Plus,
@@ -152,7 +153,7 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
                 <Link href="/students/create" className="flex gap-2 items-center button font-semibold border p-2 rounded-lg">
                     <UserRound className="mr size-4" />Add Student
                 </Link> */}
-				<h1 className="text-2xl font-bold tracking-tight mr-auto">Students</h1>
+				<h1 className="text-3xl font-bold tracking-tight mr-auto">Students</h1>
 
 				<Link href="/students/create">
 					<Button variant={"ghost"}>
@@ -265,16 +266,24 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 					{students.map((student, index) => (
 						<div
 							key={index}
-							className="p-4 border rounded-lg flex flex-col gap-2 backdrop-contrast-50 backdrop-opacity-25"
+							className="p-5 rounded-lg flex flex-col gap-1 backdrop-contrast-50 backdrop-opacity-20"
 						>
 							<div className="flex justify-between items-center">
 								<div className="flex gap-2 items-center">
 									<UserRound className="size-5" />
-									<p className="font-semibold text-sm">{student.school_id}</p>
+									<h2 className="font-bold">{student.name}</h2>
+									{student.dept_id && (
+										<Badge className="flex gap-1" variant={"secondary"}>
+											<Building2 className="size-3" />
+											{getDepartmentNameById(student.dept_id)}
+										</Badge>
+									)}
 								</div>
+
+
 								<div className="flex gap-4 items-center">
 
-									<StudentRecordsDialog student={student} />
+
 
 									<DropdownMenu>
 										<DropdownMenuTrigger className=" rounded-full text-sm flex gap-2 items-center">
@@ -297,21 +306,25 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 								</div>
 							</div>
 
-							<Separator className="my-1" />
+							{/* <Separator className="my-1" /> */}
 
-							<h2 className="font-bold text-xl">{student.name}</h2>
+
 
 							{/* <div className="text-xs text-balance truncate">
                                 {event.description ? event.description : "No description"}
                             </div> */}
 
-							<div className="flex gap-2 flex-wrap mt-1">
-								{student.dept_id && (
-									<Badge className="flex gap-1">
-										<Building2 className="size-3" />
-										{getDepartmentNameById(student.dept_id)}
-									</Badge>
-								)}
+							<div className="flex gap-2 flex-wrap mt-1 justify-between">
+								<div className="flex gap-2 items-center opacity-50">
+
+
+									<p className="font-semibold text-sm">{student.school_id}</p>
+
+									<StudentRecordsDialog student={student} />
+								</div>
+
+
+
 							</div>
 						</div>
 					))}
