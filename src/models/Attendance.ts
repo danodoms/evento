@@ -1,6 +1,7 @@
 import useQueuedAttendanceStore from "@/store/useQueuedAttendanceStore";
 import { createClient } from "@/utils/supabase/client";
 import type { Student } from "./Student";
+import { differenceInMinutes, parseISO } from "date-fns";
 
 const supabase = createClient();
 
@@ -78,6 +79,42 @@ const hasCompleteRecords = (records: Attendance[]): boolean => {
   return completeCount >= 2;
 };
 
+const isEarlyTimeOut = (
+  records: Attendance[],
+  minutesSinceTimeIn: number = 1
+): boolean => {
+  const incompleteRecord = records.find((record) => !record.time_out);
+
+  if (incompleteRecord && incompleteRecord.time_in) {
+    console.log("CHECKING IF TIME OUT IS EARLY: ", incompleteRecord);
+
+    // Parse the date and time_in into a single Date object
+    const timeIn = parseISO(
+      `${incompleteRecord.date}T${incompleteRecord.time_in}`
+    );
+
+    // Get current time in the same format
+    const now = new Date();
+
+    // console.log("TIME IN: ", timeIn.toISOString());
+    // console.log("TIME NOW: ", now.toISOString());
+
+    const timeDifference = differenceInMinutes(now, timeIn);
+
+    console.log(
+      timeDifference,
+      " MINUTES SINCE LAST TIME IN",
+      incompleteRecord
+    );
+
+    return timeDifference < minutesSinceTimeIn;
+  }
+
+  console.log("NO EARLY TIME OUT CANDIDATE FOUND");
+
+  return false;
+};
+
 // const hasCompleteRecords = (records: Attendance[]): boolean =>
 //   records.length >= 2 &&
 //   records.every((record) => record.timeIn && record.timeOut);
@@ -97,6 +134,11 @@ const createAttendanceRecord = async (
 ): Promise<Attendance | null> => {
   // Fetch today's attendance records for the given student.
   const records = await fetchTodayRecords(studentId);
+
+  if (isEarlyTimeOut(records, 1)) {
+    console.warn("EARLY TIME OUT, NOT PROCEEDING");
+    throw new Error("EARLY_TIMEOUT");
+  }
 
   // Check if there are already two complete records for today.
   if (hasCompleteRecords(records)) {
@@ -143,11 +185,33 @@ const createAttendanceRecord = async (
   return newTimeInRecord;
 };
 
+//* V1
+// export const createQueuedAttendanceRecord = async (
+//   student: Student
+// ): Promise<QueuedAttendance | null> => {
+//   const record = await createAttendanceRecord(student.id);
+//   return record ? { ...record, student, uniqueId: 0, performed: false } : null;
+// };
+
+//* V2
 export const createQueuedAttendanceRecord = async (
   student: Student
 ): Promise<QueuedAttendance | null> => {
-  const record = await createAttendanceRecord(student.id);
-  return record ? { ...record, student, uniqueId: 0, performed: false } : null;
+  try {
+    const record = await createAttendanceRecord(student.id);
+    return record
+      ? { ...record, student, uniqueId: 0, performed: false }
+      : null;
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error(
+      `Error in createQueuedAttendanceRecord for student ${student.id}:`,
+      error
+    );
+
+    // Re-throw the error to propagate it
+    throw error;
+  }
 };
 
 const addTimeOut = async (record: Attendance): Promise<void> => {

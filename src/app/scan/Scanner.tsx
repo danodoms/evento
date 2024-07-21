@@ -68,6 +68,11 @@ export default function Scanner() {
         }
     };
 
+    const pauseAndResumeScanner = (milliseconds: number, pauseVideo: boolean = false) => {
+        pauseScanner(pauseVideo);
+        setTimeout(resumeScanner, milliseconds);
+    };
+
     const onScanSuccess = async (decodedText: string, decodedResult: Html5QrcodeResult) => {
         try {
             // SCANNING SHOULD BE PAUSED IMMEDIATELY SINCE FOLLOWING CODE ARE ASYNC
@@ -91,13 +96,12 @@ export default function Scanner() {
             if (student) {
                 successSound?.play();
 
-                // const queuedAttendance = await createQueuedAttendanceRecord(student);
                 const queuedAttendance = await throwErrorAfterTimeout(2000, () => createQueuedAttendanceRecord(student), "TIME_LIMIT_REACHED");
 
                 if (queuedAttendance) {
                     addAttendanceQueue(queuedAttendance);
                 } else {
-                    toast.error("Daily attendance limit reached!", { autoClose: 3000 })
+                    toast.error("Daily attendance limit reached!", { autoClose: 2500, toastId: "toast-daily-limit-reached" });
                 }
 
                 setTimeout(() => {
@@ -114,18 +118,22 @@ export default function Scanner() {
         } catch (error: Error | any) {
             console.error("Error fetching student details:", error);
 
-            if (error.message === "OFFLINE") {
+            if (error.message === "EARLY_TIMEOUT") {
+                failSound?.play();
+                toast.error("Early time out detected, try again in a minute", { autoClose: 3000, toastId: "toast-early-timeout" });
+                pauseAndResumeScanner(1500)
+            } else if (error.message === "OFFLINE") {
                 offlineSound?.play();
                 toast.error("You are offline, please check your internet connection", { autoClose: 3000, toastId: "toast-offline" });
-                resumeScanner(); // Resume scanning after a delay
+                pauseAndResumeScanner(1000)
             } else if (error.message === "TIME_LIMIT_REACHED") {
                 networkErrorSound?.play();
                 toast.error("Server took too long to respond, try again", { autoClose: 3000 });
-                resumeScanner(); // Resume scanning after a delay
+                pauseAndResumeScanner(1000)
             } else if (error.message === "EMPTY_STUDENTS_REFERENCE") {
                 toast.error("No students to compare in the database", { autoClose: 3000, toastId: "toast-empty-students" });
                 failSound?.play();
-                resumeScanner(); // Resume scanning after a delay
+                pauseAndResumeScanner(1000)
             } else {
                 setModalContent({ desc: "An error occurred while fetching student details.", subtitle: `Scanned ID: ${decodedText}` });
                 failSound?.play();

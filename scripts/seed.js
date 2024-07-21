@@ -39,10 +39,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var faker_1 = require("@faker-js/faker");
 var pg_1 = require("pg");
 var pool = new pg_1.Pool({
-    user: 'postgres',
-    host: '127.0.0.1',
-    database: 'postgres', // Replace with your actual database name if different
-    password: 'postgres', // Replace with your actual database password
+    user: "postgres",
+    host: "127.0.0.1",
+    database: "postgres", // Replace with your actual database name if different
+    password: "postgres", // Replace with your actual database password
     port: 54322, // Replace with your actual database port
 });
 var generateDepartments = function (count) {
@@ -57,15 +57,18 @@ var generateDepartments = function (count) {
 };
 // Function to remove single quotes from a string
 var removeSingleQuotes = function (str) {
-    return str.replace(/'/g, '');
+    return str.replace(/'/g, "");
 };
 var generateStudents = function (count, deptIds) {
     var students = [];
-    var idYears = [2018, 2019, 2020, 2021, 2022, 2023];
-    var idSuffixStart = 2000;
+    // const idYears = [2018, 2019, 2020, 2021, 2022, 2023];
+    var idYears = [2007];
+    var idSuffixStart = 1000;
     for (var i = 0; i < count; i++) {
         var student = {
-            school_id: idYears[faker_1.faker.number.int({ min: 0, max: idYears.length - 1 })] + "-" + (idSuffixStart + i),
+            school_id: idYears[faker_1.faker.number.int({ min: 0, max: idYears.length - 1 })] +
+                "-" +
+                (idSuffixStart + i),
             name: "".concat(removeSingleQuotes(faker_1.faker.person.firstName()), " ").concat(removeSingleQuotes(faker_1.faker.person.lastName())),
         };
         if (deptIds.length > 0) {
@@ -77,11 +80,11 @@ var generateStudents = function (count, deptIds) {
 };
 var generateEvents = function (count) {
     var events = [];
-    var eventDurations = ['AM_ONLY', 'PM_ONLY', 'AM_AND_PM'];
+    var eventDurations = ["AM_ONLY", "PM_ONLY", "AM_AND_PM"];
     for (var i = 0; i < count; i++) {
         events.push({
             name: faker_1.faker.lorem.words(3),
-            date: faker_1.faker.date.soon().toISOString().split('T')[0],
+            date: faker_1.faker.date.soon().toISOString().split("T")[0],
             description: faker_1.faker.lorem.sentence(),
             location: "".concat(faker_1.faker.location.streetAddress()),
             duration: faker_1.faker.helpers.arrayElement(eventDurations),
@@ -96,9 +99,9 @@ var generateAttendance = function (count, studentIds) {
         var timeOut = faker_1.faker.date.soon({ refDate: timeIn });
         attendanceRecords.push({
             student_id: faker_1.faker.helpers.arrayElement(studentIds),
-            time_in: timeIn.toISOString().split('T')[1],
-            time_out: timeOut.toISOString().split('T')[1],
-            date: timeIn.toISOString().split('T')[0],
+            time_in: timeIn.toISOString().split("T")[1],
+            time_out: timeOut.toISOString().split("T")[1],
+            date: timeIn.toISOString().split("T")[0],
         });
     }
     return attendanceRecords;
@@ -118,10 +121,10 @@ var insertData = function (tableName, data) { return __awaiter(void 0, void 0, v
             case 3:
                 if (!(_i < data_1.length)) return [3 /*break*/, 6];
                 record = data_1[_i];
-                keys = Object.keys(record).join(', ');
+                keys = Object.keys(record).join(", ");
                 values = Object.values(record)
                     .map(function (value) { return "'".concat(value, "'"); })
-                    .join(', ');
+                    .join(", ");
                 query = "INSERT INTO ".concat(tableName, " (").concat(keys, ") VALUES (").concat(values, ")");
                 console.log("Executing query: ".concat(query)); // Log the query
                 return [4 /*yield*/, client.query(query)];
@@ -150,31 +153,31 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
             case 0:
                 console.log("Generating departments...");
                 departmentData = generateDepartments(5);
-                return [4 /*yield*/, insertData('public.departments', departmentData)];
+                return [4 /*yield*/, insertData("public.departments", departmentData)];
             case 1:
                 _a.sent();
                 console.log("Departments inserted.");
-                return [4 /*yield*/, pool.query('SELECT id FROM public.departments')];
+                return [4 /*yield*/, pool.query("SELECT id FROM public.departments")];
             case 2:
                 deptIds = (_a.sent()).rows.map(function (row) { return row.id; });
                 console.log("Generating students...");
                 studentData = generateStudents(2000, deptIds);
-                return [4 /*yield*/, insertData('public.students', studentData)];
+                return [4 /*yield*/, insertData("public.students", studentData)];
             case 3:
                 _a.sent();
                 console.log("Students inserted.");
-                return [4 /*yield*/, pool.query('SELECT id FROM public.students')];
+                return [4 /*yield*/, pool.query("SELECT id FROM public.students")];
             case 4:
                 studentIds = (_a.sent()).rows.map(function (row) { return row.id; });
                 console.log("Generating attendance records...");
                 attendanceData = generateAttendance(5000, studentIds);
-                return [4 /*yield*/, insertData('public.attendance', attendanceData)];
+                return [4 /*yield*/, insertData("public.attendance", attendanceData)];
             case 5:
                 _a.sent();
                 console.log("Attendance records inserted.");
                 console.log("Generating events...");
                 eventData = generateEvents(100);
-                return [4 /*yield*/, insertData('public.events', eventData)];
+                return [4 /*yield*/, insertData("public.events", eventData)];
             case 6:
                 _a.sent();
                 console.log("Events inserted.");
@@ -182,4 +185,6 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
         }
     });
 }); };
-main().catch(function (err) { return console.error('Main error:', err); }).finally(function () { return pool.end(); });
+main()
+    .catch(function (err) { return console.error("Main error:", err); })
+    .finally(function () { return pool.end(); });
