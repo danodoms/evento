@@ -9,6 +9,8 @@ import {
 	QrCode,
 	Map,
 	RotateCw,
+	UsersRound,
+	CalendarFold,
 
 } from "lucide-react";
 import Image from "next/image";
@@ -69,7 +71,7 @@ export default function Home() {
 			<div className="flex justify-between items-center gap-4 mb-8 lg:hidden  bg-opacity-80">
 				<div className="flex gap-2 items-center">
 					<h1 className="font-bold text-xl text-pretty">{appName}</h1>
-					<div className="opacity-50">
+					<div className="opacity-50 scale-90">
 						<ModeToggle compactMode={true} />
 					</div>
 				</div>
@@ -80,10 +82,36 @@ export default function Home() {
 
 
 
-			<div className="flex flex-col ">
+			<div className="flex justify-between items-center">
 				<h2 className="text-4xl text-pretty  font-bold items-center gap-2">
 					Home
 				</h2>
+
+				<div className="flex gap-2">
+					<div className="flex-col flex ">
+						<p className="font-bold text-right flex gap-2 items-center py-2 px-3  bg-neutral-500 bg-opacity-10 rounded-md">
+							<UsersRound className="size-4" />
+							1,385
+						</p>
+						{/* <p className="text-xs font-semibold text-center py-1 px-3  rounded-b-md bg-neutral-500 bg-opacity-10">
+							Students
+						</p> */}
+
+					</div>
+					<div className="flex-col flex ">
+
+						<p className="font-bold text-right flex gap-2 items-center py-2 px-3  bg-neutral-500 bg-opacity-10 rounded-md">
+							<CalendarFold className="size-4" />
+							100
+						</p>
+						{/* <p className="text-xs font-semibold text-center py-1 px-3  rounded-b-md bg-neutral-500 bg-opacity-10">
+							Events
+						</p> */}
+
+					</div>
+				</div>
+
+
 			</div>
 
 
