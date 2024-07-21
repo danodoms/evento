@@ -37,6 +37,7 @@ import {
     Info,
     Ban,
     Check,
+    Dot,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -95,11 +96,11 @@ export default function AdminPage() {
     const getIconByRole = (role: number) => {
         switch (role) {
             case 0:
-                return <Crown className="size-5" />;
+                return <Crown className="size-4" />;
             case 1:
-                return <Award className="size-5" />;
+                return <Award className="size-4" />;
             case 2:
-                return <BadgeCheck className="size-5" />;
+                return <BadgeCheck className="size-4" />;
             default:
                 return null; // Return null or handle other cases as needed
         }
@@ -216,7 +217,7 @@ export default function AdminPage() {
                     {filteredUsers.map((user) => (
                         <div
                             key={user.id}
-                            className="p-4 border rounded-lg flex flex-col gap-2 backdrop-contrast-50 backdrop-opacity-25"
+                            className="p-4 rounded-lg flex flex-col gap-2 backdrop-contrast-50 backdrop-opacity-20"
                         >
                             <div className="flex justify-between items-center">
                                 <div className="flex gap-2 items-center">
@@ -224,12 +225,17 @@ export default function AdminPage() {
 
                                     {/* <Crown className="size-5" /> */}
 
-                                    {getIconByRole(user.role)}
+                                    <Badge variant="secondary" className="flex gap-2 items-center">
 
-                                    <p className="font-semibold text-sm">{convertRole(user.role)}</p>
+                                        {getIconByRole(user.role)}
 
+                                        <p className="font-semibold text-sm">{convertRole(user.role)}</p>
+
+
+                                    </Badge>
 
                                     {!user.is_active && <Badge variant="destructive">Deactivated</Badge>}
+
 
 
                                 </div>
@@ -255,9 +261,10 @@ export default function AdminPage() {
                                     </DropdownMenu>
                                 </div>
                             </div>
-                            <Separator className="my-1" />
-                            <h2 className="font-bold text-xl">{user.email}</h2>
-                            <div className="text-xs text-balance truncate mt-1 opacity-50">
+                            {/* <Separator className="my-1" /> */}
+                            <h2 className="font-bold text-xl mt-1">{user.email}</h2>
+                            <div className="text-xs text-balance truncate mt-1 opacity-50 flex items-center gap-1">
+                                <Plus className="size-4" />
                                 Added on {format(user?.created_at, 'MMMM dd, yyyy HH:mm:ss')}
                             </div>
                             {/* <div className="flex gap-2 flex-wrap mt-1">
