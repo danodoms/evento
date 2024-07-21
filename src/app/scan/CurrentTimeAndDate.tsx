@@ -1,5 +1,6 @@
-import { TriangleAlert } from 'lucide-react';
+import { Maximize, Minimize, TriangleAlert } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
+import useNavStore from "@/store/useNavStore";
 
 const CurrentTimeAndDate = () => {
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
@@ -34,20 +35,42 @@ const CurrentTimeAndDate = () => {
     return date.toLocaleTimeString(undefined, options);
   };
 
+
+  // const [isFullScreen, setIsFullScreen] = useState<boolean>(false)
+
+  const { isNavHidden, setIsNavHidden } = useNavStore();
+
+
+
   return (
-    <div className="flex items-center justify-between w-full flex-auto">
+    <div className="flex items-center justify-end w-full flex-auto gap-2 ">
 
 
 
-      <h2 className='p-3 bg-destructive rounded-md text-xs font-semibold flex gap-1 items-center animate-pulse'>
+      {/* <h2 className='p-3 bg-destructive rounded-md text-xs font-semibold flex gap-1 items-center animate-pulse'>
         <TriangleAlert className='size-3' />
         Ensure date and time is correct
-      </h2>
+      </h2> */}
 
-      <div className='flex flex-col'>
-        <p className='font-bold text-right tracking-wide'>{formatTime(currentDateTime)}</p>
-        <p className='font-semibold text-xs text-right'>{formatDate(currentDateTime)}</p>
+      <div className='flex flex-col  font-bold'>
+        <p className='font-semibold text-right text-xs tracking-wider'>{formatTime(currentDateTime)}</p>
+        <p className='font-semibold text-xs text-right'>{String(formatDate(currentDateTime)).toUpperCase()}</p>
       </div>
+
+
+      <div className='bg-destructive size-1 rounded-full relative m-3' onClick={() => setIsNavHidden(!isNavHidden)}>
+
+        {isNavHidden ? <div className="rounded-md absolute center top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <Minimize className="size-8" />
+        </div> : <div className="rounded-md absolute center top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ">
+          <Maximize className="size-8" />
+        </div>}
+
+
+
+      </div>
+      {/* <div className='bg-red-500 w-2 h-7 rounded-full animate-ping' /> */}
+
 
 
     </div>

@@ -229,7 +229,7 @@ export default function AdminPage() {
 
                                         {getIconByRole(user.role)}
 
-                                        <p className="font-semibold text-sm">{convertRole(user.role)}</p>
+                                        <p className="font-semibold text-xs">{convertRole(user.role)}</p>
 
 
                                     </Badge>
@@ -262,7 +262,7 @@ export default function AdminPage() {
                                 </div>
                             </div>
                             {/* <Separator className="my-1" /> */}
-                            <h2 className="font-bold text-xl mt-1">{user.email}</h2>
+                            <h2 className="font-bold mt-1">{user.email}</h2>
                             <div className="text-xs text-balance truncate mt-1 opacity-50 flex items-center gap-1">
                                 <Plus className="size-4" />
                                 Added on {format(user?.created_at, 'MMMM dd, yyyy HH:mm:ss')}
