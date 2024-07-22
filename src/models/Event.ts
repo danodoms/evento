@@ -85,3 +85,18 @@ export async function getAttendanceForDate(
 
   return data as object;
 }
+
+export const getEventRowCount = async () => {
+  const { count, error } = await supabase
+    .from("events")
+    .select("id", { count: "exact", head: true });
+
+  if (error) {
+    console.error("Error fetching total event row count:", error);
+    return 0;
+  }
+
+  console.log("Total event row count:", count);
+
+  return count || 0;
+};

@@ -135,17 +135,17 @@ export async function getFilteredPaginatedStudents(
   return { students: data as Student[], count };
 }
 
-// export const getStudentRowCount = async () => {
-//   const { count, error } = await supabase
-//     .from("students")
-//     .select("*", { count: "exact", head: true });
+export const getStudentRowCount = async () => {
+  const { count, error } = await supabase
+    .from("students")
+    .select("id", { count: "exact", head: true });
 
-//   if (error) {
-//     console.error("Error fetching total student row count:", error);
-//     return 0;
-//   }
+  if (error) {
+    console.error("Error fetching total student row count:", error);
+    return 0;
+  }
 
-//   console.log("Total student row count:", count);
+  console.log("Total student row count:", count);
 
-//   return count || 0;
-// };
+  return count || 0;
+};
