@@ -78,6 +78,7 @@ import Search from "@/app/students/Search";
 import PaginationComponent from "./Pagination";
 import Loading from "@/components/Loading";
 import { stat } from "fs/promises";
+import StudentCardSkeleton from "@/components/skeleton/StudentCardSkeleton";
 
 type StudentsPageProps = {
 	searchParams?: {
@@ -86,7 +87,13 @@ type StudentsPageProps = {
 	};
 };
 
+
+
 export default function StudentsPage({ searchParams }: StudentsPageProps) {
+
+	const size = 9;
+	const skeletons = new Array(size).fill(undefined);
+
 
 	const query = searchParams?.query || '';
 	const currentPage = Number(searchParams?.page) || 1;
@@ -117,15 +124,6 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 	});
 
 
-	// const {
-	// 	data: studentRowCount = 0,
-	// } = useQuery<number>({
-	// 	queryKey: ["studentRowCount"],
-	// 	queryFn: getStudentRowCount,
-	// });
-
-
-
 	function getDepartmentNameById(departmentId: number): string | undefined {
 		const department = departments.find((dept) => dept.id === departmentId);
 		return department ? department.short_name : undefined;
@@ -146,15 +144,21 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 
 
 
+	if (isStudentsLoading) {
+		return (
+			<div className="flex flex-col gap-3 md:grid md:grid-cols-2 lg:grid-cols-3 overflow-y-auto rounded-md w-full">
+				{skeletons.map((index, skeleton) => (
+					<StudentCardSkeleton key={index} />
+				))}
+			</div>
+		)
+	}
+
+
 	return (
 		<div className="flex flex-col gap-3">
 			<div className="flex justify-between gap-2 items-center">
-				{/* <h1 className="text-2xl font-bold tracking-tight">Students</h1>
-                <Link href="/students/create" className="flex gap-2 items-center button font-semibold border p-2 rounded-lg">
-                    <UserRound className="mr size-4" />Add Student
-                </Link> */}
 				<h1 className="text-3xl font-bold tracking-tight mr-auto">Students</h1>
-
 				<Link href="/students/create">
 					<Button variant={"ghost"}>
 						<Plus className="size-4" />
@@ -282,9 +286,6 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 
 
 								<div className="flex gap-4 items-center">
-
-
-
 									<DropdownMenu>
 										<DropdownMenuTrigger className=" rounded-full text-sm flex gap-2 items-center">
 											<Ellipsis className=" " />
@@ -306,30 +307,14 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 								</div>
 							</div>
 
-							{/* <Separator className="my-1" /> */}
-
-
-
-							{/* <div className="text-xs text-balance truncate">
-                                {event.description ? event.description : "No description"}
-                            </div> */}
-
 							<div className="flex gap-2 flex-wrap mt-1 justify-between">
 								<div className="flex gap-2 items-center opacity-50">
-
-
 									<p className="font-semibold text-sm">{student.school_id}</p>
-
 									<StudentRecordsDialog student={student} />
 								</div>
-
-
-
 							</div>
 						</div>
 					))}
-
-
 				</div>
 
 
