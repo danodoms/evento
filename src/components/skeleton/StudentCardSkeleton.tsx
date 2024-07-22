@@ -24,7 +24,7 @@ export default function StudentCardSkeleton() {
                 </div>
             </div>
 
-            <div className="flex gap-2 flex-wrap mt-2 justify-between">
+            <div className="flex gap-2 flex-wrap mt-3 justify-between">
                 <div className="flex gap-2 items-center opacity-50 w-full">
                     {/* REPLACE WITH SKELETON */}
                     {/* <p className="font-semibold text-sm">{student.school_id}</p> */}

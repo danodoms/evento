@@ -31,7 +31,7 @@ import {
 
 import Link from "next/link";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import {
 	DropdownMenu,
@@ -79,6 +79,8 @@ import PaginationComponent from "./Pagination";
 import Loading from "@/components/Loading";
 import { stat } from "fs/promises";
 import StudentCardSkeleton from "@/components/skeleton/StudentCardSkeleton";
+import { set } from "date-fns";
+import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 type StudentsPageProps = {
 	searchParams?: {
@@ -91,8 +93,8 @@ type StudentsPageProps = {
 
 export default function StudentsPage({ searchParams }: StudentsPageProps) {
 
-	const size = 9;
-	const skeletons = new Array(size).fill(undefined);
+	// const size = 9;
+	// const skeletons = new Array(size).fill(undefined);
 
 
 	const query = searchParams?.query || '';
@@ -109,6 +111,7 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 		data: { students = [], count: studentRowCount = null } = {},
 		error: studentsError,
 		isLoading: isStudentsLoading,
+		isSuccess: isStudentsSuccess,
 	} = useQuery<{ students: Student[]; count: number | null }>({
 		queryKey: ["paginatedStudents", query, currentPage, departmentFilter, statusFilter],
 		queryFn: () => getFilteredPaginatedStudents(currentPage, query, departmentFilter !== "all" ? Number(departmentFilter) : null, statusFilter === "active"),
@@ -144,15 +147,39 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 
 
 
-	if (isStudentsLoading) {
+	// if (true) {
+	// 	return (
+	// 		<div className="flex flex-col gap-3 md:grid md:grid-cols-2 lg:grid-cols-3 overflow-y-auto rounded-md w-full">
+	// 			{skeletons.map((index, skeleton) => (	
+	// 				<StudentCardSkeleton key={index} />
+	// 			))}
+	// 		</div>
+	// 	)
+	// }
+
+	// return (<LoadingSkeleton headerText="Students" />)
+
+	const [prevStudentCount, setPrevStudentCount] = useState<number>(0);
+
+	useEffect(() => {
+		if (isStudentsSuccess) {
+			setPrevStudentCount(students.length);
+			console.warn("prevStudentCount", students.length);
+		}
+	}, [isStudentsSuccess]);
+
+	const renderSkeleton = (count: number) => {
+		const size = count;
+		const skeletons = new Array(size).fill(undefined);
+
 		return (
 			<div className="flex flex-col gap-3 md:grid md:grid-cols-2 lg:grid-cols-3 overflow-y-auto rounded-md w-full">
 				{skeletons.map((index, skeleton) => (
 					<StudentCardSkeleton key={index} />
 				))}
 			</div>
-		)
-	}
+		);
+	};
 
 
 	return (
@@ -264,8 +291,10 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 
 
 
+			{isStudentsLoading ? renderSkeleton(prevStudentCount) : null}
 
-			{students.length > 0 ? (
+
+			{students.length > 0 && !isStudentsLoading ? (
 				<div className="flex flex-col gap-3 md:grid md:grid-cols-2 lg:grid-cols-3 overflow-y-auto rounded-md w-full">
 					{students.map((student, index) => (
 						<div
