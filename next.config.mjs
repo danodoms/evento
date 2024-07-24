@@ -2,16 +2,22 @@ import { register } from "module";
 import { skip } from "node:test";
 
 /** @type {import('next').NextConfig} */
-import withPWA from "next-pwa";
+import withPWAInit from "@ducanh2912/next-pwa";
 
-const nextConfig = {
-  // "experimental.webpackBuildWorker": true,
-  reactStrictMode: true,
-  ...withPWA({
-    dest: "public",
-    register: true,
-    skipWaiting: true,
-  }),
-};
+const withPWA = withPWAInit({
+  dest: "public",
+  register: true,
+  reloadOnOnline: true,
+  swcMinify: true,
+  cacheStartUrl: true,
+  cacheOnFrontendNav: true,
+  aggressiveFrontEndNavCaching: true,
+  // disable: process.env.NODE_ENV === "development",
+  // scope: "/app",
+  //...
+});
 
-export default nextConfig;
+// Your Next config is automatically typed!
+export default withPWA({
+  // Your Next.js config
+});

@@ -12,6 +12,8 @@ import Sidebar from "@/components/Sidebar";
 
 import { ClerkProvider } from '@clerk/nextjs'
 import AuthGuard from "@/components/auth/AuthGuard";
+import OfflineHeader from "@/components/OfflineHeader";
+
 
 
 const fontSans = FontSans({
@@ -33,6 +35,8 @@ export default function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+
+
 	return (
 		<ClerkProvider afterSignOutUrl={"/sign-in"}>
 			<ReactQueryProvider>
@@ -57,6 +61,9 @@ export default function RootLayout({
 
 								{/* <Header /> */}
 
+								<div className="w-full hidden lg:block"><OfflineHeader /></div>
+
+
 
 								<main className=" lg:pb-0 lg:flex-row flex flex-col h-screen">
 									<div className="hidden lg:block">
@@ -64,8 +71,14 @@ export default function RootLayout({
 									</div>
 
 
+									<div className="w-full lg:hidden"><OfflineHeader /></div>
+
+
+
 
 									<div className="overflow-auto h-full w-full p-3">
+
+
 
 										{children}
 
