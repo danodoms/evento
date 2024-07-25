@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { unknown } from "zod";
 import { ModeToggle } from "./ModeToggle";
 import { useAuth } from "@/hooks/useAuth";
+import useNavStore from "@/store/useNavStore";
 
 export default function BottomNav() {
 	const pathname = usePathname();
@@ -35,6 +36,13 @@ export default function BottomNav() {
         ${activeLink === link ? "opacity-100" : "opacity-50"}
         transition-all duration-125 ease-in-out hover:opacity-100
     `;
+
+	const { isNavHidden } = useNavStore();
+
+	if (isNavHidden) {
+		return null
+	}
+
 	if (pathname !== "/sign-in") {
 		return (
 			<nav className="w-full z-50">

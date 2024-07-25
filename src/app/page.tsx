@@ -1,4 +1,4 @@
-// "use client"
+"use client"
 
 
 import { Separator } from "@/components/ui/separator";
@@ -23,45 +23,30 @@ import { useQuery } from "@tanstack/react-query";
 import { useClerk, useUser } from "@clerk/nextjs";
 import FeaturesCarousel from "@/components/FeaturesCarousel";
 import { ModeToggle } from "@/components/ModeToggle";
-
-interface UiButton {
-	name: string;
-	iconName: React.ComponentType;
-	link: string;
-}
+import { getStudentRowCount } from "@/models/Student";
+import { getEventRowCount } from "@/models/Event";
 
 
 export default function Home() {
 
-	// const {
-	// 	data: users = [],
-	// 	error,
-	// 	isLoading,
-	// } = useQuery<User[]>({
-	// 	queryKey: ["users"],
-	// 	queryFn: getAllUsers,
-	// });
+	const {
+		data: studentsRowCount = 0,
+		error,
+		isLoading,
+	} = useQuery<number>({
+		queryKey: ["studentsCount"],
+		queryFn: getStudentRowCount,
+	});
 
-	// const { isLoaded, isSignedIn, user } = useUser();
-	// const { signOut } = useClerk();
 
-	// if (isLoaded && users.length !== 0) {
-	// 	const emailExists = (users: User[], email: string): boolean => {
-	// 		return users.some(user => user.email === email && user.is_active);
-	// 	};
-
-	// 	if (emailExists(users, String(user?.primaryEmailAddress))) {
-	// 		console.log("EMAIL IS AUTHORIZED");
-	// 		console.log("EMAIL IS AUTHORIZED");
-	// 		console.log("EMAIL IS AUTHORIZED");
-	// 	} else {
-	// 		console.log("EMAIL IS UNAUTHORIZED");
-	// 		console.log("EMAIL IS UNAUTHORIZED");
-	// 		console.log("EMAIL IS UNAUTHORIZED");
-	// 		signOut({ redirectUrl: '/' });
-	// 	}
-	// }
-
+	const {
+		data: eventsRowCount = 0,
+		// error,
+		// isLoading,
+	} = useQuery<number>({
+		queryKey: ["eventsCount"],
+		queryFn: getEventRowCount,
+	});
 
 
 	return (
@@ -91,7 +76,7 @@ export default function Home() {
 					<div className="flex-col flex ">
 						<p className="font-bold text-right flex gap-2 items-center py-2 px-3  bg-neutral-500 bg-opacity-10 rounded-md">
 							<UsersRound className="size-4" />
-							1,385
+							{studentsRowCount}
 						</p>
 						{/* <p className="text-xs font-semibold text-center py-1 px-3  rounded-b-md bg-neutral-500 bg-opacity-10">
 							Students
@@ -102,7 +87,7 @@ export default function Home() {
 
 						<p className="font-bold text-right flex gap-2 items-center py-2 px-3  bg-neutral-500 bg-opacity-10 rounded-md">
 							<CalendarFold className="size-4" />
-							100
+							{eventsRowCount}
 						</p>
 						{/* <p className="text-xs font-semibold text-center py-1 px-3  rounded-b-md bg-neutral-500 bg-opacity-10">
 							Events
@@ -116,18 +101,6 @@ export default function Home() {
 
 
 
-			{/* <div className="flex flex-col gap-2 p-4 border rounded-lg">
-				<div className="font-semibold text-md text-pretty flex items-center gap-2">
-					Dashboard
-				</div>
-
-				<div className="w-full rounded-md p-4 flex justify-between border">
-					<p>No Upcoming Event</p>
-
-					<CalendarX />
-				</div>
-			</div> */}
-
 			<div className="font-semibold text-pretty flex items-center text-sm mt-2 gap-2">
 				<Map className="size-5" />
 				<span>Explore Features</span>
@@ -137,18 +110,7 @@ export default function Home() {
 
 
 
-			{/* BOTTOM SECTION */}
-			{/* <div className="gap-4 flex flex-col grid-cols-2 md:grid">
 
-        {buttons.map((button, index) => (
-          <Link href={button.link} key={index} className="w-full p-8 flex justify-center gap-2 border rounded-lg bg-card text-card-foreground shadow-sm">
-            {React.createElement(button.iconName)}
-            <p className="font-semibold">
-              {button.name}
-            </p>
-          </Link>
-        ))}
-      </div> */}
 
 			<div className="flex justify-between">
 
