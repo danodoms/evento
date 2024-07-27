@@ -14,8 +14,9 @@ import { fulfillWithTimeLimit, throwErrorAfterTimeout } from '@/utils/utils';
 import { useQuery } from '@tanstack/react-query';
 import { set } from 'zod';
 import { createOrUpdateAttendanceRecord } from '@/models/Attendance';
-
+import { motion } from 'framer-motion';
 import { useAttendanceStore } from "@/store/useAttendanceStore";
+import { UserRound } from 'lucide-react';
 
 interface ModalContent {
     desc: string;
@@ -26,33 +27,23 @@ export default function Scanner() {
 
     const { addAttendanceRecord } = useAttendanceStore();
 
-    // const { data: students = [], error, isLoading } = useQuery<Student[]>({
-    //     queryKey: ["students"],
-    //     queryFn: getAllStudents
-    // });
-
-    // const studentsRef = useRef(students);
-
-    // useEffect(() => {
-    //     console.log('Student query status:', { isLoading, students, error });
-    //     studentsRef.current = students;
-    // }, [students, isLoading, error]);
+    const [scannedStudent, setScannedStudent] = useState<Student | null>(null);
 
 
-
+    useEffect(() => {
+        let timer: NodeJS.Timeout;
+        if (scannedStudent) {
+            timer = setTimeout(() => {
+                setScannedStudent(null);
+            }, 3000); // 3 seconds
+        }
+        return () => clearTimeout(timer);
+    }, [scannedStudent]);
 
 
     const html5QrcodeScannerRef = useRef<Html5QrcodeScanner | null>(null);
     const [modalContent, setModalContent] = useState<ModalContent | null>(null);
-    // const addAttendanceQueue = useQueuedAttendanceStore((state) => state.addAttendanceQueue);
 
-
-
-
-
-    // const attendanceQueueProp: QueuedAttendance[] = []
-
-    // const notify = () => toast.error("Daily attendance limit reached!");
 
     const pauseScanner = (pauseVideo = false) => {
         if (html5QrcodeScannerRef.current) {
@@ -99,6 +90,7 @@ export default function Scanner() {
 
             if (student) {
 
+                setScannedStudent(student);
                 const newAttendanceRecord = await throwErrorAfterTimeout(2000, () => createOrUpdateAttendanceRecord(student.id), "TIME_LIMIT_REACHED");
 
                 if (newAttendanceRecord) {
@@ -171,8 +163,32 @@ export default function Scanner() {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center relative">
             <div id="reader" ref={setScannerRef} className="w-full max-w-sm rounded" />
+
+
+
+
+            {scannedStudent && (
+                <motion.div
+                    className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                    initial={{ opacity: 0, scale: 0.2 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{ duration: 0.2 }}
+                >
+                    <div className="p-4 bg-background opacity-90 backdrop-blur-lg rounded-md text-center flex items-center flex-col gap-1 outline outline-1">
+                        <UserRound className='size-8' />
+                        <div>
+                            <p className='font-bold'>{scannedStudent.name}</p>
+                            <p className='text-sm'>{scannedStudent.school_id}</p>
+                        </div>
+                    </div>
+                </motion.div>
+            )}
+
+
+
             {modalContent && (
                 <StudentMissingModal
                     subtitle={modalContent.subtitle}
