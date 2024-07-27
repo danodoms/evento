@@ -1,5 +1,5 @@
+import { AttendanceRecord } from "@/models/Attendance";
 import create from "zustand";
-import { type AttendanceRecord } from "@/models/Attendance";
 
 type AttendanceState = {
   attendanceRecords: AttendanceRecord[];
@@ -9,7 +9,14 @@ type AttendanceState = {
 export const useAttendanceStore = create<AttendanceState>((set) => ({
   attendanceRecords: [],
   addAttendanceRecord: (record: AttendanceRecord) =>
-    set((state) => ({
-      attendanceRecords: [...state.attendanceRecords, record],
-    })),
+    set((state) => {
+      // Generate a unique ID if not provided
+      const uniqueId = record.uniqueId ?? new Date().getTime();
+      return {
+        attendanceRecords: [
+          ...state.attendanceRecords,
+          { ...record, uniqueId },
+        ],
+      };
+    }),
 }));
