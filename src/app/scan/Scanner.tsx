@@ -17,6 +17,7 @@ import { createOrUpdateAttendanceRecord } from '@/models/Attendance';
 import { motion } from 'framer-motion';
 import { useAttendanceStore } from "@/store/useAttendanceStore";
 import { UserRound } from 'lucide-react';
+import useOnlineStatus from "@/hooks/useOnlineStatus";
 
 interface ModalContent {
     desc: string;
@@ -24,6 +25,7 @@ interface ModalContent {
 }
 
 export default function Scanner() {
+    const isOnline = useOnlineStatus();
 
     const { addAttendanceRecord } = useAttendanceStore();
 
@@ -77,6 +79,10 @@ export default function Scanner() {
             //     throw new Error("OFFLINE");
             // }
 
+            if (!isOnline) {
+                throw new Error("OFFLINE");
+            }
+
 
             // checks first if there are students in the variable fetched by react-tanstack-query
             // if (studentsRef.current.length === 0) {
@@ -106,7 +112,7 @@ export default function Scanner() {
                 }, 1250);
 
             } else {
-                setModalContent({ desc: "The scanned ID does not match any user.", subtitle: `Scanned ID: ${decodedText}` });
+                setModalContent({ desc: "The scanned ID does not match any student", subtitle: `Scanned ID: ${decodedText}` });
                 failSound?.play();
                 pauseScanner(true); // Pause scanning
             }
@@ -117,11 +123,11 @@ export default function Scanner() {
 
             if (error.message === "EARLY_TIMEOUT") {
                 failSound?.play();
-                toast.error("Early time out detected, try again in a minute", { autoClose: 2500, toastId: "toast-early-timeout" });
+                toast.error("Early time out detected, retry in a minute", { autoClose: 2500, toastId: "toast-early-timeout" });
                 pauseAndResumeScanner(1000)
             } else if (error.message === "EARLY_TIMEIN") {
                 failSound?.play();
-                toast.error("Early time in detected, try again in 10 seconds", { autoClose: 2500, toastId: "toast-early-timein" });
+                toast.error("Early time in detected, retry in 10 seconds", { autoClose: 2500, toastId: "toast-early-timein" });
                 pauseAndResumeScanner(1000)
             } else if (error.message === "OFFLINE") {
                 offlineSound?.play();
