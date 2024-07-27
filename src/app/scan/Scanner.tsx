@@ -118,7 +118,7 @@ export default function Scanner() {
             if (error.message === "EARLY_TIMEOUT") {
                 failSound?.play();
                 toast.error("Early time out detected, try again in a minute", { autoClose: 3000, toastId: "toast-early-timeout" });
-                pauseAndResumeScanner(1500)
+                pauseAndResumeScanner(1000)
             } else if (error.message === "OFFLINE") {
                 offlineSound?.play();
                 toast.error("You are offline, please check your internet connection", { autoClose: 3000, toastId: "toast-offline" });
