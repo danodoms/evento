@@ -1,7 +1,7 @@
 // import useQueuedAttendanceStore from "@/store/useQueuedAttendanceStore";
 import { createClient } from "@/utils/supabase/client";
 import type { Student } from "./Student";
-import { differenceInMinutes, parseISO } from "date-fns";
+import { differenceInMinutes, differenceInSeconds, parseISO } from "date-fns";
 
 const supabase = createClient();
 
@@ -69,6 +69,20 @@ const isEarlyTimeOut = (
   return false;
 };
 
+const isEarlyTimeIn = (
+  records: Attendance[],
+  secondsSinceLastTimeOut: number = 10
+): boolean => {
+  const completedRecords = records.filter((record) => record.time_out);
+  if (completedRecords.length === 1) {
+    const lastRecord = completedRecords[0];
+    const lastTimeOut = parseISO(`${lastRecord.date}T${lastRecord.time_out}`);
+    const now = new Date();
+    return differenceInSeconds(now, lastTimeOut) < secondsSinceLastTimeOut;
+  }
+  return false;
+};
+
 // Find the first incomplete attendance record
 const findIncompleteRecord = (records: Attendance[]): Attendance | undefined =>
   records.find((record) => !record.time_out);
@@ -81,6 +95,10 @@ export const createOrUpdateAttendanceRecord = async (
 
   if (isEarlyTimeOut(records)) {
     throw new Error("EARLY_TIMEOUT");
+  }
+
+  if (isEarlyTimeIn(records)) {
+    throw new Error("EARLY_TIMEIN");
   }
 
   if (hasCompleteRecords(records)) {

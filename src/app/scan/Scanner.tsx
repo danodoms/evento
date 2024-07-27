@@ -103,7 +103,7 @@ export default function Scanner() {
 
                 setTimeout(() => {
                     resumeScanner(); // Resume scanning after a delay
-                }, 800);
+                }, 1250);
 
             } else {
                 setModalContent({ desc: "The scanned ID does not match any user.", subtitle: `Scanned ID: ${decodedText}` });
@@ -117,18 +117,22 @@ export default function Scanner() {
 
             if (error.message === "EARLY_TIMEOUT") {
                 failSound?.play();
-                toast.error("Early time out detected, try again in a minute", { autoClose: 3000, toastId: "toast-early-timeout" });
+                toast.error("Early time out detected, try again in a minute", { autoClose: 2500, toastId: "toast-early-timeout" });
+                pauseAndResumeScanner(1000)
+            } else if (error.message === "EARLY_TIMEIN") {
+                failSound?.play();
+                toast.error("Early time in detected, try again in 10 seconds", { autoClose: 2500, toastId: "toast-early-timein" });
                 pauseAndResumeScanner(1000)
             } else if (error.message === "OFFLINE") {
                 offlineSound?.play();
-                toast.error("You are offline, please check your internet connection", { autoClose: 3000, toastId: "toast-offline" });
+                toast.error("You are offline, please check your internet connection", { autoClose: 2500, toastId: "toast-offline" });
                 pauseAndResumeScanner(1000)
             } else if (error.message === "TIME_LIMIT_REACHED") {
                 networkErrorSound?.play();
-                toast.error("Server took too long to respond, try again", { autoClose: 3000 });
+                toast.error("Server took too long to respond, try again", { autoClose: 2500 });
                 pauseAndResumeScanner(1000)
             } else if (error.message === "EMPTY_STUDENTS_REFERENCE") {
-                toast.error("No students to compare in the database", { autoClose: 3000, toastId: "toast-empty-students" });
+                toast.error("No students to compare in the database", { autoClose: 2500, toastId: "toast-empty-students" });
                 failSound?.play();
                 pauseAndResumeScanner(1000)
             } else {
