@@ -52,12 +52,12 @@ const CurrentTimeAndDate = () => {
         Ensure date and time is correct
       </h2> */}
 
-      <div className='flex flex-col  text-red-500 font-bold'>
+      <div className='flex flex-col font-bold'>
         <p className='font-semibold text-right text-xs tracking-wider'>{formatTime(currentDateTime)}</p>
         <p className='font-semibold text-xs text-right'>{String(formatDate(currentDateTime)).toUpperCase()}</p>
       </div>
 
-      <div className='bg-red-500 w-1 h-7 rounded-full' />
+      {/* <div className='bg-primary w-1 h-7 rounded-full' /> */}
 
 
       <div className=' size-1 rounded-full relative m-3 ' onClick={() => setIsNavHidden(!isNavHidden)}>
