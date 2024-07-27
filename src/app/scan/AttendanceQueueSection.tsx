@@ -3,11 +3,12 @@
 import { TextSearch } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
 import { AttendanceQueueCard } from "./AttendanceQueueCard";
+import { motion, AnimatePresence } from 'framer-motion';
 
-import type { QueuedAttendance } from "@/models/Attendance";
+import type { AttendanceRecord } from "@/models/Attendance";
 
 interface AttendanceQueueSectionProps {
-	results: QueuedAttendance[];
+	results: AttendanceRecord[];
 }
 
 const AttendanceQueueSection: React.FC<AttendanceQueueSectionProps> = ({
@@ -17,9 +18,19 @@ const AttendanceQueueSection: React.FC<AttendanceQueueSectionProps> = ({
 		<>
 			{results.length > 0 ? (
 				<div className="h-full overflow-auto w-full rounded-md flex flex-col gap-2">
-					{results.map((result) => (
-						<AttendanceQueueCard key={result.uniqueId} {...result} />
-					))}
+					<AnimatePresence>
+						{[...results].reverse().map((result) => (
+							<motion.div
+								key={result.id}
+								initial={{ opacity: 0, x: -100 }}
+								animate={{ opacity: 1, x: 0 }}
+								exit={{ opacity: 0, x: -100 }}
+								transition={{ duration: 0.3 }}
+							>
+								<AttendanceQueueCard key={result.id} {...result} />
+							</motion.div>
+						))}
+					</AnimatePresence>
 				</div>
 			) : (
 				<div className="flex gap-2 items-center justify-center opacity-50 h-full">

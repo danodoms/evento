@@ -47,7 +47,7 @@
     "embla-carousel-react": "^8.1.6",
     "export-from-json": "^1.7.4",
     "firebase": "^10.12.2",
-    "framer-motion": "^11.3.6",
+    "framer-motion": "^11.3.18",
     "html5-qrcode": "^2.3.8",
     "is-online": "^10.0.0",
     "lucide-react": "^0.396.0",

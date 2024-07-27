@@ -2,17 +2,18 @@
 
 import AttendanceQueueSection from "@/app/scan/AttendanceQueueSection";
 import Scanner from "@/app/scan/Scanner";
-import useQueuedAttendanceStore from "@/store/useQueuedAttendanceStore";
+// import useQueuedAttendanceStore from "@/store/useQueuedAttendanceStore";
 import { ToastContainer, toast } from "react-toastify";
 import CurrentTimeAndDate from "./CurrentTimeAndDate";
 import { Eye, GalleryHorizontalEnd, GalleryVerticalEnd, Maximize, TextSearch, TriangleAlert } from "lucide-react";
 import AttendanceHistoryDialog from "./AttendanceHistoryDialog";
 import { Toggle } from "@/components/ui/toggle"
+import { useAttendanceStore } from "@/store/useAttendanceStore";
 
 
 const ScanPage = () => {
-	const { attendanceQueue } = useQueuedAttendanceStore();
-
+	// const { attendanceQueue } = useQueuedAttendanceStore();
+	const { attendanceRecords } = useAttendanceStore();
 	return (
 		<section className="flex flex-col gap-3 justify-center bg-background h-full">
 			<div className="flex gap-2 justify-between items-center">
@@ -47,7 +48,7 @@ const ScanPage = () => {
 			</div>
 
 
-			<AttendanceQueueSection results={attendanceQueue} />
+			<AttendanceQueueSection results={attendanceRecords} />
 
 
 

@@ -1,10 +1,10 @@
 "use client";
 
 import { StudentMissingModal } from '@/components/modals/StudentMissingModal';
-import { createQueuedAttendanceRecord } from '@/models/Attendance';
-import type { QueuedAttendance } from '@/models/Attendance';
-import { type Student, getAllStudents, getStudentBySchoolId } from '@/models/Student';
-import useQueuedAttendanceStore from '@/store/useQueuedAttendanceStore';
+// import { createQueuedAttendanceRecord } from '@/models/Attendance';
+// import type { QueuedAttendance } from '@/models/Attendance';
+import { type Student, getAllStudents, getStudentByIdNum, getStudentBySchoolId } from '@/models/Student';
+// import useQueuedAttendanceStore from '@/store/useQueuedAttendanceStore';
 import { failSound, networkErrorSound, offlineSound, successSound } from '@/utils/sound';
 import { type Html5QrcodeResult, Html5QrcodeScanner, Html5QrcodeScannerState } from 'html5-qrcode';
 import { useEffect, useRef, useState } from 'react';
@@ -13,6 +13,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { fulfillWithTimeLimit, throwErrorAfterTimeout } from '@/utils/utils';
 import { useQuery } from '@tanstack/react-query';
 import { set } from 'zod';
+import { createOrUpdateAttendanceRecord } from '@/models/Attendance';
+
+import { useAttendanceStore } from "@/store/useAttendanceStore";
 
 interface ModalContent {
     desc: string;
@@ -21,18 +24,19 @@ interface ModalContent {
 
 export default function Scanner() {
 
+    const { addAttendanceRecord } = useAttendanceStore();
 
-    const { data: students = [], error, isLoading } = useQuery<Student[]>({
-        queryKey: ["students"],
-        queryFn: getAllStudents
-    });
+    // const { data: students = [], error, isLoading } = useQuery<Student[]>({
+    //     queryKey: ["students"],
+    //     queryFn: getAllStudents
+    // });
 
-    const studentsRef = useRef(students);
+    // const studentsRef = useRef(students);
 
-    useEffect(() => {
-        console.log('Student query status:', { isLoading, students, error });
-        studentsRef.current = students;
-    }, [students, isLoading, error]);
+    // useEffect(() => {
+    //     console.log('Student query status:', { isLoading, students, error });
+    //     studentsRef.current = students;
+    // }, [students, isLoading, error]);
 
 
 
@@ -40,13 +44,13 @@ export default function Scanner() {
 
     const html5QrcodeScannerRef = useRef<Html5QrcodeScanner | null>(null);
     const [modalContent, setModalContent] = useState<ModalContent | null>(null);
-    const addAttendanceQueue = useQueuedAttendanceStore((state) => state.addAttendanceQueue);
+    // const addAttendanceQueue = useQueuedAttendanceStore((state) => state.addAttendanceQueue);
 
 
 
 
 
-    const attendanceQueueProp: QueuedAttendance[] = []
+    // const attendanceQueueProp: QueuedAttendance[] = []
 
     // const notify = () => toast.error("Daily attendance limit reached!");
 
@@ -78,28 +82,29 @@ export default function Scanner() {
             // SCANNING SHOULD BE PAUSED IMMEDIATELY SINCE FOLLOWING CODE ARE ASYNC
             pauseScanner(); // Pause scanning
 
-            if (!navigator.onLine) {
-                throw new Error("OFFLINE");
-            }
+            // if (!navigator.onLine) {
+            //     throw new Error("OFFLINE");
+            // }
 
 
             // checks first if there are students in the variable fetched by react-tanstack-query
-            if (studentsRef.current.length === 0) {
-                throw new Error("EMPTY_STUDENTS_REFERENCE");
-            }
+            // if (studentsRef.current.length === 0) {
+            //     throw new Error("EMPTY_STUDENTS_REFERENCE");
+            // }
 
 
             //The commented initiates an API call everytime, it is replaced by a client side filtering method to reduce API calls and improve scanning responsiveness
-            // const student = await throwErrorAfterTimeout(2000, () => getStudentByIdNum(decodedText), "TIME_LIMIT_REACHED");
-            const student: Student | undefined = getStudentBySchoolId(studentsRef.current, decodedText);
+            const student = await throwErrorAfterTimeout(2000, () => getStudentByIdNum(decodedText), "TIME_LIMIT_REACHED");
+            // const student: Student | undefined = getStudentBySchoolId(studentsRef.current, decodedText);
 
             if (student) {
-                successSound?.play();
 
-                const queuedAttendance = await throwErrorAfterTimeout(2000, () => createQueuedAttendanceRecord(student), "TIME_LIMIT_REACHED");
+                const newAttendanceRecord = await throwErrorAfterTimeout(2000, () => createOrUpdateAttendanceRecord(student.id), "TIME_LIMIT_REACHED");
 
-                if (queuedAttendance) {
-                    addAttendanceQueue(queuedAttendance);
+                if (newAttendanceRecord) {
+                    // addAttendanceQueue(queuedAttendance);
+                    addAttendanceRecord({ ...newAttendanceRecord, student });
+                    successSound?.play();
                 } else {
                     toast.error("Daily attendance limit reached!", { autoClose: 2500, toastId: "toast-daily-limit-reached" });
                 }
