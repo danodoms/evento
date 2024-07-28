@@ -175,7 +175,7 @@ export default function Scanner() {
         if (node && !html5QrcodeScannerRef.current) {
             const scanner = new Html5QrcodeScanner(
                 node.id,
-                { fps: 15, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 },
+                { fps: 15, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0, rememberLastUsedCamera: true, showTorchButtonIfSupported: true },
                 false
             );
 
@@ -186,7 +186,7 @@ export default function Scanner() {
 
     return (
         <div className="flex flex-col items-center justify-center relative">
-            <div id="reader" ref={setScannerRef} className="w-full max-w-sm rounded" />
+            <div id="reader" ref={setScannerRef} className="w-full max-w-sm border-none outline-none" />
 
 
 
