@@ -16,7 +16,7 @@ import { set } from 'zod';
 import { Attendance, createOrUpdateAttendanceRecord } from '@/models/Attendance';
 import { motion } from 'framer-motion';
 import { useAttendanceStore } from "@/store/useAttendanceStore";
-import { LogIn, LogOut, UserRound } from 'lucide-react';
+import { LogIn, LogOut, TriangleAlert, UserRound } from 'lucide-react';
 import useOnlineStatus from "@/hooks/useOnlineStatus";
 
 interface ModalContent {
@@ -31,6 +31,7 @@ export default function Scanner() {
 
     const [scannedStudent, setScannedStudent] = useState<Student | null>(null);
     const [scannedStatus, setScannedStatus] = useState<"TIMED IN" | "TIMED OUT" | null>(null);
+    const [scannedMessage, setScannedMessage] = useState<string>("");
 
 
     useEffect(() => {
@@ -99,24 +100,21 @@ export default function Scanner() {
 
                 setScannedStudent(student);
                 setScannedStatus(null);
+                setScannedMessage("");
                 const newAttendanceRecord: Attendance | null = await throwErrorAfterTimeout(2000, () => createOrUpdateAttendanceRecord(student.id), "TIME_LIMIT_REACHED");
 
                 if (newAttendanceRecord) {
-
-                    console.log("New attendance record created", newAttendanceRecord);
-                    // addAttendanceQueue(queuedAttendance);
                     if (newAttendanceRecord.time_out) {
                         setScannedStatus("TIMED OUT")
-                        console.log("THIS IS TIME OUT", newAttendanceRecord);
                     } else {
                         setScannedStatus("TIMED IN")
-                        console.log("THIS IS TIME IN", newAttendanceRecord);
                     }
 
                     addAttendanceRecord({ ...newAttendanceRecord, student });
                     successSound?.play();
                 } else {
-                    toast.error("Daily attendance limit reached!", { autoClose: 2500, toastId: "toast-daily-limit-reached" });
+                    // toast.error("Daily attendance limit reached!", { autoClose: 2500, toastId: "toast-daily-limit-reached" });
+                    setScannedMessage("Daily attendance limit reached!");
                 }
 
                 setTimeout(() => {
@@ -134,12 +132,14 @@ export default function Scanner() {
             console.error("Error fetching student details:", error);
 
             if (error.message === "EARLY_TIMEOUT") {
+                setScannedMessage("Early timeout, retry in 1 min");
                 failSound?.play();
-                toast.error("Early time out detected, retry in a minute", { autoClose: 2500, toastId: "toast-early-timeout" });
+                // toast.error("Early time out detected, retry in a minute", { autoClose: 2500, toastId: "toast-early-timeout" });
                 pauseAndResumeScanner(1000)
             } else if (error.message === "EARLY_TIMEIN") {
+                setScannedMessage("Early time-in, retry in 10 sec");
                 failSound?.play();
-                toast.error("Early time in detected, retry in 10 seconds", { autoClose: 2500, toastId: "toast-early-timein" });
+                // toast.error("Early time in detected, retry in 10 seconds", { autoClose: 2500, toastId: "toast-early-timein" });
                 pauseAndResumeScanner(1000)
             } else if (error.message === "OFFLINE") {
                 offlineSound?.play();
@@ -186,7 +186,7 @@ export default function Scanner() {
 
     return (
         <div className="flex flex-col items-center justify-center relative">
-            <div id="reader" ref={setScannerRef} className="w-full max-w-sm border-none outline-none" />
+            <div id="reader" ref={setScannerRef} className="w-full max-w-sm border-none outline-none rounded-md" />
 
 
 
@@ -199,37 +199,59 @@ export default function Scanner() {
                     exit={{ opacity: 0, scale: 0.8 }}
                     transition={{ duration: 0.2 }}
                 >
-                    <div className="p-4 bg-background opacity-90 backdrop-blur-lg rounded-md text-center flex items-center flex-col gap-1 outline outline-1">
+                    <div className="p-4 bg-background opacity-90 backdrop-blur-lg rounded-md text-center flex items-center flex-col gap-1 outline-1 mb-16">
                         <UserRound className='size-8' />
                         <div>
                             <p className='font-bold'>{scannedStudent.name}</p>
                             <p className='text-sm'>{scannedStudent.school_id}</p>
 
-                            {scannedStatus &&
-                                (
-                                    <motion.div
-                                        className=" flex items-center justify-center pointer-events-none"
-                                        initial={{ opacity: 0, scale: 0.2 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 0.8 }}
-                                        transition={{ duration: 0.2 }}
-                                    >
-                                        <div>
-                                            <p className={`${scannedStatus === "TIMED OUT" ? "bg-destructive" : "bg-green-700"} flex items-center gap-2 tracking-wide w-full p-2 font-bold mt-2 rounded-md`}>
-                                                {scannedStatus === "TIMED OUT" ? (
-                                                    <LogOut />
-                                                ) : (
-                                                    <LogIn />
-                                                )}
-
-                                                {scannedStatus}
-                                            </p>
-                                        </div>
-                                    </motion.div>
-                                )
-                            }
-
                         </div>
+
+                        {scannedStatus && (
+                            <motion.div
+                                className=" flex items-center justify-center pointer-events-none"
+                                initial={{ opacity: 0, scale: 0.2 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.8 }}
+                                transition={{ duration: 0.2 }}
+                            >
+                                <div>
+                                    <p className={`${scannedStatus === "TIMED OUT" ? "bg-destructive" : "bg-green-700"} w-full flex items-center gap-2 tracking-wide p-2 font-bold mt-2 rounded-md`}>
+                                        {scannedStatus === "TIMED OUT" ? (
+                                            <LogOut />
+                                        ) : (
+                                            <LogIn />
+                                        )}
+
+                                        {scannedStatus}
+                                    </p>
+                                </div>
+                            </motion.div>
+                        )}
+
+
+                        {scannedMessage && (
+                            <motion.div
+                                className=" flex items-center justify-center pointer-events-none"
+                                initial={{ opacity: 0, scale: 0.2 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.8 }}
+                                transition={{ duration: 0.2 }}
+                            >
+                                <div>
+                                    <p className="flex items-center bg-yellow-500 text-sm bg-opacity-50 gap-2 text-pretty tracking-wide p-2 font-semibold mt-2 rounded-md w-full">
+                                        <TriangleAlert className='size-4' />
+                                        {scannedMessage}
+                                    </p>
+                                </div>
+                            </motion.div>
+                        )}
+
+
+
+
+
+
 
 
                     </div>
