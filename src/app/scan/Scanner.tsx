@@ -13,10 +13,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import { fulfillWithTimeLimit, throwErrorAfterTimeout } from '@/utils/utils';
 import { useQuery } from '@tanstack/react-query';
 import { set } from 'zod';
-import { createOrUpdateAttendanceRecord } from '@/models/Attendance';
+import { Attendance, createOrUpdateAttendanceRecord } from '@/models/Attendance';
 import { motion } from 'framer-motion';
 import { useAttendanceStore } from "@/store/useAttendanceStore";
-import { UserRound } from 'lucide-react';
+import { LogIn, LogOut, UserRound } from 'lucide-react';
 import useOnlineStatus from "@/hooks/useOnlineStatus";
 
 interface ModalContent {
@@ -30,6 +30,7 @@ export default function Scanner() {
     const { addAttendanceRecord } = useAttendanceStore();
 
     const [scannedStudent, setScannedStudent] = useState<Student | null>(null);
+    const [scannedStatus, setScannedStatus] = useState<"TIMED IN" | "TIMED OUT" | null>(null);
 
 
     useEffect(() => {
@@ -37,7 +38,7 @@ export default function Scanner() {
         if (scannedStudent) {
             timer = setTimeout(() => {
                 setScannedStudent(null);
-            }, 3000); // 3 seconds
+            }, 2000); // 2 seconds
         }
         return () => clearTimeout(timer);
     }, [scannedStudent]);
@@ -97,10 +98,21 @@ export default function Scanner() {
             if (student) {
 
                 setScannedStudent(student);
-                const newAttendanceRecord = await throwErrorAfterTimeout(2000, () => createOrUpdateAttendanceRecord(student.id), "TIME_LIMIT_REACHED");
+                setScannedStatus(null);
+                const newAttendanceRecord: Attendance | null = await throwErrorAfterTimeout(2000, () => createOrUpdateAttendanceRecord(student.id), "TIME_LIMIT_REACHED");
 
                 if (newAttendanceRecord) {
+
+                    console.log("New attendance record created", newAttendanceRecord);
                     // addAttendanceQueue(queuedAttendance);
+                    if (newAttendanceRecord.time_out) {
+                        setScannedStatus("TIMED OUT")
+                        console.log("THIS IS TIME OUT", newAttendanceRecord);
+                    } else {
+                        setScannedStatus("TIMED IN")
+                        console.log("THIS IS TIME IN", newAttendanceRecord);
+                    }
+
                     addAttendanceRecord({ ...newAttendanceRecord, student });
                     successSound?.play();
                 } else {
@@ -192,7 +204,34 @@ export default function Scanner() {
                         <div>
                             <p className='font-bold'>{scannedStudent.name}</p>
                             <p className='text-sm'>{scannedStudent.school_id}</p>
+
+                            {scannedStatus &&
+                                (
+                                    <motion.div
+                                        className=" flex items-center justify-center pointer-events-none"
+                                        initial={{ opacity: 0, scale: 0.2 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.8 }}
+                                        transition={{ duration: 0.2 }}
+                                    >
+                                        <div>
+                                            <p className={`${scannedStatus === "TIMED OUT" ? "bg-destructive" : "bg-green-700"} flex items-center gap-2 tracking-wide w-full p-2 font-bold mt-2 rounded-md`}>
+                                                {scannedStatus === "TIMED OUT" ? (
+                                                    <LogOut />
+                                                ) : (
+                                                    <LogIn />
+                                                )}
+
+                                                {scannedStatus}
+                                            </p>
+                                        </div>
+                                    </motion.div>
+                                )
+                            }
+
                         </div>
+
+
                     </div>
                 </motion.div>
             )}
