@@ -1,7 +1,5 @@
 "use client";
 
-import TimeInCard from "@/components/TimeInCard";
-import TimeOutCard from "@/components/TimeOutCard";
 import { getAllAttendanceRecords } from "@/models/Attendance";
 import type { AttendanceRecord } from "@/models/Attendance";
 import { useQuery } from "@tanstack/react-query";

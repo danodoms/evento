@@ -1,11 +1,11 @@
 "use client";
 
 import { TextSearch } from "lucide-react";
-import { Fragment, useEffect, useState } from "react";
-import { AttendanceQueueCard } from "./AttendanceQueueCard";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
 
 import type { AttendanceRecord } from "@/models/Attendance";
+import AttendanceCard from "@/components/AttendanceCard";
 
 interface AttendanceQueueSectionProps {
 	results: AttendanceRecord[];
@@ -14,12 +14,30 @@ interface AttendanceQueueSectionProps {
 const AttendanceQueueSection: React.FC<AttendanceQueueSectionProps> = ({
 	results,
 }) => {
+	const [animatedResults, setAnimatedResults] = useState<(AttendanceRecord & { isNew?: boolean })[]>([]);
+
+	useEffect(() => {
+		const newResults = results.filter(result => !animatedResults.some(ar => ar.uniqueId === result.uniqueId));
+		setAnimatedResults(prev => [
+			...newResults.map(result => ({ ...result, isNew: true })),
+			...prev.map(result => ({ ...result, isNew: false }))
+		]);
+	}, [results]);
+
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setAnimatedResults(prev => prev.map(result => ({ ...result, isNew: false })));
+		}, 1000); // Duration of the animation
+
+		return () => clearTimeout(timer);
+	}, [animatedResults]);
+
 	return (
 		<>
-			{results.length > 0 ? (
-				<div className="h-full overflow-auto w-full rounded-md flex flex-col gap-2">
+			{animatedResults.length > 0 ? (
+				<div className="h-full overflow-auto w-full rounded-md flex flex-col">
 					<AnimatePresence>
-						{[...results].reverse().map((result) => (
+						{animatedResults.map((result) => (
 							<motion.div
 								key={result.uniqueId}
 								initial={{ opacity: 0, x: -100 }}
@@ -27,7 +45,9 @@ const AttendanceQueueSection: React.FC<AttendanceQueueSectionProps> = ({
 								exit={{ opacity: 0, x: -100 }}
 								transition={{ duration: 0.3 }}
 							>
-								<AttendanceQueueCard key={result.uniqueId} {...result} />
+								<div className={result.isNew ? 'animate-flash' : ''}>
+									<AttendanceCard key={result.uniqueId} result={result} />
+								</div>
 							</motion.div>
 						))}
 					</AnimatePresence>
