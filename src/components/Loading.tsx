@@ -1,3 +1,5 @@
+"use client"
+
 import { appName } from "@/config";
 import { LoaderCircle } from "lucide-react";
 

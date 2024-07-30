@@ -10,6 +10,8 @@ const withPWA = withPWAInit({
   reloadOnOnline: true,
   swcMinify: true,
   cacheStartUrl: true,
+  dynamicStartUrl: true,
+  dynamicStartUrlRedirect: "/sign-in",
   cacheOnFrontendNav: true,
   aggressiveFrontEndNavCaching: true,
   // disable: process.env.NODE_ENV === "development",
