@@ -1,25 +1,18 @@
-import { register } from "module";
-import { skip } from "node:test";
+import withSerwistInit from "@serwist/next";
 
-/** @type {import('next').NextConfig} */
-import withPWAInit from "@ducanh2912/next-pwa";
-
-const withPWA = withPWAInit({
-  dest: "public",
-  register: true,
+const withSerwist = withSerwistInit({
+  // Note: This is only an example. If you use Pages Router,
+  // use something else that works, such as "service-worker/index.ts".
+  swSrc: "src/app/sw.ts",
+  swDest: "public/sw.js",
+  cacheOnNavigation: true,
   reloadOnOnline: true,
-  swcMinify: true,
-  cacheStartUrl: true,
-  dynamicStartUrl: true,
-  dynamicStartUrlRedirect: "/sign-in",
-  cacheOnFrontendNav: true,
-  aggressiveFrontEndNavCaching: true,
-  // disable: process.env.NODE_ENV === "development",
-  // scope: "/app",
-  //...
+  include: [
+    /\.(js|css|json)$/,
+    ({ asset }) => asset.name.startsWith("client/"),
+  ],
 });
 
-// Your Next config is automatically typed!
-export default withPWA({
+export default withSerwist({
   // Your Next.js config
 });
