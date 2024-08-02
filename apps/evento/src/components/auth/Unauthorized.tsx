@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 import { Lock, TriangleAlert, LogInIcon, User, UserRound } from "lucide-react"
 import { useClerk, useUser } from "@clerk/nextjs";
