@@ -12,6 +12,7 @@ evento is a Progressive Web App (PWA) designed to streamline and modernize atten
 - **Responsive Design**: Fully responsive design to ensure usability on any device, including desktops, tablets, and smartphones.
 
 ## Screenshots
+
 ![Untitled-2](https://github.com/user-attachments/assets/c56edd37-96a2-4ef9-ba52-424fba481635)
 
 ## Installation
@@ -19,29 +20,34 @@ evento is a Progressive Web App (PWA) designed to streamline and modernize atten
 To install and use Evento, follow these steps:
 
 1. **Clone the Repository**:
-    ```sh
-    git clone https://github.com/domsdano/events-attendance.git
-    ```
+
+   ```sh
+   git clone https://github.com/domsdano/events-attendance.git
+   ```
 
 2. **Navigate to the Project Directory**:
-    ```sh
-    cd evento
-    ```
+
+   ```sh
+   cd evento
+   ```
 
 3. **Install Dependencies**:
-    ```sh
-    npm install
-    ```
+
+   ```sh
+   npm install
+   ```
 
 4. **Run the App**:
-    ```sh
-    npm start
-    ```
+
+   ```sh
+   npm start
+   ```
 
 5. **Build the App for Production**:
-    ```sh
-    npm run build
-    ```
+
+   ```sh
+   npm run build
+   ```
 
 6. **Deploy the App**: Follow your preferred method to deploy the built app to your web server or hosting service.
 
@@ -70,23 +76,27 @@ To install and use Evento, follow these steps:
 Contributions to improve Evento are welcome! If you have any ideas, suggestions, or bug reports, please open an issue or submit a pull request.
 
 1. **Fork the Repository**:
-    ```sh
-    git fork https://github.com/domsdano/events-attendance.git
-    ```
+
+   ```sh
+   git fork https://github.com/domsdano/events-attendance.git
+   ```
 
 2. **Create a New Branch**:
-    ```sh
-    git checkout -b feature/your-feature-name
-    ```
+
+   ```sh
+   git checkout -b feature/your-feature-name
+   ```
 
 3. **Commit Your Changes**:
-    ```sh
-    git commit -m "Add your commit message"
-    ```
+
+   ```sh
+   git commit -m "Add your commit message"
+   ```
 
 4. **Push to Your Branch**:
-    ```sh
-    git push origin feature/your-feature-name
-    ```
+
+   ```sh
+   git push origin feature/your-feature-name
+   ```
 
 5. **Open a Pull Request**: Describe your changes and submit a pull request for review.
