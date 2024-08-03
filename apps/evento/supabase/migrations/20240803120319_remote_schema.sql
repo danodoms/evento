@@ -214,7 +214,7 @@ CREATE POLICY "Enable read access for all users" ON "public"."students" FOR SELE
 
 CREATE PUBLICATION "logflare_pub" WITH (publish = 'insert, update, delete, truncate');
 
-ALTER PUBLICATION "logflare_pub" OWNER TO "supabase_admin";
+ALTER PUBLICATION "logflare_pub" OWNER TO "postgres";
 
 ALTER PUBLICATION "supabase_realtime" OWNER TO "postgres";
 
