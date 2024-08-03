@@ -175,9 +175,9 @@ const Trigger = () => {
 		// 	<TableProperties className="size-4" />
 		// 	<p className="text-xs font-bold">View Records</p>
 		// </div>
-		<div className="flex gap-1 items-center rounded-full ">
+		<div className="flex gap-1 items-center rounded-full">
 			<AlignLeft className="size-5" />
-			<p className="text-xs font-bold">Records</p>
+			{/* <p className="text-xs font-bold">Records</p> */}
 		</div>
 	)
 }

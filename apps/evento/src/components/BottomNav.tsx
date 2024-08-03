@@ -32,8 +32,8 @@ export default function BottomNav() {
 	}, [pathname]);
 
 	const linkClasses = (link: string) => `
-        flex flex-col items-center  
-        ${activeLink === link ? "opacity-100" : "opacity-50"}
+        flex flex-col items-center  p-2
+        ${activeLink === link ? "opacity-100 bg-neutral-500 rounded-full p-2 px-8 bg-opacity-20" : "opacity-50"}
         transition-all duration-125 ease-in-out hover:opacity-100
     `;
 

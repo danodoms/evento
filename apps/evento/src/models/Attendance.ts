@@ -211,6 +211,17 @@ export const getAllAttendanceRecords = async (): Promise<
   return data as AttendanceRecord[];
 };
 
+export const getAllAttendance = async (): Promise<Attendance[]> => {
+  const { data, error } = await supabase
+    .from("attendance")
+    .select("*")
+    .order("time, date");
+
+  if (error) throw new Error("Error fetching attendance: " + error.message);
+
+  return data as Attendance[];
+};
+
 // Fetch attendance records by student ID
 export const getAttendanceRecordsByStudentId = async (
   studentId: number
