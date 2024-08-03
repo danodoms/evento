@@ -3,7 +3,7 @@
 import { StudentMissingModal } from '@/components/modals/StudentMissingModal';
 // import { createQueuedAttendanceRecord } from '@/models/Attendance';
 // import type { QueuedAttendance } from '@/models/Attendance';
-import { type Student, getAllStudents, getStudentByIdNum, getStudentBySchoolId } from '@/models/Student';
+import { type Student, getAllStudents, getStudentByIdNum, getStudentBySchoolId, isValidSchoolId } from '@/models/Student';
 // import useQueuedAttendanceStore from '@/store/useQueuedAttendanceStore';
 import { failSound, networkErrorSound, offlineSound, successSound } from '@/utils/sound';
 import { type Html5QrcodeResult, Html5QrcodeScanner, Html5QrcodeScannerState } from 'html5-qrcode';
@@ -91,23 +91,36 @@ export default function Scanner() {
             //     throw new Error("EMPTY_STUDENTS_REFERENCE");
             // }
 
+            //! DEPRECATED 
+            // const student = await throwErrorAfterTimeout(2000, () => getStudentByIdNum(decodedText), "TIME_LIMIT_REACHED");
 
-            //The commented initiates an API call everytime, it is replaced by a client side filtering method to reduce API calls and improve scanning responsiveness
-            const student = await throwErrorAfterTimeout(2000, () => getStudentByIdNum(decodedText), "TIME_LIMIT_REACHED");
-            // const student: Student | undefined = getStudentBySchoolId(studentsRef.current, decodedText);
+            const scannedSchoolId = decodedText
+            const isValidId = isValidSchoolId(scannedSchoolId)
 
-            if (student) {
+
+            //* THIS IS JUST A PLACEHOLDER STUDENT OBJECT FOR ANONYMOUS ID SCANNING
+            const student: Student = {
+                name: "Student",
+                id: 100,
+                created_at: String(Date.now),
+                is_active: true,
+                school_id: scannedSchoolId,
+                dept_id: null
+            }
+
+
+            if (isValidId) {
 
                 setScannedStudent(student);
                 setScannedStatus(null);
                 setScannedMessage("");
-                const newAttendanceRecord: Attendance | null = await throwErrorAfterTimeout(2000, () => createOrUpdateAttendanceRecord(student.id), "TIME_LIMIT_REACHED");
+                const newAttendanceRecord: Attendance | null = await throwErrorAfterTimeout(2000, () => createOrUpdateAttendanceRecord(scannedSchoolId), "TIME_LIMIT_REACHED");
 
                 if (newAttendanceRecord) {
-                    if (newAttendanceRecord.time_out) {
-                        setScannedStatus("TIMED OUT")
-                    } else {
+                    if (newAttendanceRecord.is_time_in) {
                         setScannedStatus("TIMED IN")
+                    } else {
+                        setScannedStatus("TIMED OUT")
                     }
 
                     addAttendanceRecord({ ...newAttendanceRecord, student });
@@ -270,3 +283,7 @@ export default function Scanner() {
         </div>
     );
 };
+function Integer(random: () => number): number {
+    throw new Error('Function not implemented.');
+}
+

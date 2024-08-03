@@ -11,7 +11,7 @@ export function AttendanceQueueCard(result: AttendanceRecord) {
 
 	return (
 		<div
-			className={`flex justify-between gap-4 items-center rounded-md relative ${result.time_out ? "bg-destructive" : "bg-green-700"}`}
+			className={`flex justify-between gap-4 items-center rounded-md relative ${result.is_time_in ? "bg-green-700" : "bg-destructive"}`}
 		>
 			<div className="flex gap-2 w-full flex-col px-4 py-2">
 				<div className="flex gap-4 items-center">
@@ -23,15 +23,15 @@ export function AttendanceQueueCard(result: AttendanceRecord) {
 						</div>
 					</div>
 					<div className="ml-auto flex gap-4 items-center ">
-						{!result.time_out ? (
+						{result.is_time_in ? (
 							<div className="p-2 items-center flex flex-col">
 								<p className="text-xs">TIMED IN</p>
-								<p className="font-bold">{result.time_in}</p>
+								<p className="font-bold">{result.time}</p>
 							</div>
 						) : (
 							<div className="p-2 items-center flex flex-col">
 								<p className="text-xs">TIMED OUT</p>
-								<p className="font-bold">{result.time_out}</p>
+								<p className="font-bold">{result.time}</p>
 							</div>
 						)}
 

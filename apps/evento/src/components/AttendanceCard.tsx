@@ -7,13 +7,13 @@ interface Props {
 }
 
 const AttendanceCard: React.FC<Props> = ({ result }) => {
-    const isTimeOut = !!result.time_out;
+    const isTimeOut = !result.is_time_in;
 
     const cardConfig = {
         backgroundColor: isTimeOut ? 'bg-red-500' : 'bg-green-500',
         icon: isTimeOut ? LogOut : LogIn,
         label: isTimeOut ? 'TIME OUT' : 'TIME IN',
-        time: isTimeOut ? result.time_out : result.time_in,
+        time: isTimeOut ? result.time : result.time,
     };
 
     return (

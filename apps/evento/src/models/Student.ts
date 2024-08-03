@@ -149,3 +149,11 @@ export const getStudentRowCount = async () => {
 
   return count || 0;
 };
+
+export const isValidSchoolId = (id: string): boolean => {
+  // Regular expression to match the format "YYYY-NNNN"
+  const schoolIdRegex = /^\d{4}-\d{4}$/;
+
+  // Test the string against the regular expression
+  return schoolIdRegex.test(id);
+};
