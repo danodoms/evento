@@ -44,7 +44,8 @@ import { Student } from "@/models/Student";
 import useMediaQuery from "@custom-react-hooks/use-media-query";
 import { useQuery } from "@tanstack/react-query";
 import { format, parseISO } from "date-fns";
-import { TableProperties, CircleAlert, Eye, AlignLeft } from "lucide-react";
+import { TableProperties, CircleAlert, Eye, AlignLeft, LogIn, LogOut } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 type StudentRecordsDialogProps = {
 	student?: Student;
@@ -202,7 +203,13 @@ const AttendanceRecordsSection: React.FC<AttendanceSectionProps> = ({ attendance
 								<TableCell className="font-medium">
 									{getEventNameFromDate(events, record.date)}
 								</TableCell>
-								<TableCell>{record.time}</TableCell>
+
+								{record.is_time_in ?
+									(<TableCell className="flex gap-4 items-center">{record.time} <Badge variant={"secondary"} className="flex gap-1"><LogIn className="size-3" />In </Badge></TableCell>) :
+									(<TableCell className="flex gap-4 items-center">{record.time} <Badge variant={"destructive"} className="flex gap-1"><LogOut className="size-3" />Out</Badge></TableCell>)
+								}
+
+
 								{/* <TableCell>{record.time_out}</TableCell> */}
 								{/* <TableCell className="text-right">$250.00</TableCell> */}
 							</TableRow>
