@@ -42,7 +42,8 @@ import {
 	Plus,
 	TableProperties,
 	Trash,
-	FileBarChart2
+	FileBarChart2,
+	PlusCircle
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -299,6 +300,12 @@ export default function EventsPage() {
 							</div>
 						</div>
 					))}
+
+
+					<Link href="/events/create" className="flex justify-center gap-2 items-center p-4 w-full rounded-lg border-2 border-dashed opacity-50 bg-opacity-10">
+						<Plus className="size-4" />
+						<p className="text-sm">Add event</p>
+					</Link>
 				</div>
 			) : (
 				<div className="flex flex-col mx-auto gap-4 p-20 opacity-50">

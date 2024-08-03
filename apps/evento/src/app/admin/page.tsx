@@ -281,6 +281,12 @@ export default function AdminPage() {
                             </div> */}
                         </div>
                     ))}
+
+
+                    <Link href="/admin/create" className="flex justify-center gap-2 items-center p-4 w-full rounded-lg border-2 border-dashed opacity-50 bg-opacity-10">
+                        <Plus className="size-4" />
+                        <p className="text-sm">Add user</p>
+                    </Link>
                 </div>
             ) : (
                 <div className="flex flex-col mx-auto gap-4 p-20 opacity-50">
