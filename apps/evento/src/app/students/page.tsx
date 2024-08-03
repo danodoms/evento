@@ -264,7 +264,7 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 									<SelectGroup>
 										<SelectLabel>Departments</SelectLabel>
 										<SelectItem value="all">All Departments</SelectItem>
-										{departments.map((department) => (
+										{departments?.map((department) => (
 											<SelectItem
 												key={department.id}
 												value={department.id.toString()}

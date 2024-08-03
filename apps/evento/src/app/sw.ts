@@ -14,22 +14,10 @@ declare global {
 
 const revision = crypto.randomUUID();
 
-// List of routes to pre-cache
-const routesToPrecache: (PrecacheEntry | string)[] = [
-  { url: "/", revision },
-  { url: "/sign-in", revision },
-  { url: "/events", revision },
-  { url: "/students", revision },
-  { url: "/admin", revision },
-  { url: "/students/create", revision },
-  { url: "/events/create", revision },
-  // Add more routes and assets as needed
-];
-
 declare const self: ServiceWorkerGlobalScope;
 
 const serwist = new Serwist({
-  precacheEntries: routesToPrecache.concat(self.__SW_MANIFEST || []),
+  precacheEntries: self.__SW_MANIFEST,
   skipWaiting: true,
   clientsClaim: true,
   navigationPreload: true,
@@ -46,6 +34,22 @@ const serwist = new Serwist({
   runtimeCaching: [
     {
       matcher: ({ request }) => request.destination === "style",
+      handler: new CacheFirst(),
+    },
+    {
+      matcher: ({ request }) => request.destination === "script",
+      handler: new CacheFirst(),
+    },
+    {
+      matcher: ({ request }) => request.destination === "image",
+      handler: new CacheFirst(),
+    },
+    {
+      matcher: ({ request }) => request.destination === "font",
+      handler: new CacheFirst(),
+    },
+    {
+      matcher: ({ request }) => request.destination === "document",
       handler: new CacheFirst(),
     },
   ],

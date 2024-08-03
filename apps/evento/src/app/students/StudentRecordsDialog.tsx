@@ -205,8 +205,8 @@ const AttendanceRecordsSection: React.FC<AttendanceSectionProps> = ({ attendance
 								</TableCell>
 
 								{record.is_time_in ?
-									(<TableCell className="flex gap-4 items-center">{record.time} <Badge variant={"secondary"} className="flex gap-1"><LogIn className="size-3" />In </Badge></TableCell>) :
-									(<TableCell className="flex gap-4 items-center">{record.time} <Badge variant={"destructive"} className="flex gap-1"><LogOut className="size-3" />Out</Badge></TableCell>)
+									(<TableCell className="flex gap-4 items-center"> <Badge variant={"secondary"} className="flex gap-2"><LogIn className="size-3" />{record.time}</Badge></TableCell>) :
+									(<TableCell className="flex gap-4 items-center"> <Badge variant={"destructive"} className="flex gap-2"><LogOut className="size-3" />{record.time}</Badge></TableCell>)
 								}
 
 
