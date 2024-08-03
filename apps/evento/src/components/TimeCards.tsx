@@ -28,7 +28,7 @@ const Card: React.FC<Props> = ({ result }) => (
                 </div>
                 <div className="p-2 items-center flex flex-col ml-auto opacity-50">
                     <p className="text-xs">TIMED IN</p>
-                    <p className="font-bold">{result.time_in}</p>
+                    <p className="font-bold">{result.time}</p>
                 </div>
             </div>
         </div>
