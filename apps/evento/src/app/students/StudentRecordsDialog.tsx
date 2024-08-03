@@ -37,7 +37,7 @@ import {
 } from "@/components/ui/table";
 import {
 	Attendance,
-	getAttendanceRecordsByStudentId,
+	getAttendanceRecordsBySchoolId,
 } from "@/models/Attendance";
 import { Event, getEvents } from "@/models/Event";
 import { Student } from "@/models/Student";
@@ -47,7 +47,8 @@ import { format, parseISO } from "date-fns";
 import { TableProperties, CircleAlert, Eye, AlignLeft } from "lucide-react";
 
 type StudentRecordsDialogProps = {
-	student: Student;
+	student?: Student;
+	schoolId?: string;
 };
 
 
@@ -62,14 +63,25 @@ const getEventNameFromDate = (events: Event[], date: string) => {
 };
 
 
-const StudentRecordsDialog = ({ student }: StudentRecordsDialogProps) => {
+const StudentRecordsDialog = ({ schoolId, student }: StudentRecordsDialogProps) => {
+
+	let schoolIdToUse = "0000-0000"
+	let studentName = "Student"
+
+	if (schoolId) {
+		schoolIdToUse = schoolId
+	} else if (student) {
+		schoolIdToUse = student.school_id
+		studentName = student.name
+	}
+
 	const {
 		data: attendanceRecords = [],
 		error: attendanceRecordsError,
 		isLoading: isAttendanceRecordsLoading,
 	} = useQuery<Attendance[]>({
-		queryKey: ["studentAttendanceRecords", student.id],
-		queryFn: () => getAttendanceRecordsByStudentId(student.id),
+		queryKey: ["studentAttendanceRecords", schoolId],
+		queryFn: () => getAttendanceRecordsBySchoolId(schoolIdToUse),
 	});
 
 	const {
@@ -99,10 +111,10 @@ const StudentRecordsDialog = ({ student }: StudentRecordsDialogProps) => {
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-[425px]">
 					<DialogHeader>
-						<DialogTitle>{student?.name}</DialogTitle>
+						<DialogTitle>{studentName}</DialogTitle>
 
 						<p className="text-xs tracking-wide">
-							{student?.school_id}
+							{schoolIdToUse}
 						</p>
 						<DialogDescription className="text-balance">
 						</DialogDescription>
@@ -126,9 +138,9 @@ const StudentRecordsDialog = ({ student }: StudentRecordsDialogProps) => {
 			</DrawerTrigger>
 			<DrawerContent>
 				<DrawerHeader>
-					<DrawerTitle className="text-xl">{student?.name}</DrawerTitle>
+					<DrawerTitle className="text-xl">{studentName}</DrawerTitle>
 					<p className="text-xs tracking-wide">
-						{student?.school_id}
+						{schoolIdToUse}
 					</p>
 					<DrawerDescription className="text-balance text-xs px-4"></DrawerDescription>
 				</DrawerHeader>
@@ -180,8 +192,8 @@ const AttendanceRecordsSection: React.FC<AttendanceSectionProps> = ({ attendance
 					<TableHeader>
 						<TableRow>
 							<TableHead>Date</TableHead>
-							<TableHead>Time In</TableHead>
-							<TableHead>Time Out</TableHead>
+							<TableHead>Time</TableHead>
+							{/* <TableHead>Time Out</TableHead> */}
 						</TableRow>
 					</TableHeader>
 					<TableBody className="">
@@ -190,8 +202,8 @@ const AttendanceRecordsSection: React.FC<AttendanceSectionProps> = ({ attendance
 								<TableCell className="font-medium">
 									{getEventNameFromDate(events, record.date)}
 								</TableCell>
-								<TableCell>{record.time_in}</TableCell>
-								<TableCell>{record.time_out}</TableCell>
+								<TableCell>{record.time}</TableCell>
+								{/* <TableCell>{record.time_out}</TableCell> */}
 								{/* <TableCell className="text-right">$250.00</TableCell> */}
 							</TableRow>
 						))}

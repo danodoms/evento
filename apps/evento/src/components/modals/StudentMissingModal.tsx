@@ -27,7 +27,7 @@ export const StudentMissingModal: React.FC<StudentMissingModalProps> = ({
 		<AlertDialog open={true} onOpenChange={onClose}>
 			<AlertDialogContent>
 				<AlertDialogHeader>
-					<AlertDialogTitle>Student not found</AlertDialogTitle>
+					<AlertDialogTitle>Invalid QR Code</AlertDialogTitle>
 					<h3>{subtitle}</h3>
 					<AlertDialogDescription>{description}</AlertDialogDescription>
 				</AlertDialogHeader>
@@ -35,7 +35,7 @@ export const StudentMissingModal: React.FC<StudentMissingModalProps> = ({
 					<AlertDialogCancel onClick={onClose}>
 						Continue Scanning
 					</AlertDialogCancel>
-					<Button>Register this ID instead</Button>
+					{/* <Button>Register this ID instead</Button> */}
 				</AlertDialogFooter>
 			</AlertDialogContent>
 		</AlertDialog>

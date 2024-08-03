@@ -81,6 +81,7 @@ import { stat } from "fs/promises";
 import StudentCardSkeleton from "@/components/skeleton/StudentCardSkeleton";
 import { set } from "date-fns";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
+import { getFilteredPaginatedSchoolIds } from "@/models/Attendance";
 
 type StudentsPageProps = {
 	searchParams?: {
@@ -117,6 +118,21 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 		queryFn: () => getFilteredPaginatedStudents(currentPage, query, departmentFilter !== "all" ? Number(departmentFilter) : null, statusFilter === "active"),
 	});
 
+
+
+	const {
+		data: { schoolIds = [], count: schoolIdRowCount = null } = {},
+		error: schoolIdsError,
+		isLoading: isSchoolIdsLoading,
+		isSuccess: isSchoolIdsSuccess,
+	} = useQuery<{ schoolIds: string[]; count: number | null }>({
+		queryKey: ["paginatedSchoolIds", query, currentPage],
+		queryFn: () => getFilteredPaginatedSchoolIds(currentPage, query),
+	});
+
+
+
+
 	const {
 		data: departments = [],
 		error: departmentsError,
@@ -146,27 +162,20 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 	};
 
 
-
-	// if (true) {
-	// 	return (
-	// 		<div className="flex flex-col gap-3 md:grid md:grid-cols-2 lg:grid-cols-3 overflow-y-auto rounded-md w-full">
-	// 			{skeletons.map((index, skeleton) => (	
-	// 				<StudentCardSkeleton key={index} />
-	// 			))}
-	// 		</div>
-	// 	)
-	// }
-
-	// return (<LoadingSkeleton headerText="Students" />)
-
 	const [prevStudentCount, setPrevStudentCount] = useState<number>(0);
+	const [prevSchoolIdCount, setPrevSchoolIdCount] = useState<number>(0);
 
 	useEffect(() => {
 		if (isStudentsSuccess) {
 			setPrevStudentCount(students.length);
 			console.warn("prevStudentCount", students.length);
 		}
-	}, [isStudentsSuccess]);
+
+		if (isSchoolIdsSuccess) {
+			setPrevSchoolIdCount(schoolIds.length);
+			console.warn("prevSchoolIdCount", schoolIds.length)
+		}
+	}, [isStudentsSuccess, isSchoolIdsSuccess]);
 
 	const renderSkeleton = (count: number) => {
 		const size = count;
@@ -291,7 +300,7 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 
 
 
-			{isStudentsLoading ? renderSkeleton(prevStudentCount) : null}
+			{/* {isStudentsLoading ? renderSkeleton(prevStudentCount) : null}
 
 
 			{students.length > 0 && !isStudentsLoading ? (
@@ -351,10 +360,48 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 				<div className="flex flex-col mx-auto gap-4 p-20 opacity-50">
 					<p>No students</p>
 				</div>
+			)} */}
+
+
+
+			{isSchoolIdsLoading ? renderSkeleton(prevSchoolIdCount) : null}
+
+
+			{schoolIds.length > 0 && !isSchoolIdsLoading ? (
+				<div className="flex flex-col gap-3 md:grid md:grid-cols-2 lg:grid-cols-3 overflow-y-auto rounded-md w-full">
+					{schoolIds.map((schoolId) => (
+						<div
+							key={schoolId}
+							className="p-5 rounded-lg flex flex-col gap-1 backdrop-contrast-50 backdrop-opacity-20"
+						>
+							<div className="flex justify-between items-center">
+								<div className="flex gap-2 items-center">
+									<UserRound className="size-5" />
+									<h2 className="font-bold">{schoolId}</h2>
+
+
+								</div>
+
+								<div className="flex gap-2 flex-wrap mt-1 justify-between">
+									<div className="flex gap-2 items-center opacity-50">
+										<StudentRecordsDialog schoolId={schoolId} />
+									</div>
+								</div>
+							</div>
+						</div>
+					))}
+				</div>
+
+
+			) : (
+				<div className="flex flex-col mx-auto gap-4 p-20 opacity-50">
+					<p>No students</p>
+				</div>
 			)}
 
 
-			<PaginationComponent totalItems={studentRowCount} itemsPerPage={10} />
+			{/* <PaginationComponent totalItems={studentRowCount} itemsPerPage={10} /> */}
+			<PaginationComponent totalItems={schoolIdRowCount} itemsPerPage={10} />
 
 			<ToastContainer />
 		</div>

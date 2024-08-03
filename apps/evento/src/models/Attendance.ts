@@ -225,3 +225,48 @@ export const getAttendanceRecordsByStudentId = async (
 
   return data as Attendance[];
 };
+
+// Fetch attendance records by student ID
+export const getAttendanceRecordsBySchoolId = async (
+  schoolId: string
+): Promise<Attendance[]> => {
+  const { data, error } = await supabase
+    .from("attendance")
+    .select("*")
+    .eq("school_id", schoolId);
+
+  if (error)
+    throw new Error("Error fetching attendance records: " + error.message);
+
+  return data as Attendance[];
+};
+
+export async function getFilteredPaginatedSchoolIds(
+  currentPage: number,
+  query: string,
+  limit: number = 9
+): Promise<{ schoolIds: string[]; count: number | null }> {
+  const { data, error } = await supabase.rpc(
+    "get_filtered_paginated_school_ids",
+    {
+      current_page: currentPage,
+      search_query: query,
+      limit_count: limit,
+    }
+  );
+
+  if (error) {
+    console.error("Error fetching filtered school IDs:", error);
+    throw error;
+  }
+
+  // Extract total count from the first row if data is not empty
+  const count = data.length > 0 ? data[0].total_count : 0;
+
+  // Extract school IDs from the data
+  const schoolIds = data.map((row: { school_id: any }) => row.school_id);
+
+  console.log("school ids", data);
+
+  return { schoolIds, count };
+}
