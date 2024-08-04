@@ -16,9 +16,8 @@ export function HeroSection() {
             <div className="container mx-auto flex justify-center  h-full ">
                 <div className="flex gap-8 py-20 lg:py-40 items-center justify-center flex-col">
 
-                    <div className="flex gap-4 flex-col">
-
-                        <div className="flex items-center gap-2 mt-6 justify-center">
+                    <div className="flex gap-4 flex-col flex-2 basis-11/12 justify-center">
+                        <div className="flex items-center gap-2 justify-center">
                             <Image
                                 src="/dorsu-icon.png"
                                 alt="Picture of the author"
@@ -34,7 +33,7 @@ export function HeroSection() {
 
 
                         <h1 className="text-5xl md:text-7xl max-w-2xl tracking-tighter text-center font-regular">
-                            University Events
+                            Events Attendance
                             <div>
                                 <FlipWords words={words} />
                             </div>
@@ -55,14 +54,14 @@ export function HeroSection() {
                         </Button>
                     </Link> */}
 
-                    <div>
+                    {/* <div>
                         <Button variant="secondary" size="sm" className="gap-4">
                             Read our launch article <MoveRight className="w-4 h-4" />
                         </Button>
-                    </div>
+                    </div> */}
 
 
-                    <h3 className="mt-8 md:text-xl max-w-2xl tracking-tighter text-center font-regular flex flex-col justify-center items-center gap-4 opacity-50">
+                    <h3 className=" md:text-xl max-w-2xl tracking-tighter text-center font-regular flex flex-col h-full justify-center items-center gap-4 opacity-50 basis-1/12">
                         How it works
                         <MoveDown className="size-8 animate-bounce" />
                     </h3>
