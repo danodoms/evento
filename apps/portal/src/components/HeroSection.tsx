@@ -5,11 +5,14 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button";
 import { FlipWords } from "./ui/flip-words";
 import Image from 'next/image'
+import { Vortex } from "./ui/vortex";
 
 export function HeroSection() {
     const words = ["Streamlined", "Digitized", "Modernized"];
     return (
-        <div className="w-full h-screen">
+        // <div className="w-full h-screen relative ">
+        <div className=" top-0 z-[-2] h-screen w-full bg-background bg-[radial-gradient(100%_50%_at_50%_0%,rgba(0,163,255,0.13)_0,rgba(0,163,255,0)_50%,rgba(0,163,255,0)_100%)]">
+
             <div className="container mx-auto flex justify-center  h-full ">
                 <div className="flex gap-8 py-20 lg:py-40 items-center justify-center flex-col">
 
@@ -37,7 +40,8 @@ export function HeroSection() {
                             </div>
                         </h1>
                         <p className="text-sm text-balance md:text-xl leading-relaxed tracking-tight text-muted-foreground max-w-2xl text-center">
-                            <span className="font-bold">evento</span>  digitizes and streamlines university event attendance tracking.
+                            {/* <span className="font-bold">evento</span> streamlines university event attendance tracking. */}
+                            no pen. no paper. no hassle. just<span className="font-bold"> evento.</span>
                         </p>
 
 
@@ -66,5 +70,6 @@ export function HeroSection() {
                 </div>
             </div>
         </div>
+        // </div>
     )
 }
