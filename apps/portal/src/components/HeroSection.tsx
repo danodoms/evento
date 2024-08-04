@@ -1,34 +1,68 @@
 // components/HeroSection.jsx\
-import { MoveRight, PhoneCall, QrCode } from "lucide-react";
+"use client"
+import { MoveDown, MoveRight, PhoneCall, QrCode } from "lucide-react";
 import Link from "next/link"
 import { Button } from "@/components/ui/button";
+import { FlipWords } from "./ui/flip-words";
+import Image from 'next/image'
 
 export function HeroSection() {
+    const words = ["Streamlined", "Digitized", "Modernized"];
     return (
         <div className="w-full h-screen">
             <div className="container mx-auto flex justify-center  h-full ">
                 <div className="flex gap-8 py-20 lg:py-40 items-center justify-center flex-col">
+
+                    <div className="flex gap-4 flex-col">
+
+                        <div className="flex items-center gap-2 mt-6 justify-center">
+                            <Image
+                                src="/dorsu-icon.png"
+                                alt="Picture of the author"
+                                width={30}
+                                height={30}
+                                className="saturate-0"
+                            // blurDataURL="data:..." automatically provided
+                            // placeholder="blur" // Optional blur-up while loading
+                            />
+                            <p className="text-xs text-left text-balance opacity-50 ">An internal web app of Davao Oriental State   <br /> University
+                                Banaybanay Campus Student Council</p>
+                        </div>
+
+
+                        <h1 className="text-5xl md:text-7xl max-w-2xl tracking-tighter text-center font-regular">
+                            University Events
+                            <div>
+                                <FlipWords words={words} />
+                            </div>
+                        </h1>
+                        <p className="text-sm text-balance md:text-xl leading-relaxed tracking-tight text-muted-foreground max-w-2xl text-center">
+                            <span className="font-bold">evento</span>  digitizes and streamlines university event attendance tracking.
+                        </p>
+
+
+                    </div>
+                    {/* <Link href="/generate-qr" className="flex flex-row gap-3">
+                        <Button size="lg" className="gap-4" variant="outline">
+                            Generate QR Code <QrCode className="w-4 h-4" />
+                        </Button>
+                        <Button size="lg" className="gap-4">
+                            Sign up here <MoveRight className="w-4 h-4" />
+                        </Button>
+                    </Link> */}
+
                     <div>
                         <Button variant="secondary" size="sm" className="gap-4">
                             Read our launch article <MoveRight className="w-4 h-4" />
                         </Button>
                     </div>
-                    <div className="flex gap-4 flex-col">
-                        <h1 className="text-5xl md:text-7xl max-w-2xl tracking-tighter text-center font-regular">
-                            University Events Streamlined
-                        </h1>
-                        <p className="text-sm text-balance md:text-xl leading-relaxed tracking-tight text-muted-foreground max-w-2xl text-center">
-                            Evento is a Progressive Web App (PWA) designed to streamline and modernize attendance tracking for university events by replacing the traditional pen and paper methods with a fast, efficient, and digital solution.
-                        </p>
-                    </div>
-                    <Link href="/generate-qr" className="flex flex-row gap-3">
-                        <Button size="lg" className="gap-4" variant="outline">
-                            Generate QR Code <QrCode className="w-4 h-4" />
-                        </Button>
-                        {/* <Button size="lg" className="gap-4">
-                            Sign up here <MoveRight className="w-4 h-4" />
-                        </Button> */}
-                    </Link>
+
+
+                    <h3 className="mt-8 md:text-xl max-w-2xl tracking-tighter text-center font-regular flex flex-col justify-center items-center gap-4 opacity-50">
+                        How it works
+                        <MoveDown className="size-8 animate-bounce" />
+                    </h3>
+
                 </div>
             </div>
         </div>

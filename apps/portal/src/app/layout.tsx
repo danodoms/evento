@@ -4,6 +4,7 @@ import './globals.css'
 import { ReactNode } from 'react'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
+import { ThemeProvider } from "@/components/theme-provider"
 
 // Define the type for the props
 type LayoutProps = {
@@ -32,10 +33,19 @@ export default function Layout({ children }: LayoutProps) {
           fontBody.variable
         )}
       >
-        <Header />
-        {children}
 
-        <Footer />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Header />
+          {children}
+
+          <Footer />
+
+        </ThemeProvider>
       </body>
     </html>
   )

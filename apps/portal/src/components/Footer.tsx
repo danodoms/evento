@@ -1,4 +1,5 @@
 import Link from "next/link";
+import DevInfo from "./DevInfo";
 
 export const Footer = () => {
     const navigationItems = [
@@ -59,15 +60,17 @@ export const Footer = () => {
                 <div className="grid lg:grid-cols-2 gap-10 items-center">
                     <div className="flex gap-8 flex-col items-start">
                         <div className="flex gap-2 flex-col">
-                            <h2 className="text-3xl md:text-5xl tracking-tighter max-w-xl font-regular text-left">
-                                TWBlocks™
+                            <h2 className="text-3xl font-bold md:text-5xl tracking-tighter max-w-xl font-regular text-left">
+                                evento
                             </h2>
                             <p className="text-lg max-w-lg leading-relaxed tracking-tight text-background/75 text-left">
-                                Managing a small business today is already tough.
+                                Streamlining university events
                             </p>
+
+                            <DevInfo />
                         </div>
                         <div className="flex gap-20 flex-row">
-                            <div className="flex flex-col text-sm max-w-lg leading-relaxed tracking-tight text-background/75 text-left">
+                            {/* <div className="flex flex-col text-sm max-w-lg leading-relaxed tracking-tight text-background/75 text-left">
                                 <p>1 Tailwind Way</p>
                                 <p>Menlo Park</p>
                                 <p>CA 94025</p>
@@ -75,10 +78,10 @@ export const Footer = () => {
                             <div className="flex flex-col text-sm max-w-lg leading-relaxed tracking-tight text-background/75 text-left">
                                 <Link href="/">Terms of service</Link>
                                 <Link href="/">Privacy Policy</Link>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
-                    <div className="grid lg:grid-cols-3 gap-10 items-start">
+                    {/* <div className="grid lg:grid-cols-3 gap-10 items-start">
                         {navigationItems.map((item) => (
                             <div
                                 key={item.title}
@@ -110,7 +113,7 @@ export const Footer = () => {
                                 </div>
                             </div>
                         ))}
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>
