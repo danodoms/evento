@@ -1,4 +1,6 @@
 import { Badge } from "@/components/ui/badge";
+import { Link, MoveRight, QrCode } from "lucide-react";
+import { Button } from "./ui/button";
 
 export const Content1 = () => (
     <div className="w-full py-20 lg:py-40">
@@ -15,7 +17,16 @@ export const Content1 = () => (
                         <p className="text-lg max-w-xl lg:max-w-sm leading-relaxed tracking-tight text-muted-foreground text-left">
                             Create a custom QR Code based on your student ID. Ensure your credentials are correct
                         </p>
+
                     </div>
+                    <Link href="/generate-qr" className="flex flex-row gap-3">
+                        <Button size="lg" className="gap-4" variant="outline">
+                            Generate QR Code <QrCode className="w-4 h-4" />
+                        </Button>
+                        <Button size="lg" className="gap-4">
+                            Sign up here <MoveRight className="w-4 h-4" />
+                        </Button>
+                    </Link>
                 </div>
                 <div className="bg-muted rounded-md w-full aspect-video h-full flex-1"></div>
             </div>
