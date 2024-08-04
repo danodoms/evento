@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
-import { Link, MoveRight, QrCode } from "lucide-react";
+import { MoveRight, QrCode } from "lucide-react";
 import { Button } from "./ui/button";
+import Link from "next/link";
 
 export const Content1 = () => (
     <div className="w-full py-20 lg:py-40">
@@ -20,12 +21,12 @@ export const Content1 = () => (
 
                     </div>
                     <Link href="/generate-qr" className="flex flex-row gap-3">
-                        <Button size="lg" className="gap-4" variant="outline">
+                        <Button size="lg" className="gap-4" >
                             Generate QR Code <QrCode className="w-4 h-4" />
                         </Button>
-                        <Button size="lg" className="gap-4">
+                        {/* <Button size="lg" className="gap-4">
                             Sign up here <MoveRight className="w-4 h-4" />
-                        </Button>
+                        </Button> */}
                     </Link>
                 </div>
                 <div className="bg-muted rounded-md w-full aspect-video h-full flex-1"></div>
