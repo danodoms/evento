@@ -14,8 +14,12 @@ export default function Home() {
         <HeroSection />
         <Content1 />
         <Content2 />
+
+        {/* <div className="bg-opacity-5  bg-gradient-to-b  from-transparent to-slate-500"> */}
+
         <FeaturesSection />
-        {/* <CTASection /> */}
+        <CTASection />
+        {/* </div> */}
       </main>
     </div>
   )

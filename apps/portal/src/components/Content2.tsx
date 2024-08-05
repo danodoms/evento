@@ -14,7 +14,7 @@ export const Content2 = () => (
                             Attend Events
                         </h2>
                         <p className="text-lg max-w-xl lg:max-w-sm leading-relaxed tracking-tight text-muted-foreground text-left">
-                            Your QR Code will be scanned by the designated officers
+                            Attendee QR Code will be scanned to mark attendance
                         </p>
                     </div>
                 </div>

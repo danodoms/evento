@@ -2,7 +2,7 @@ import { Check } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 export const FeaturesSection = () => (
-    <div className="w-full py-20 lg:py-40 bg-neutral-500 bg-opacity-5">
+    <div className="w-full py-20 lg:py-40 ">
         <div className="container mx-auto">
             <div className="flex gap-4 py-20 lg:py-40 flex-col items-start">
                 <div>
@@ -22,17 +22,17 @@ export const FeaturesSection = () => (
                             <Check className="w-4 h-4 mt-2 text-primary" />
                             <div className="flex flex-col gap-1">
                                 <p>QR Code and Barcode Scanning</p>
-                                {/* <p className="text-muted-foreground text-sm">
-
-                                </p> */}
+                                <p className="text-muted-foreground text-sm">
+                                    Effortlessly scan QR codes and barcodes for quick attendance logging.
+                                </p>
                             </div>
                         </div>
                         <div className="flex flex-row gap-6 items-start">
                             <Check className="w-4 h-4 mt-2 text-primary" />
                             <div className="flex flex-col gap-1">
-                                <p>User Roles</p>
+                                <p>Customizable User Roles</p>
                                 <p className="text-muted-foreground text-sm">
-                                    Designate and limit access
+                                    Tailor access permissions with flexible user roles to streamline your team&apos;s operations.
                                 </p>
                             </div>
                         </div>
@@ -40,9 +40,9 @@ export const FeaturesSection = () => (
                             <Check className="w-4 h-4 mt-2 text-primary" />
                             <div className="flex flex-col gap-1">
                                 <p>Responsive and Accessible by design</p>
-                                {/* <p className="text-muted-foreground text-sm">
-                                    We&apos;ve made it beautiful and modern.
-                                </p> */}
+                                <p className="text-muted-foreground text-sm">
+                                    Enjoy a beautifully designed, responsive interface that adapts to any device for a smooth user experience.
+                                </p>
                             </div>
                         </div>
                         <div className="flex flex-row gap-6 w-full items-start">
@@ -50,28 +50,28 @@ export const FeaturesSection = () => (
                             <div className="flex flex-col gap-1">
                                 <p>Event Report Generation</p>
                                 <p className="text-muted-foreground text-sm">
-                                    Export attendance event data
-                                </p>
-                            </div>
-                        </div>
-                        {/* <div className="flex flex-row gap-6 items-start">
-                            <Check className="w-4 h-4 mt-2 text-primary" />
-                            <div className="flex flex-col gap-1">
-                                <p>Fast and reliable</p>
-                                <p className="text-muted-foreground text-sm">
-                                    We&apos;ve made it fast and reliable.
+                                    Generate detailed reports and export event data effortlessly to track attendance and analyze insights.
                                 </p>
                             </div>
                         </div>
                         <div className="flex flex-row gap-6 items-start">
                             <Check className="w-4 h-4 mt-2 text-primary" />
                             <div className="flex flex-col gap-1">
-                                <p>Beautiful and modern</p>
+                                <p>Centralized Data</p>
                                 <p className="text-muted-foreground text-sm">
-                                    We&apos;ve made it beautiful and modern.
+                                    Scanned data are synced in a centralized database
                                 </p>
                             </div>
-                        </div> */}
+                        </div>
+                        <div className="flex flex-row gap-6 items-start">
+                            <Check className="w-4 h-4 mt-2 text-primary" />
+                            <div className="flex flex-col gap-1">
+                                <p>Scalable Scanning Solutions</p>
+                                <p className="text-muted-foreground text-sm">
+                                    Expand your capabilities with scalable scanning, allowing administrators to assign multiple authorized officers for greater flexibility.
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
