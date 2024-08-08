@@ -13,6 +13,7 @@ import { BadgeCheck, MoveRight, QrCode } from "lucide-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { Card } from "./ui/card";
+import Image from "next/image"
 
 export const Content1 = () => {
 
@@ -70,7 +71,13 @@ export const Content1 = () => {
 
 
 
-                    <div className="bg-muted rounded-md w-full aspect-video h-full flex-1 ">
+                    <div className=" rounded-md w-full aspect-video h-full flex-1 relative">
+                        <Image
+                            src="/qrcode-generate.svg"
+                            alt="wide"
+                            fill={true}
+                            className="rounded-md object-fit "
+                        />
                     </div>
 
                     {/* <IdCard /> */}

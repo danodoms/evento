@@ -10,22 +10,28 @@ import { DemoSection } from "@/components/DemoSection"
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-[100dvh]">
+    <main className="flex flex-col min-h-[100dvh] justify-center items-center">
 
-      <main className="flex-1">
-        <HeroSection />
-        {/* <DemoSection /> */}
 
-        <Content1 />
-        <Content2 />
-        <Content3 />
+      <HeroSection />
+      {/* <DemoSection /> */}
 
-        {/* <div className="bg-opacity-5  bg-gradient-to-b  from-transparent to-slate-500"> */}
 
-        <FeaturesSection />
-        <CTASection />
-        {/* </div> */}
-      </main>
-    </div>
+      <h1 className="text-3xl md:text-6xl max-w-2xl tracking-tighter text-center font-regular w-full ">
+        How it works
+      </h1>
+      <Content1 />
+      <Content2 />
+      <Content3 />
+
+
+
+      {/* <div className="bg-opacity-5  bg-gradient-to-b  from-transparent to-slate-500"> */}
+
+      <FeaturesSection />
+      <CTASection />
+      {/* </div> */}
+
+    </main>
   )
 }

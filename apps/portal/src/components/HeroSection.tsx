@@ -48,7 +48,7 @@ export function HeroSection() {
 
 
 
-                            <Link href="/generate-qr" className="flex flex-row flex-wrap gap-3 justify-center">
+                            <Link href="/" className="flex flex-row flex-wrap gap-3 justify-center">
 
                                 <Button size="lg" className="gap-4">
                                     View Demo <MoveRight className="w-4 h-4" />
