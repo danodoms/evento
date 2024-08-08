@@ -2,7 +2,7 @@ import { Check } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 export const FeaturesSection = () => (
-    <div className="w-full py-20 lg:py-40 bg-neutral-500 bg-opacity-5">
+    <div className="w-full py-20 lg:py-40 ">
         <div className="container mx-auto">
             <div className="flex gap-4 py-20 lg:py-40 flex-col items-start">
                 <div>
@@ -21,57 +21,57 @@ export const FeaturesSection = () => (
                         <div className="flex flex-row gap-6 w-full items-start">
                             <Check className="w-4 h-4 mt-2 text-primary" />
                             <div className="flex flex-col gap-1">
-                                <p>QR Code and Barcode Scanning</p>
-                                {/* <p className="text-muted-foreground text-sm">
-
-                                </p> */}
-                            </div>
-                        </div>
-                        <div className="flex flex-row gap-6 items-start">
-                            <Check className="w-4 h-4 mt-2 text-primary" />
-                            <div className="flex flex-col gap-1">
-                                <p>User Roles</p>
+                                <p>Effortless Scanning</p>
                                 <p className="text-muted-foreground text-sm">
-                                    Designate and limit access
+                                    Quickly and accurately log attendance with QR code and barcode scanning. No more paper hassle.
                                 </p>
                             </div>
                         </div>
                         <div className="flex flex-row gap-6 items-start">
                             <Check className="w-4 h-4 mt-2 text-primary" />
                             <div className="flex flex-col gap-1">
-                                <p>Responsive and Accessible by design</p>
-                                {/* <p className="text-muted-foreground text-sm">
-                                    We&apos;ve made it beautiful and modern.
-                                </p> */}
+                                <p>Customizable Permissions</p>
+                                <p className="text-muted-foreground text-sm">
+                                    Assign roles and access levels to your team, ensuring the right people can manage events and data.
+                                </p>
+                            </div>
+                        </div>
+                        <div className="flex flex-row gap-6 items-start">
+                            <Check className="w-4 h-4 mt-2 text-primary" />
+                            <div className="flex flex-col gap-1">
+                                <p>Responsive & Accessible</p>
+                                <p className="text-muted-foreground text-sm">
+                                    Evento&apos;s modern interface adapts seamlessly to any device, providing a smooth experience.
+                                </p>
                             </div>
                         </div>
                         <div className="flex flex-row gap-6 w-full items-start">
                             <Check className="w-4 h-4 mt-2 text-primary" />
                             <div className="flex flex-col gap-1">
-                                <p>Event Report Generation</p>
+                                <p>Comprehensive Reporting</p>
                                 <p className="text-muted-foreground text-sm">
-                                    Export attendance event data
-                                </p>
-                            </div>
-                        </div>
-                        {/* <div className="flex flex-row gap-6 items-start">
-                            <Check className="w-4 h-4 mt-2 text-primary" />
-                            <div className="flex flex-col gap-1">
-                                <p>Fast and reliable</p>
-                                <p className="text-muted-foreground text-sm">
-                                    We&apos;ve made it fast and reliable.
+                                    Generate detailed attendance reports and export data to analyze insights.
                                 </p>
                             </div>
                         </div>
                         <div className="flex flex-row gap-6 items-start">
                             <Check className="w-4 h-4 mt-2 text-primary" />
                             <div className="flex flex-col gap-1">
-                                <p>Beautiful and modern</p>
+                                <p>Secure, Centralized Data</p>
                                 <p className="text-muted-foreground text-sm">
-                                    We&apos;ve made it beautiful and modern.
+                                    Scanned attendance is stored securely in a centralized database.
                                 </p>
                             </div>
-                        </div> */}
+                        </div>
+                        <div className="flex flex-row gap-6 items-start">
+                            <Check className="w-4 h-4 mt-2 text-primary" />
+                            <div className="flex flex-col gap-1">
+                                <p>Scalable Scanning</p>
+                                <p className="text-muted-foreground text-sm">
+                                    Empower multiple authorized officers to manage scanning as your events grow.
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

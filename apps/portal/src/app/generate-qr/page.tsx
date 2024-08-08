@@ -82,7 +82,7 @@ const QRCodeGenerator = () => {
                 const imgData = canvas.toDataURL('image/png');
                 const link = document.createElement('a');
                 link.href = imgData;
-                link.download = 'card.png';
+                link.download = 'qrcode.png';
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -111,7 +111,7 @@ const QRCodeGenerator = () => {
 
 
                     <h1 className="text-xl max-w-2xl tracking-tighter text-center font-regular ">
-                        This is your QR Code ID
+                        This is your QR Code
                     </h1>
 
                     <p className="text-sm text-balance  leading-relaxed tracking-tight text-muted-foreground max-w-2xl text-center mb-8">
@@ -122,12 +122,13 @@ const QRCodeGenerator = () => {
                     {/* <div class="relative h-full w-full bg-white"><div class="absolute h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div></div> */}
 
 
-                    <Card id="card" className="  w-full max-w-md p-6 grid gap-6 rounded-lg shadow-neutral-500 bg-muted shadow-sm bg-gradient-to-br from-muted to-slate-500 relative overflow-hidden drop-shadow-xl" >
+                    {/* <div className="aspect-w-5 aspect-h-3 w-full max-w-md"> */}
+                    <Card id="card" className="aspect-[2/3] p-8 max-w-sm min-w-80 grid gap-6 rounded-lg shadow-neutral-500 bg-muted shadow-sm bg-gradient-to-br from-muted to-slate-500 relative overflow-hidden drop-shadow-xl" >
 
-                        <div className="absolute font-bold text-9xl rotate-90 top-52 right-4 z-0 opacity-5 ">
+                        <div className="absolute font-bold text-9xl rotate-90 top-52 right-4 z-0 opacity-40 bg-gradient-to-r bg-clip-text text-transparent from-transparent to-slate-500">
                             evento
                         </div>
-                        <div className="absolute font-bold text-9xl rotate-90 top-8 left-8 z-0 opacity-5 ">
+                        <div className="absolute font-bold text-9xl rotate-90 top-8 left-8 z-0 opacity-40 bg-gradient-to-l bg-clip-text text-transparent from-transparent to-slate-500 ">
                             evento
                         </div>
 
@@ -140,7 +141,7 @@ const QRCodeGenerator = () => {
                             </div>
 
                             <div className="flex flex-col">
-                                <h3 className=" font-semibold text-3xl mb-1">{name}</h3>
+                                <h3 className=" font-semibold text-xl mb-1 text-wrap">{name}</h3>
                                 {/* <p className="text-muted-foreground text-sm font-medium">BSIT</p> */}
                             </div>
                         </div>
@@ -160,6 +161,7 @@ const QRCodeGenerator = () => {
 
                         </div>
                     </Card>
+                    {/* </div> */}
 
 
 

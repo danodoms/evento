@@ -64,7 +64,7 @@ export const Footer = () => {
                                 evento
                             </h2>
                             <p className="text-lg max-w-lg leading-relaxed tracking-tight text-background/75 text-left">
-                                Streamlining university events
+                                Streamlining events
                             </p>
 
                             <DevInfo />

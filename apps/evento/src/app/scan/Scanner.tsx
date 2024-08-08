@@ -110,7 +110,6 @@ export default function Scanner() {
 
 
             if (isValidId) {
-
                 setScannedStudent(student);
                 setScannedStatus(null);
                 setScannedMessage("");
