@@ -12,7 +12,6 @@ import { useAttendanceStore } from "@/store/useAttendanceStore";
 
 
 const ScanPage = () => {
-	// const { attendanceQueue } = useQueuedAttendanceStore();
 	const { attendanceRecords } = useAttendanceStore();
 	return (
 		<section className="flex flex-col gap-3 justify-center bg-background h-full">

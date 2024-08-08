@@ -14,7 +14,7 @@ export const CTASection = () => (
                         Get Started with Evento
                     </h3>
                     <p className="text-lg leading-relaxed tracking-tight text-muted-foreground max-w-xl text-pretty">
-                        Interested in bringing Evento to your organization? Evento is currently cloud-hosted and only available for internal use. Contact us to learn how you can deploy your own instance and enhance your event management experience.
+                        Interested in bringing Evento to your organization? Evento is currently only available for internal use. Contact us to learn how you can deploy your own instance and enhance your event management experience.
                     </p>
                 </div>
                 <div className="flex flex-row gap-4">

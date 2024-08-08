@@ -21,54 +21,54 @@ export const FeaturesSection = () => (
                         <div className="flex flex-row gap-6 w-full items-start">
                             <Check className="w-4 h-4 mt-2 text-primary" />
                             <div className="flex flex-col gap-1">
-                                <p>QR Code and Barcode Scanning</p>
+                                <p>Effortless Scanning</p>
                                 <p className="text-muted-foreground text-sm">
-                                    Effortlessly scan QR codes and barcodes for quick attendance logging.
+                                    Quickly and accurately log attendance with QR code and barcode scanning. No more paper hassle.
                                 </p>
                             </div>
                         </div>
                         <div className="flex flex-row gap-6 items-start">
                             <Check className="w-4 h-4 mt-2 text-primary" />
                             <div className="flex flex-col gap-1">
-                                <p>Customizable User Roles</p>
+                                <p>Customizable Permissions</p>
                                 <p className="text-muted-foreground text-sm">
-                                    Tailor access permissions with flexible user roles to streamline your team&apos;s operations.
+                                    Assign roles and access levels to your team, ensuring the right people can manage events and data.
                                 </p>
                             </div>
                         </div>
                         <div className="flex flex-row gap-6 items-start">
                             <Check className="w-4 h-4 mt-2 text-primary" />
                             <div className="flex flex-col gap-1">
-                                <p>Responsive and Accessible by design</p>
+                                <p>Responsive & Accessible</p>
                                 <p className="text-muted-foreground text-sm">
-                                    Enjoy a beautifully designed, responsive interface that adapts to any device for a smooth user experience.
+                                    Evento&apos;s modern interface adapts seamlessly to any device, providing a smooth experience.
                                 </p>
                             </div>
                         </div>
                         <div className="flex flex-row gap-6 w-full items-start">
                             <Check className="w-4 h-4 mt-2 text-primary" />
                             <div className="flex flex-col gap-1">
-                                <p>Event Report Generation</p>
+                                <p>Comprehensive Reporting</p>
                                 <p className="text-muted-foreground text-sm">
-                                    Generate detailed reports and export event data effortlessly to track attendance and analyze insights.
+                                    Generate detailed attendance reports and export data to analyze insights.
                                 </p>
                             </div>
                         </div>
                         <div className="flex flex-row gap-6 items-start">
                             <Check className="w-4 h-4 mt-2 text-primary" />
                             <div className="flex flex-col gap-1">
-                                <p>Centralized Data</p>
+                                <p>Secure, Centralized Data</p>
                                 <p className="text-muted-foreground text-sm">
-                                    Scanned data are synced in a centralized database
+                                    Scanned attendance is stored securely in a centralized database.
                                 </p>
                             </div>
                         </div>
                         <div className="flex flex-row gap-6 items-start">
                             <Check className="w-4 h-4 mt-2 text-primary" />
                             <div className="flex flex-col gap-1">
-                                <p>Scalable Scanning Solutions</p>
+                                <p>Scalable Scanning</p>
                                 <p className="text-muted-foreground text-sm">
-                                    Expand your capabilities with scalable scanning, allowing administrators to assign multiple authorized officers for greater flexibility.
+                                    Empower multiple authorized officers to manage scanning as your events grow.
                                 </p>
                             </div>
                         </div>
