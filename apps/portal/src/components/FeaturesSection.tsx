@@ -17,7 +17,7 @@ export const FeaturesSection = () => (
                     </p> */}
                 </div>
                 <div className="flex gap-10 pt-12 flex-col w-full">
-                    <div className="grid grid-cols-2 items-start lg:grid-cols-3 gap-10">
+                    <div className="grid grid-cols-1 items-start lg:grid-cols-3 gap-10">
                         <div className="flex flex-row gap-6 w-full items-start">
                             <Check className="w-4 h-4 mt-2 text-primary" />
                             <div className="flex flex-col gap-1">

@@ -6,11 +6,10 @@ import { Footer } from "@/components/Footer"
 import { Content1 } from "@/components/Content1"
 import { Content2 } from "@/components/Content2"
 import { Content3 } from "@/components/Content3"
-import { DemoSection } from "@/components/DemoSection"
 
 export default function Home() {
   return (
-    <main className="flex flex-col min-h-[100dvh] justify-center items-center">
+    <main className="flex flex-col justify-center items-center">
 
 
       <HeroSection />
@@ -24,12 +23,16 @@ export default function Home() {
       <Content2 />
       <Content3 />
 
-
-
       {/* <div className="bg-opacity-5  bg-gradient-to-b  from-transparent to-slate-500"> */}
 
-      <FeaturesSection />
-      <CTASection />
+      <div id="features">
+        <FeaturesSection />
+      </div>
+
+
+      <div id="get-started">
+        <CTASection />
+      </div>
       {/* </div> */}
 
     </main>

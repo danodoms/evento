@@ -9,63 +9,13 @@ import {
     NavigationMenuList,
     NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { Menu, MoveRight, X } from "lucide-react";
+import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet"
+import { ArrowRight, Menu, MoveRight, X } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
 import { ModeToggle } from "./ModeToggle";
 
 export const Header = () => {
-    const navigationItems = [
-        {
-            title: "Home",
-            href: "/",
-            description: "",
-        },
-        {
-            title: "Product",
-            description: "Managing a small business today is already tough.",
-            items: [
-                {
-                    title: "Reports",
-                    href: "/reports",
-                },
-                {
-                    title: "Statistics",
-                    href: "/statistics",
-                },
-                {
-                    title: "Dashboards",
-                    href: "/dashboards",
-                },
-                {
-                    title: "Recordings",
-                    href: "/recordings",
-                },
-            ],
-        },
-        {
-            title: "Company",
-            description: "Managing a small business today is already tough.",
-            items: [
-                {
-                    title: "About us",
-                    href: "/about",
-                },
-                {
-                    title: "Fundraising",
-                    href: "/fundraising",
-                },
-                {
-                    title: "Investors",
-                    href: "/investors",
-                },
-                {
-                    title: "Contact us",
-                    href: "/contact",
-                },
-            ],
-        },
-    ];
 
     const [isOpen, setOpen] = useState(false);
     return (
@@ -80,62 +30,59 @@ export const Header = () => {
                         <ModeToggle compactMode={true} />
                     </div>
 
-                    <div className="lg:visible flex ml-auto gap-8 invisible ">
+                    <div className="hidden lg:flex ml-auto gap-8  items-center ">
                         <Link href="/" className="font-semibold">
                             Home
                         </Link>
-                        <Link href="/" className="font-semibold">
-                            About
+                        <Link href="#features" className="font-semibold">
+                            Features
                         </Link>
-                        <Link href="/" className="font-semibold">
-                            Pricing
+
+                        <Link href="#get-started" className="font-semibold">
+                            <Button>
+                                Get Started
+                            </Button>
                         </Link>
                     </div>
+
+
+
+
+
+                    <Sheet>
+                        <SheetTrigger asChild>
+                            {/* <Button variant="outline" size="icon" className="lg:hidden">
+                                <MenuIcon className="h-6 w-6" />
+                                <span className="sr-only">Toggle navigation menu</span>
+                            </Button> */}
+                            <div className="flex lg:hidden gap-8 items-center ">
+                                <Menu className=" rounded-md" />
+                            </div>
+                        </SheetTrigger>
+                        <SheetContent side="right" className="w-full max-w-[300px] bg-background p-6">
+                            <nav className="grid gap-4">
+                                <Link href="/" className="text-lg font-medium hover:underline" prefetch={false}>
+                                    Home
+                                </Link>
+                                <Link href="/#features" className="text-lg font-medium hover:underline" prefetch={false}>
+                                    Features
+                                </Link>
+                                <Link href="/#get-started" className="text-lg font-medium hover:underline" prefetch={false}>
+                                    Get Started
+                                </Link>
+                            </nav>
+                        </SheetContent>
+                    </Sheet>
+
+
                 </div>
 
 
 
 
-                <div className="flex w-12 shrink lg:hidden items-end justify-end">
-                    <Button variant="ghost" onClick={() => setOpen(!isOpen)}>
-                        {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-                    </Button>
-                    {isOpen && (
-                        <div className="absolute top-20 border-t flex flex-col w-full right-0 bg-background shadow-lg py-4 container gap-8">
-                            {navigationItems.map((item) => (
-                                <div key={item.title}>
-                                    <div className="flex flex-col gap-2">
-                                        {item.href ? (
-                                            <Link
-                                                href={item.href}
-                                                className="flex justify-between items-center"
-                                            >
-                                                <span className="text-lg">{item.title}</span>
-                                                <MoveRight className="w-4 h-4 stroke-1 text-muted-foreground" />
-                                            </Link>
-                                        ) : (
-                                            <p className="text-lg">{item.title}</p>
-                                        )}
-                                        {item.items &&
-                                            item.items.map((subItem) => (
-                                                <Link
-                                                    key={subItem.title}
-                                                    href={subItem.href}
-                                                    className="flex justify-between items-center"
-                                                >
-                                                    <span className="text-muted-foreground">
-                                                        {subItem.title}
-                                                    </span>
-                                                    <MoveRight className="w-4 h-4 stroke-1" />
-                                                </Link>
-                                            ))}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
             </div>
+
+
         </header>
     );
 };

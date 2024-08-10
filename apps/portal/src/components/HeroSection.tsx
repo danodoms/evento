@@ -37,7 +37,7 @@ export function HeroSection() {
                         <div className="flex gap-4 flex-col justify-center items-center md:items-start ">
                             <h1 className="text-5xl md:text-7xl max-w-2xl tracking-tighter font-regular text-center md:justify-start">
                                 Events Attendance
-                                <div className="md:text-left">
+                                <div className="md:text-left relative">
                                     <FlipWords words={words} />
                                 </div>
                             </h1>
