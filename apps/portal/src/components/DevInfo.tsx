@@ -21,15 +21,19 @@ export default function DevInfo() {
     return (
         <HoverCard>
             <HoverCardTrigger asChild>
-                <div className="flex text-sm font-semibold pl-2 pr-3 py-2 rounded-full items-center ">
+                <div className="flex text-sm font-semibold rounded-full items-center ">
 
                     <div className='flex gap-2 items-center font-semibold'>
+                        <p>Developed by</p>
                         <Avatar className='size-8'>
                             <AvatarImage src="https://avatars.githubusercontent.com/u/165539900?v=4" />
                             <AvatarFallback>DD</AvatarFallback>
                         </Avatar>
+                        <p>danodoms</p>
 
-                        <p>developed by @danodoms</p>
+
+
+
                     </div>
                 </div>
             </HoverCardTrigger>

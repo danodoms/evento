@@ -18,7 +18,7 @@ export function HeroSection() {
         // <div className="w-full h-screen relative ">
         <div className=" top-0 z-[-2] h-screen w-full bg-background bg-[radial-gradient(100%_50%_at_50%_0%,rgba(0,163,255,0.13)_0,rgba(0,163,255,0)_50%,rgba(0,163,255,0)_100%)]">
 
-            <div className=" flex justify-center h-full container">
+            <div className=" flex justify-center h-screen container">
                 <div className="flex gap-8 lg:py-40 w-full items-center justify-center flex-col">
 
                     <div className="flex gap-8 w-full flex-wrap grid-cols-2 md:grid justify-center ">
@@ -37,8 +37,8 @@ export function HeroSection() {
                         <div className="flex gap-4 flex-col justify-center items-center md:items-start ">
                             <h1 className="text-5xl md:text-7xl max-w-2xl tracking-tighter font-regular text-center md:justify-start">
                                 Events Attendance
-                                <div className="md:text-left">
-                                    <FlipWords words={words} />
+                                <div className="md:text-left relative overflow-hidden pb-3">
+                                    <FlipWords words={words} className="" />
                                 </div>
                             </h1>
                             <p className="text-sm text-balance md:text-xl leading-relaxed tracking-tight text-muted-foreground max-w-2xl">
