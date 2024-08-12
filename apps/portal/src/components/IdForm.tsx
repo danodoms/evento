@@ -22,8 +22,8 @@ type FormSchemaType = z.infer<typeof IdSchema>;
 
 // Define the props for IdForm component
 interface IdFormProps {
-    setName: React.Dispatch<React.SetStateAction<string>>;
     setId: React.Dispatch<React.SetStateAction<string>>;
+    setName: React.Dispatch<React.SetStateAction<string>>;
 
 }
 
@@ -34,8 +34,8 @@ export function IdForm({ setName, setId }: IdFormProps) {
 
     async function onSubmit(values: FormSchemaType) {
         console.log(values);
-        setName(values.name);
         setId(values.school_id);
+        setName(values.firstName.trim() + " " + values.lastName.trim());
 
     }
 
@@ -71,16 +71,34 @@ export function IdForm({ setName, setId }: IdFormProps) {
                 />
                 <FormField
                     control={form.control}
-                    name="name"
+                    name="firstName"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Name</FormLabel>
+                            <FormLabel>First Name</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter Name" {...field} />
+                                <Input placeholder="Enter first name" {...field} />
                             </FormControl>
                             <FormMessage>
-                                {form.formState.errors.name && (
-                                    <p>{form.formState.errors.name.message}</p>
+                                {form.formState.errors.firstName && (
+                                    <p>{form.formState.errors.firstName.message}</p>
+                                )}
+                            </FormMessage>
+                        </FormItem>
+                    )}
+                />
+
+                <FormField
+                    control={form.control}
+                    name="lastName"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Last Name</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Enter last name" {...field} />
+                            </FormControl>
+                            <FormMessage>
+                                {form.formState.errors.lastName && (
+                                    <p>{form.formState.errors.lastName.message}</p>
                                 )}
                             </FormMessage>
                         </FormItem>
