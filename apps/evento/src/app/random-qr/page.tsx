@@ -15,7 +15,7 @@ const RandomQRPage = () => {
         const generateRandomQR = () => {
             const rightSide = 1000 + (currentStudentIndex % studentCount);
             setCurrentStudentIndex((prevIndex) => (prevIndex + 1) % studentCount);
-            return `${customYear}-${rightSide},${faker.person.fullName()}`;
+            return `${customYear}-${rightSide},${faker.person.firstName()} ${faker.person.lastName()}`;
         };
 
         const intervalId = setInterval(() => {
