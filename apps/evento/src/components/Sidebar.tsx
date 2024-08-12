@@ -64,7 +64,7 @@ export default function Sidebar() {
                             <Lock className="size-5" />Manage Access
                         </Link>
 
-                        <Separator className="" />
+                        {/* <Separator className="" /> */}
                     </>
                 }
 

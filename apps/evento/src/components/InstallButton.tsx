@@ -39,7 +39,7 @@ const InstallButton = () => {
     return (
         isVisible && (
             <div className='flex-col items-center justify-center flex gap-2'>
-                <p className="text-xs text-danger italic opacity-50 mb-1">Currently in development</p>
+                <p className="text-xs text-danger italic opacity-50 mb-1">Currently in beta</p>
                 <div className="flex gap-4 border py-2 px-4 rounded-lg items-center hover:bg-slate-500 hover:bg-opacity-20 cursor-pointer shadow-lg shadow-blue-500/50 ring-offset-2 ring-2" onClick={handleInstallClick} >
 
                     <Download className='animate-bounce' />

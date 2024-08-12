@@ -58,10 +58,19 @@ const formatDate = (dateString: string): string =>
 	format(parseISO(dateString), "MMMM d, yyyy");
 
 
+//*V2 This version also checks if event is active
 const getEventNameFromDate = (events: Event[], date: string) => {
-	const event = events.find((event) => event.date === date);
+	const event = events.find((event) => event.date === date && event.is_active === true);
 	return event ? event.name : formatDate(date);
 };
+
+//*V1 
+// const getEventNameFromDate = (events: Event[], date: string) => {
+// 	const event = events.find((event) => event.date === date);
+// 	return event ? event.name : formatDate(date);
+// };
+
+
 
 
 const StudentRecordsDialog = ({ schoolId, student }: StudentRecordsDialogProps) => {
