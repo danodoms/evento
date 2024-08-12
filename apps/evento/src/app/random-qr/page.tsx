@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import QRCode from 'qrcode.react';
+import { faker } from "@faker-js/faker"
 
 const RandomQRPage = () => {
     const [qrValue, setQrValue] = useState('');
@@ -14,7 +15,7 @@ const RandomQRPage = () => {
         const generateRandomQR = () => {
             const rightSide = 1000 + (currentStudentIndex % studentCount);
             setCurrentStudentIndex((prevIndex) => (prevIndex + 1) % studentCount);
-            return `${customYear}-${rightSide}`;
+            return `${customYear}-${rightSide},${faker.person.fullName()}`;
         };
 
         const intervalId = setInterval(() => {

@@ -71,6 +71,7 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@snaplet/copycat": "^5.0.0",
     "@snaplet/seed": "^0.97.20",
     "@tanstack/react-query-devtools": "^5.50.1",
@@ -81,7 +82,6 @@
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
-    "faker": "^6.6.6",
     "pg": "^8.12.0",
     "postcss": "^8",
     "postgres": "^3.4.4",

@@ -72,6 +72,13 @@ export default function Scanner() {
         setTimeout(resumeScanner, milliseconds);
     };
 
+    const splitIdAndName = (input: String) => {
+        const [id, ...nameParts] = input.split(',');
+        const name = nameParts.join(',').trim();
+        return { id: id.trim(), name };
+    };
+
+
     const onScanSuccess = async (decodedText: string, decodedResult: Html5QrcodeResult) => {
         try {
             // SCANNING SHOULD BE PAUSED IMMEDIATELY SINCE FOLLOWING CODE ARE ASYNC
@@ -94,13 +101,17 @@ export default function Scanner() {
             //! DEPRECATED 
             // const student = await throwErrorAfterTimeout(2000, () => getStudentByIdNum(decodedText), "TIME_LIMIT_REACHED");
 
-            const scannedSchoolId = decodedText
+
+
+            const { id, name } = splitIdAndName(decodedText);
+            const scannedSchoolId = id
+            const scannedStudentName = name
             const isValidId = isValidSchoolId(scannedSchoolId)
 
 
             //* THIS IS JUST A PLACEHOLDER STUDENT OBJECT FOR ANONYMOUS ID SCANNING
             const student: Student = {
-                name: "Student",
+                name: scannedStudentName,
                 id: 100,
                 created_at: String(Date.now),
                 is_active: true,

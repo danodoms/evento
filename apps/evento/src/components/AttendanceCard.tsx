@@ -1,9 +1,9 @@
 import React from 'react';
 import { UserRound, LogIn, LogOut } from 'lucide-react';
-import type { Attendance } from "@/models/Attendance";
+import type { Attendance, AttendanceRecord } from "@/models/Attendance";
 
 interface Props {
-    result: Attendance;
+    result: AttendanceRecord;
 }
 
 const AttendanceCard: React.FC<Props> = ({ result }) => {
@@ -23,7 +23,7 @@ const AttendanceCard: React.FC<Props> = ({ result }) => {
                 <div className="flex gap-4 items-center">
                     <UserRound />
                     <div className="flex flex-col">
-                        <div className="text-normal font-medium">Student</div>
+                        <div className="text-normal font-medium">{result.student?.name}</div>
                         <div className="text-xs font-extralight">{result.school_id}</div>
                     </div>
                     <div className="p-2 items-center flex flex-col ml-auto">
