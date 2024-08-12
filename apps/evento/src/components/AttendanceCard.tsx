@@ -1,9 +1,9 @@
 import React from 'react';
 import { UserRound, LogIn, LogOut } from 'lucide-react';
-import type { Attendance } from "@/models/Attendance";
+import type { Attendance, AttendanceRecord } from "@/models/Attendance";
 
 interface Props {
-    result: Attendance;
+    result: AttendanceRecord;
 }
 
 const AttendanceCard: React.FC<Props> = ({ result }) => {
@@ -16,6 +16,9 @@ const AttendanceCard: React.FC<Props> = ({ result }) => {
         time: isTimeOut ? result.time : result.time,
     };
 
+    // Determine the display name
+    const displayName = result.student?.name ? result.student.name : 'Student';
+
     return (
         <div className="flex justify-between gap-4 items-center border-1 border-solid rounded-md relative p-2">
             <div className={`${cardConfig.backgroundColor} w-2 flex-initial h-14 opacity-50 rounded-md`} />
@@ -23,7 +26,7 @@ const AttendanceCard: React.FC<Props> = ({ result }) => {
                 <div className="flex gap-4 items-center">
                     <UserRound />
                     <div className="flex flex-col">
-                        <div className="text-normal font-medium">Student</div>
+                        <div className="text-normal font-medium">{displayName}</div>
                         <div className="text-xs font-extralight">{result.school_id}</div>
                     </div>
                     <div className="p-2 items-center flex flex-col ml-auto">

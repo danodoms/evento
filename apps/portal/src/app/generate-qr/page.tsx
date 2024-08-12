@@ -39,7 +39,7 @@ const QRCodeGenerator = () => {
     const generateQRCode = async () => {
         try {
             console.log
-            const data = id;
+            const data = id + "," + name;
             const url = await QRCode.toDataURL(data, {
                 width: 200,
                 margin: 2,

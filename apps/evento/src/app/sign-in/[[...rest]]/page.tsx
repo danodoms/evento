@@ -33,23 +33,22 @@ export default function SignInPage() {
                 <h1 className="font-extrabold lg:text-7xl text-6xl">
                     evento
                 </h1>
-                <p className="text-balance  text-xs opacity-70 flex gap-1 items-center"><Zap className="size-3" />Streamlining university events</p>
+                <p className="text-balance  text-xs opacity-70 flex gap-1 items-center"><Zap className="size-3" />Streamlining events</p>
 
 
 
-                <div className="flex items-center gap-2 mt-6">
+                {/* <div className="flex items-center gap-2 mt-6">
                     <Image
                         src="/dorsu-icon.png"
                         alt="Picture of the author"
                         width={30}
                         height={30}
                         className="saturate-0"
-                    // blurDataURL="data:..." automatically provided
-                    // placeholder="blur" // Optional blur-up while loading
+                
                     />
                     <p className="text-xs text-left text-balance opacity-50">An internal web app of Davao Oriental State   <br /> University
                         Banaybanay Campus Student Council</p>
-                </div>
+                </div> */}
 
             </div>
 
