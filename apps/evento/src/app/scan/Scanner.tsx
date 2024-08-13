@@ -105,7 +105,7 @@ export default function Scanner() {
 
             const { id, name } = splitIdAndName(decodedText);
             const scannedSchoolId = id
-            const scannedStudentName = name
+            const scannedStudentName = name ? name : "Student"
             const isValidId = isValidSchoolId(scannedSchoolId)
 
 
