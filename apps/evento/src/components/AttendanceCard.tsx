@@ -29,11 +29,15 @@ const AttendanceCard: React.FC<Props> = ({ result }) => {
                         <div className="text-normal font-medium">{displayName}</div>
                         <div className="text-xs font-extralight">{result.school_id}</div>
                     </div>
-                    <div className="p-2 items-center flex flex-col ml-auto">
-                        <p className="font-bold">{cardConfig.time}</p>
-                        <p className="text-xs flex gap-1 font-semibold items-center opacity-50">
+                    <div className="p-2 items-end flex flex-col ml-auto">
+
+                        <p className="font-bold flex gap-2 items-center">
                             <cardConfig.icon className="size-3" />
-                            {cardConfig.label}
+                            {cardConfig.time}
+                        </p>
+                        <p className="text-xs flex gap-1 font-semibold items-center opacity-50">
+
+                            {result.date}
                         </p>
                     </div>
                 </div>
