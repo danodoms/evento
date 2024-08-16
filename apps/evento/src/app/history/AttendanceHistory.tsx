@@ -34,7 +34,7 @@ const AttendanceHistory: React.FC<AttendanceHistoryProps> = ({
 
 	const studentPlaceholder: Student =
 	{
-		name: "student",
+		name: "Student",
 		id: 0,
 		created_at: "",
 		is_active: true,

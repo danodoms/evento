@@ -124,7 +124,7 @@ export default function Scanner() {
                 setScannedStudent(student);
                 setScannedStatus(null);
                 setScannedMessage("");
-                const newAttendanceRecord: Attendance | null = await throwErrorAfterTimeout(2000, () => createOrUpdateAttendanceRecord(scannedSchoolId), "TIME_LIMIT_REACHED");
+                const newAttendanceRecord: Attendance | null = await throwErrorAfterTimeout(2300, () => createOrUpdateAttendanceRecord(scannedSchoolId), "TIME_LIMIT_REACHED");
 
                 if (newAttendanceRecord) {
                     if (newAttendanceRecord.is_time_in) {

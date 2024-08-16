@@ -1,7 +1,12 @@
 // import useQueuedAttendanceStore from "@/store/useQueuedAttendanceStore";
 import { createClient } from "@/utils/supabase/client";
 import type { Student } from "./Student";
-import { differenceInMinutes, differenceInSeconds, parseISO } from "date-fns";
+import {
+  differenceInMinutes,
+  differenceInSeconds,
+  parseISO,
+  format,
+} from "date-fns";
 
 const supabase = createClient();
 
@@ -29,6 +34,10 @@ const getTodayDateRange = () => {
     startOfDay: `${today}T00:00:00.000Z`,
     endOfDay: `${today}T23:59:59.999Z`,
   };
+};
+
+const getCurrentDate = (): string => {
+  return format(new Date(), "yyyy-MM-dd");
 };
 
 // Fetch today's records for a specific student
@@ -167,11 +176,11 @@ export const createOrUpdateAttendanceRecord = async (
 
   const isTimeIn = records.length % 2 === 0;
 
-  const { startOfDay } = getTodayDateRange();
+  // const { startOfDay } = getTodayDateRange();
   const { data, error } = await supabase
     .from("attendance")
     .insert({
-      date: startOfDay,
+      date: getCurrentDate(),
       school_id: schoolId,
       time: getCurrentTime(),
       is_time_in: isTimeIn,
