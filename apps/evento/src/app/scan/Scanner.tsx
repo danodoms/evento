@@ -18,6 +18,7 @@ import { motion } from 'framer-motion';
 import { useAttendanceStore } from "@/store/useAttendanceStore";
 import { LogIn, LogOut, TriangleAlert, UserRound } from 'lucide-react';
 import useOnlineStatus from "@/hooks/useOnlineStatus";
+import { useAuth } from "@/hooks/useAuth";
 
 interface ModalContent {
     desc: string;
@@ -32,6 +33,9 @@ export default function Scanner() {
     const [scannedStudent, setScannedStudent] = useState<Student | null>(null);
     const [scannedStatus, setScannedStatus] = useState<"TIMED IN" | "TIMED OUT" | null>(null);
     const [scannedMessage, setScannedMessage] = useState<string>("");
+
+
+    const currentLoggedUserEmail = String(useAuth().user?.primaryEmailAddress)
 
 
     useEffect(() => {
@@ -121,10 +125,11 @@ export default function Scanner() {
 
 
             if (isValidId) {
+                console.log("currentLoggedUserEmail: ", currentLoggedUserEmail)
                 setScannedStudent(student);
                 setScannedStatus(null);
                 setScannedMessage("");
-                const newAttendanceRecord: Attendance | null = await throwErrorAfterTimeout(2300, () => createOrUpdateAttendanceRecord(scannedSchoolId), "TIME_LIMIT_REACHED");
+                const newAttendanceRecord: Attendance | null = await throwErrorAfterTimeout(2300, () => createOrUpdateAttendanceRecord(scannedSchoolId, currentLoggedUserEmail), "TIME_LIMIT_REACHED");
 
                 if (newAttendanceRecord) {
                     if (newAttendanceRecord.is_time_in) {

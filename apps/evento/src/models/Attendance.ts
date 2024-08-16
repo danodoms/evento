@@ -16,6 +16,7 @@ export type Attendance = {
   date: string;
   time: string;
   is_time_in: boolean;
+  scanned_by_email: string;
   // is_active: boolean;
 };
 
@@ -158,7 +159,8 @@ const isEarlyTimeIn = (
 
 // Create or update an attendance record for a student
 export const createOrUpdateAttendanceRecord = async (
-  schoolId: string
+  schoolId: string,
+  scannedByEmail: string
 ): Promise<Attendance | null> => {
   const records = await fetchTodayRecords(schoolId);
 
@@ -176,7 +178,6 @@ export const createOrUpdateAttendanceRecord = async (
 
   const isTimeIn = records.length % 2 === 0;
 
-  // const { startOfDay } = getTodayDateRange();
   const { data, error } = await supabase
     .from("attendance")
     .insert({
@@ -184,7 +185,8 @@ export const createOrUpdateAttendanceRecord = async (
       school_id: schoolId,
       time: getCurrentTime(),
       is_time_in: isTimeIn,
-    })
+      scanned_by_email: scannedByEmail,
+    } as Attendance)
     .select("*");
 
   if (error)
@@ -220,16 +222,31 @@ export const getAllAttendanceRecords = async (): Promise<
   return data as AttendanceRecord[];
 };
 
+//* V2
 export const getAllAttendance = async (): Promise<Attendance[]> => {
   const { data, error } = await supabase
     .from("attendance")
     .select("*")
-    .order("time, date");
+    .order("date", { ascending: false })
+    .order("time", { ascending: false })
+    .limit(100);
 
   if (error) throw new Error("Error fetching attendance: " + error.message);
 
   return data as Attendance[];
 };
+
+//* V1
+// export const getAllAttendance = async (): Promise<Attendance[]> => {
+//   const { data, error } = await supabase
+//     .from("attendance")
+//     .select("*")
+//     .order("time, date");
+
+//   if (error) throw new Error("Error fetching attendance: " + error.message);
+
+//   return data as Attendance[];
+// };
 
 // Fetch attendance records by student ID
 export const getAttendanceRecordsByStudentId = async (
