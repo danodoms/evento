@@ -2,7 +2,7 @@
 "use client"
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@repo/utils/supabase"
 import { auth, currentUser } from "@clerk/nextjs/server";
 
 

@@ -1,8 +1,8 @@
 "use client";
 
 import { StudentMissingModal } from '@/components/modals/StudentMissingModal';
-// import { createQueuedAttendanceRecord } from '@/models/Attendance';
-// import type { QueuedAttendance } from '@/models/Attendance';
+// import { createQueuedAttendanceRecord } from '@repo/models/Attendance';
+// import type { QueuedAttendance } from '@repo/models/Attendance';
 import { type Student, getAllStudents, getStudentByIdNum, getStudentBySchoolId, isValidSchoolId } from '@repo/models/Student';
 // import useQueuedAttendanceStore from '@/store/useQueuedAttendanceStore';
 import { failSound, networkErrorSound, offlineSound, successSound } from '@/utils/sound';

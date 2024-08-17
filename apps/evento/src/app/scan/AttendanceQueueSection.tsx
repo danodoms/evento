@@ -4,7 +4,7 @@ import { TextSearch } from "lucide-react";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
 
-import type { AttendanceRecord } from "@/models/Attendance";
+import type { AttendanceRecord } from "@repo/models/Attendance";
 import AttendanceCard from "@/components/AttendanceCard";
 
 interface AttendanceQueueSectionProps {

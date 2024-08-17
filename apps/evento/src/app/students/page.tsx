@@ -51,13 +51,13 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { type Department, getDepartments } from "@/models/Department";
+import { type Department, getDepartments } from "@repo/models/Department";
 import {
 	type Student,
 	deactivateStudent,
 	getAllStudents,
 	getFilteredPaginatedStudents,
-} from "@/models/Student";
+} from "@repo/models/Student";
 import StudentFormDialog from "./StudentFormDialog";
 
 import {
@@ -81,7 +81,7 @@ import { stat } from "fs/promises";
 import StudentCardSkeleton from "@/components/skeleton/StudentCardSkeleton";
 import { set } from "date-fns";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
-import { getFilteredPaginatedSchoolIds } from "@/models/Attendance";
+import { getFilteredPaginatedSchoolIds } from "@repo/models/Attendance";
 
 type StudentsPageProps = {
 	searchParams?: {

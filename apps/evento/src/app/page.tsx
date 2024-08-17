@@ -18,13 +18,13 @@ import Link from "next/link";
 import type React from "react";
 import AttendanceHistory from "./history/AttendanceHistory";
 import Account from "@/components/Account";
-import { getAllUsers, User } from "@/models/User";
+import { getAllUsers, User } from "@repo/models/User";
 import { useQuery } from "@tanstack/react-query";
 import { useClerk, useUser } from "@clerk/nextjs";
 import FeaturesCarousel from "@/components/FeaturesCarousel";
 import { ModeToggle } from "@/components/ModeToggle";
-import { getStudentRowCount } from "@/models/Student";
-import { getEventRowCount } from "@/models/Event";
+import { getStudentRowCount } from "@repo/models/Student";
+import { getEventRowCount } from "@repo/models/Event";
 
 
 export default function Home() {
