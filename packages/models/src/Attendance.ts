@@ -1,6 +1,6 @@
 // import useQueuedAttendanceStore from "@/store/useQueuedAttendanceStore";
-import { createClient } from "@/utils/supabase/client";
-import type { Student } from "./Student";
+import { createClient } from "@repo/utils/supabase";
+import type { Student } from "./Student.ts";
 import {
   differenceInMinutes,
   differenceInSeconds,

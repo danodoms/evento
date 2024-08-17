@@ -3,7 +3,7 @@
 import {
 	type AttendanceRecord,
 	getAllAttendanceRecords,
-} from "@/models/Attendance";
+} from "@repo/models/Attendance";
 import { useQuery } from "@tanstack/react-query";
 import { DataTable } from "./DataTable";
 import { columns } from "./columns";

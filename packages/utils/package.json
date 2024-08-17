@@ -1,0 +1,17 @@
+{
+  "name": "@repo/utils",
+  "type": "module",
+  "exports": {
+    "./supabase": "./dist/supabase/client.js",
+    "./utils": "./dist/utils.js",
+    "./sound": "./dist/sound.js"
+  },
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@repo/tsconfig": "*",
+    "typescript": "latest"
+  }
+}

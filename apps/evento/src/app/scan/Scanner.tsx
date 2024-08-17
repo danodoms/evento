@@ -3,7 +3,7 @@
 import { StudentMissingModal } from '@/components/modals/StudentMissingModal';
 // import { createQueuedAttendanceRecord } from '@/models/Attendance';
 // import type { QueuedAttendance } from '@/models/Attendance';
-import { type Student, getAllStudents, getStudentByIdNum, getStudentBySchoolId, isValidSchoolId } from '@/models/Student';
+import { type Student, getAllStudents, getStudentByIdNum, getStudentBySchoolId, isValidSchoolId } from '@repo/models/Student';
 // import useQueuedAttendanceStore from '@/store/useQueuedAttendanceStore';
 import { failSound, networkErrorSound, offlineSound, successSound } from '@/utils/sound';
 import { type Html5QrcodeResult, Html5QrcodeScanner, Html5QrcodeScannerState } from 'html5-qrcode';
@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { fulfillWithTimeLimit, throwErrorAfterTimeout } from '@/utils/utils';
 import { useQuery } from '@tanstack/react-query';
 import { set } from 'zod';
-import { Attendance, createOrUpdateAttendanceRecord } from '@/models/Attendance';
+import { Attendance, createOrUpdateAttendanceRecord } from '@repo/models/Attendance';
 import { motion } from 'framer-motion';
 import { useAttendanceStore } from "@/store/useAttendanceStore";
 import { LogIn, LogOut, TriangleAlert, UserRound } from 'lucide-react';

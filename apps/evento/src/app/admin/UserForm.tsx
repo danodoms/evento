@@ -24,7 +24,7 @@ import { userSchema } from "@/schemas/userSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
-import { type User, updateUser, addUser } from "@/models/User";
+import { type User, updateUser, addUser } from "@repo/models/User";
 import { ToastContainer, toast } from "react-toastify";
 
 const formSchema = userSchema;

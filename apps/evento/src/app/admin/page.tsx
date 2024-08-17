@@ -41,7 +41,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { getAllUsers, type User, convertRole, toggleUserStatus } from "@/models/User";
+import { getAllUsers, type User, convertRole, toggleUserStatus } from "@repo/models/User";
 import UserFormDialog from "./UserFormDialog";
 import {
     Accordion,
