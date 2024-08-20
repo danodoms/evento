@@ -2,9 +2,7 @@
   "name": "@repo/utils",
   "type": "module",
   "exports": {
-    "./supabase": "./dist/supabase/client.js",
-    "./utils": "./dist/utils.js",
-    "./sound": "./dist/sound.js"
+    "./supabase": "./dist/supabase/client.js"
   },
   "scripts": {
     "dev": "tsc --watch",
