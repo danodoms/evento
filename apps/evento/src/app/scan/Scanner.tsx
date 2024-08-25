@@ -88,9 +88,6 @@ export default function Scanner() {
             // SCANNING SHOULD BE PAUSED IMMEDIATELY SINCE FOLLOWING CODE ARE ASYNC
             pauseScanner(); // Pause scanning
 
-            // if (!navigator.onLine) {
-            //     throw new Error("OFFLINE");
-            // }
 
             if (!isOnline) {
                 throw new Error("OFFLINE");
