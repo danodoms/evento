@@ -24,7 +24,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 
-import { Student } from "@/models/Student";
+import { Student } from "@repo/models/Student";
 import useMediaQuery from "@custom-react-hooks/use-media-query";
 import { TableProperties, CircleAlert, Eye, AlignLeft, GalleryHorizontalEnd } from "lucide-react";
 import AttendanceHistory from "../history/AttendanceHistory";

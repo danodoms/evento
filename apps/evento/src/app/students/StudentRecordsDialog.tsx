@@ -38,9 +38,9 @@ import {
 import {
 	Attendance,
 	getAttendanceRecordsBySchoolId,
-} from "@/models/Attendance";
-import { Event, getEvents } from "@/models/Event";
-import { Student } from "@/models/Student";
+} from "@repo/models/Attendance";
+import { Event, getEvents } from "@repo/models/Event";
+import { Student } from "@repo/models/Student";
 import useMediaQuery from "@custom-react-hooks/use-media-query";
 import { useQuery } from "@tanstack/react-query";
 import { format, parseISO } from "date-fns";

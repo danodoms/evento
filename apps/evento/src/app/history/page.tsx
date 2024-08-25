@@ -1,7 +1,6 @@
 "use client";
 
-import { getAllAttendanceRecords } from "@/models/Attendance";
-import type { AttendanceRecord } from "@/models/Attendance";
+import { getAllAttendanceRecords, type AttendanceRecord } from "@repo/models/Attendance";
 import { useQuery } from "@tanstack/react-query";
 import AttendanceHistory from "./AttendanceHistory";
 

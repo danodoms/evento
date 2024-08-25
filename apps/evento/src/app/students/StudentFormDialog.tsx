@@ -25,7 +25,7 @@ import { Label } from "@/components/ui/label";
 
 import { StudentForm } from "./StudentForm";
 
-import type { Student } from "@/models/Student";
+import type { Student } from "@repo/models/Student";
 import useMediaQuery from "@custom-react-hooks/use-media-query";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";

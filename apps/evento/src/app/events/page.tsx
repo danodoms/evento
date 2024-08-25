@@ -31,7 +31,7 @@ import {
 	type eventDuration,
 	getAttendanceForDate,
 	getEvents,
-} from "@/models/Event";
+} from "@repo/models/Event";
 import { format, getMonth, getYear, parseISO } from "date-fns";
 import {
 	Calendar,

@@ -24,7 +24,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import { UserForm } from "./UserForm";
-import { type User } from "@/models/User";
+import { type User } from "@repo/models/User";
 
 import { useToast } from "@/components/ui/use-toast";
 import useMediaQuery from "@custom-react-hooks/use-media-query";

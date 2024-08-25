@@ -1,4 +1,4 @@
-import type { AttendanceRecord } from "@/models/Attendance";
+import type { AttendanceRecord } from "@repo/models/Attendance";
 import { UserRound } from "lucide-react"; // Adjust imports as needed
 import type React from "react";
 

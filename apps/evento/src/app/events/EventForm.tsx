@@ -20,7 +20,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { Department, getDepartments } from "@/models/Department";
+import { Department, getDepartments } from "@repo/models/Department";
 import { eventSchema } from "@/schemas/eventSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Value } from "@radix-ui/react-select";
@@ -48,7 +48,7 @@ import {
 	addEvent,
 	type eventDuration,
 	updateEvent,
-} from "@/models/Event";
+} from "@repo/models/Event";
 import { MapPin } from "lucide-react";
 
 const formSchema = eventSchema;

@@ -2,7 +2,7 @@ import { useClerk, useAuth as useClerkAuth, useUser } from "@clerk/nextjs";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { convertRole, getAllUsers, role, User } from "@/models/User"; // Adjust this import based on your actual implementation
+import { convertRole, getAllUsers, role, User } from "@repo/models/User"; // Adjust this import based on your actual implementation
 
 export function useAuth() {
   const { isSignedIn, isLoaded } = useClerkAuth();

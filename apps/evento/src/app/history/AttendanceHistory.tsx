@@ -3,9 +3,8 @@
 
 import AttendanceCard from "@/components/AttendanceCard";
 import { Separator } from "@/components/ui/separator";
-import { getAllAttendance, getAllAttendanceRecords } from "@/models/Attendance";
-import type { Attendance, AttendanceRecord } from "@/models/Attendance";
-import { Student } from "@/models/Student";
+import { getAllAttendance, getAllAttendanceRecords, type Attendance, type AttendanceRecord } from "@repo/models/Attendance"
+import { Student } from "@repo/models/Student";
 import { useQuery } from "@tanstack/react-query";
 
 interface AttendanceHistoryProps {

@@ -1,9 +1,9 @@
 "use client";
 
 import { StudentMissingModal } from '@/components/modals/StudentMissingModal';
-// import { createQueuedAttendanceRecord } from '@/models/Attendance';
-// import type { QueuedAttendance } from '@/models/Attendance';
-import { type Student, getAllStudents, getStudentByIdNum, getStudentBySchoolId, isValidSchoolId } from '@/models/Student';
+// import { createQueuedAttendanceRecord } from '@repo/models/Attendance';
+// import type { QueuedAttendance } from '@repo/models/Attendance';
+import { type Student, getAllStudents, getStudentByIdNum, getStudentBySchoolId, isValidSchoolId } from '@repo/models/Student';
 // import useQueuedAttendanceStore from '@/store/useQueuedAttendanceStore';
 import { failSound, networkErrorSound, offlineSound, successSound } from '@/utils/sound';
 import { type Html5QrcodeResult, Html5QrcodeScanner, Html5QrcodeScannerState } from 'html5-qrcode';
@@ -13,11 +13,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import { fulfillWithTimeLimit, throwErrorAfterTimeout } from '@/utils/utils';
 import { useQuery } from '@tanstack/react-query';
 import { set } from 'zod';
-import { Attendance, createOrUpdateAttendanceRecord } from '@/models/Attendance';
+import { Attendance, createOrUpdateAttendanceRecord } from '@repo/models/Attendance';
 import { motion } from 'framer-motion';
 import { useAttendanceStore } from "@/store/useAttendanceStore";
 import { LogIn, LogOut, TriangleAlert, UserRound } from 'lucide-react';
 import useOnlineStatus from "@/hooks/useOnlineStatus";
+import { useAuth } from "@/hooks/useAuth";
 
 interface ModalContent {
     desc: string;
@@ -32,6 +33,9 @@ export default function Scanner() {
     const [scannedStudent, setScannedStudent] = useState<Student | null>(null);
     const [scannedStatus, setScannedStatus] = useState<"TIMED IN" | "TIMED OUT" | null>(null);
     const [scannedMessage, setScannedMessage] = useState<string>("");
+
+
+    const currentLoggedUserEmail = String(useAuth().user?.primaryEmailAddress)
 
 
     useEffect(() => {
@@ -84,9 +88,6 @@ export default function Scanner() {
             // SCANNING SHOULD BE PAUSED IMMEDIATELY SINCE FOLLOWING CODE ARE ASYNC
             pauseScanner(); // Pause scanning
 
-            // if (!navigator.onLine) {
-            //     throw new Error("OFFLINE");
-            // }
 
             if (!isOnline) {
                 throw new Error("OFFLINE");
@@ -121,10 +122,11 @@ export default function Scanner() {
 
 
             if (isValidId) {
+                console.log("currentLoggedUserEmail: ", currentLoggedUserEmail)
                 setScannedStudent(student);
                 setScannedStatus(null);
                 setScannedMessage("");
-                const newAttendanceRecord: Attendance | null = await throwErrorAfterTimeout(2300, () => createOrUpdateAttendanceRecord(scannedSchoolId), "TIME_LIMIT_REACHED");
+                const newAttendanceRecord: Attendance | null = await throwErrorAfterTimeout(2300, () => createOrUpdateAttendanceRecord(scannedSchoolId, currentLoggedUserEmail), "TIME_LIMIT_REACHED");
 
                 if (newAttendanceRecord) {
                     if (newAttendanceRecord.is_time_in) {

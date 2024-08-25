@@ -1,0 +1,22 @@
+{
+  "name": "@repo/models",
+  "type": "module",
+  "exports": {
+    "./Attendance": "./src/Attendance.ts",
+    "./Department": "./src/Department.ts",
+    "./Event": "./src/Event.ts",
+    "./Student": "./src/Student.ts",
+    "./User": "./src/User.ts"
+  },
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@repo/utils": "*"
+  },
+  "devDependencies": {
+    "@repo/tsconfig": "*",
+    "typescript": "latest"
+  }
+}

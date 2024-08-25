@@ -20,8 +20,8 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { type Department, getDepartments } from "@/models/Department";
-import { type Student, addStudent, updateStudent } from "@/models/Student";
+import { type Department, getDepartments } from "@repo/models/Department";
+import { type Student, addStudent, updateStudent } from "@repo/models/Student";
 import { studentSchema } from "@/schemas/studentSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";

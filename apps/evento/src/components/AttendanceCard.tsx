@@ -1,6 +1,6 @@
 import React from 'react';
 import { UserRound, LogIn, LogOut } from 'lucide-react';
-import type { Attendance, AttendanceRecord } from "@/models/Attendance";
+import type { Attendance, AttendanceRecord } from "@repo/models/Attendance";
 
 interface Props {
     result: AttendanceRecord;
