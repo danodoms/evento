@@ -13,6 +13,12 @@ export type Event = {
   duration: eventDuration;
 };
 
+export type EventStat = {
+  date: string;
+  time_in_count: string;
+  time_out_count: string;
+};
+
 export type eventDuration = "AM_ONLY" | "PM_ONLY" | "AM_AND_PM";
 
 export async function getEvents(): Promise<Event[]> {
@@ -99,4 +105,17 @@ export const getEventRowCount = async () => {
   console.log("Total event row count:", count);
 
   return count || 0;
+};
+
+export const getEventsStats = async () => {
+  const { data, error } = await supabase.from("event_stats_view").select("*");
+
+  if (error) {
+    console.error("Error fetching event stats", error);
+    return 0;
+  }
+
+  console.log("Event stats", data);
+
+  return data as any;
 };

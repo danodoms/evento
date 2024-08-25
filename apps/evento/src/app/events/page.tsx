@@ -27,10 +27,12 @@ import {
 } from "@/components/ui/sheet";
 import {
 	type Event,
+	EventStat,
 	deactivateEvent,
 	type eventDuration,
 	getAttendanceForDate,
 	getEvents,
+	getEventsStats
 } from "@repo/models/Event";
 import { format, getMonth, getYear, parseISO } from "date-fns";
 import {
@@ -43,12 +45,15 @@ import {
 	TableProperties,
 	Trash,
 	FileBarChart2,
-	PlusCircle
+	PlusCircle,
+	LogIn,
+	LogOut
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import EventFormDialog from "./EventFormDialog";
 import { generateCSV } from "@/utils/utils";
+import { get } from "react-hook-form";
 
 export default function EventsPage() {
 	const {
@@ -59,6 +64,29 @@ export default function EventsPage() {
 		queryKey: ["events"],
 		queryFn: getEvents,
 	});
+
+
+	const {
+		data: eventStats = [],
+		error: eventStatsError,
+		isLoading: eventStatsIsLoading,
+	} = useQuery<EventStat[]>({
+		queryKey: ["eventStats"],
+		queryFn: getEventsStats,
+	});
+
+
+	const getEventTimeInCount = (event: Event) => {
+		const eventStat: EventStat | undefined = eventStats.find((stat) => stat.date === event.date);
+		return eventStat ? eventStat.time_in_count : "0";
+	};
+
+	const getEventTimeOutCount = (event: Event) => {
+		const eventStat: EventStat | undefined = eventStats.find((stat) => stat.date === event.date);
+		return eventStat ? eventStat.time_out_count : "0";
+	};
+
+
 
 	const [statusFilter, setStatusFilter] = useState<"active" | "inactive">(
 		"active",
@@ -283,20 +311,52 @@ export default function EventsPage() {
 							</div>
 							{/* <Separator className="my-1" /> */}
 							<h2 className="font-bold text-lg mt-2">{event.name}</h2>
-							<div className="text-xs text-balance truncate opacity-60">
-								{event.description || "No description"}
-							</div>
+
+							{event.description && (
+								<div className="text-xs text-balance truncate opacity-60">
+									{event.description}
+								</div>
+							)}
 							<div className="flex gap-2 flex-wrap mt-1">
-								<Badge className="flex gap-1" variant={"secondary"}>
+								<Badge className="flex gap-1 " variant={"secondary"} >
 									<Clock className="size-3" />
 									{renderEventDuration(event.duration)}
 								</Badge>
+
+
+								{getEventTimeInCount(event) !== "0" && (
+									<Badge className="flex gap-1 bg-green-500 bg-opacity-50" variant={"outline"}>
+										<LogIn className="size-3" />
+										{getEventTimeInCount(event)}
+									</Badge>
+								)}
+
+								{getEventTimeOutCount(event) !== "0" && (
+									<Badge className="flex gap-1 bg-red-500 bg-opacity-50" variant={"outline"}>
+										<LogOut className="size-3" />
+
+										{getEventTimeOutCount(event)}
+
+									</Badge>
+								)}
+
+
+
+
 								{event.location && (
 									<Badge className="flex gap-1" variant={"secondary"}>
 										<MapPin className="size-3" />
 										{event.location}
 									</Badge>
 								)}
+
+								{getEventTimeInCount(event) == "0" && getEventTimeOutCount(event) == "0" && (
+									<Badge className="flex gap-1" variant={"destructive"}>
+										{/* <LogIn className="size-3" /> */}
+										No Attendance Record
+									</Badge>
+								)
+								}
 							</div>
 						</div>
 					))}
