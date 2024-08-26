@@ -2,7 +2,7 @@
 
 
 import { Separator } from "@/components/ui/separator";
-import { appName } from "@/config";
+import { appName, version } from "@/config";
 import {
 
 	Heart,
@@ -11,6 +11,7 @@ import {
 	RotateCw,
 	UsersRound,
 	CalendarFold,
+	PieChart,
 
 } from "lucide-react";
 import Image from "next/image";
@@ -25,6 +26,7 @@ import FeaturesCarousel from "@/components/FeaturesCarousel";
 import { ModeToggle } from "@/components/ModeToggle";
 import { getStudentRowCount } from "@repo/models/Student";
 import { getEventRowCount } from "@repo/models/Event";
+import EventScannerStats from "@/components/EventScannerStats";
 
 
 export default function Home() {
@@ -50,15 +52,20 @@ export default function Home() {
 
 
 	return (
-		<section className="flex flex-col p-2 gap-3 rounded-md ">
+		<section className="flex flex-col p-2 gap-3 rounded-md h-full">
 			{/* TOP SECTION */}
 
 			<div className="flex justify-between items-center gap-4 mb-8 lg:hidden  bg-opacity-80">
 				<div className="flex gap-2 items-center">
 					<h1 className="font-bold text-xl text-pretty">{appName}</h1>
+
 					<div className="opacity-50 scale-90">
 						<ModeToggle compactMode={true} />
 					</div>
+
+					<h2 className="tracking-wide text-xs opacity-50 flex-auto">
+						v {version}
+					</h2>
 				</div>
 
 
@@ -100,22 +107,31 @@ export default function Home() {
 			</div>
 
 
-
+			{/* 
 			<div className="font-semibold text-pretty flex items-center text-sm mt-2 gap-2">
 				<Map className="size-5" />
 				<span>Explore Features</span>
 			</div>
+			<FeaturesCarousel /> */}
 
-			<FeaturesCarousel />
+
+
+
+
+
+			<div className="font-semibold text-pretty flex items-center text-sm mt-2 gap-2">
+				<PieChart className="size-5" />
+				<span>Statistics</span>
+
+			</div>
+
+			<EventScannerStats />
 
 
 
 
 
 			<div className="flex justify-between">
-
-
-
 				<div className="font-semibold text-pretty flex items-center text-sm mt-2 gap-2">
 					<QrCode className="size-5" />
 					<span>Recent Scan Results</span>
@@ -129,7 +145,7 @@ export default function Home() {
 
 
 
-			<div className="overflow-auto flex-1 max-h-96 rounded-lg">
+			<div className="overflow-auto flex-1 rounded-lg">
 				<AttendanceHistory />
 			</div>
 		</section >

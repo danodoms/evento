@@ -19,6 +19,10 @@ export type EventStat = {
   time_out_count: string;
 };
 
+export type EventScannerStat = EventStat & {
+  scanned_by_email: string;
+};
+
 export type eventDuration = "AM_ONLY" | "PM_ONLY" | "AM_AND_PM";
 
 export async function getEvents(): Promise<Event[]> {
@@ -116,6 +120,21 @@ export const getEventsStats = async () => {
   }
 
   console.log("Event stats", data);
+
+  return data as any;
+};
+
+export const getEventScannerStats = async () => {
+  const { data, error } = await supabase
+    .from("event_scanner_stats_view")
+    .select("*");
+
+  if (error) {
+    console.error("Error fetching event scanner stats", error);
+    return 0;
+  }
+
+  console.log("Event scanner stats", data);
 
   return data as any;
 };
