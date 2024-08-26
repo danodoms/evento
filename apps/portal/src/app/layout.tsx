@@ -5,6 +5,7 @@ import { ReactNode } from 'react'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { ThemeProvider } from "@/components/theme-provider"
+import { Analytics } from "@vercel/analytics/react"
 
 // Define the type for the props
 type LayoutProps = {
@@ -42,6 +43,7 @@ export default function Layout({ children }: LayoutProps) {
         >
           <Header />
           {children}
+          <Analytics />
 
           <Footer />
 
