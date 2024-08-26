@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserRound, LogIn, LogOut } from 'lucide-react';
+import { UserRound, LogIn, LogOut, Scan } from 'lucide-react';
 import type { Attendance, AttendanceRecord } from "@repo/models/Attendance";
 
 interface Props {
@@ -7,6 +7,22 @@ interface Props {
 }
 
 const AttendanceCard: React.FC<Props> = ({ result }) => {
+
+
+    function trimEmailDomain(email: string) {
+        // Find the position of the "@" symbol
+        const atIndex = email.indexOf('@');
+
+        // If "@" is found, return the substring before it
+        if (atIndex !== -1) {
+            return email.substring(0, atIndex);
+        }
+
+        // If "@" is not found, return the original email (or handle as needed)
+        return email;
+    }
+
+
     const isTimeOut = !result.is_time_in;
 
     const cardConfig = {
@@ -27,7 +43,14 @@ const AttendanceCard: React.FC<Props> = ({ result }) => {
                     <UserRound />
                     <div className="flex flex-col">
                         <div className="text-normal font-medium">{displayName}</div>
-                        <div className="text-xs font-extralight">{result.school_id}</div>
+                        <div className='flex '>
+                            <div className="text-xs font-extralight">{result.school_id}</div>
+                            <div className="text-xs font-extralight border-1 rounded-full px-2 flex gap-1 items-center opacity-50">
+                                <Scan className='size-3' />
+                                {trimEmailDomain(result.scanned_by_email)}
+                            </div>
+                        </div>
+
                     </div>
                     <div className="p-2 items-end flex flex-col ml-auto">
 
