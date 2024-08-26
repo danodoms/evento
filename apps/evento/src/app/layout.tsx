@@ -13,6 +13,7 @@ import Sidebar from "@/components/Sidebar";
 import { ClerkProvider } from '@clerk/nextjs'
 import AuthGuard from "@/components/auth/AuthGuard";
 import OfflineHeader from "@/components/OfflineHeader";
+import { Analytics } from "@vercel/analytics/react"
 
 
 
@@ -94,7 +95,7 @@ export default function RootLayout({
 									<Toaster />
 								</main>
 
-
+								<Analytics />
 
 							</AuthGuard>
 						</ThemeProvider>
