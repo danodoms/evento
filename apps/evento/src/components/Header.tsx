@@ -1,6 +1,6 @@
 "use client";
 
-import { appName } from "@/config";
+import { appName, version } from "@/config";
 import { ModeToggle } from "./ModeToggle";
 
 export default function Header() {
@@ -9,6 +9,10 @@ export default function Header() {
 			<h2 className="font-bold text-xl flex-auto place-content-center">
 				{appName}
 			</h2>
+
+			{/* <h2 className="font-semibold text-xs opacity-50 flex-auto place-content-center">
+				{version}
+			</h2> */}
 
 			<div className="ml-auto">
 				<ModeToggle />

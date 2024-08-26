@@ -2,7 +2,7 @@
 
 
 import { Separator } from "@/components/ui/separator";
-import { appName } from "@/config";
+import { appName, version } from "@/config";
 import {
 
 	Heart,
@@ -58,9 +58,14 @@ export default function Home() {
 			<div className="flex justify-between items-center gap-4 mb-8 lg:hidden  bg-opacity-80">
 				<div className="flex gap-2 items-center">
 					<h1 className="font-bold text-xl text-pretty">{appName}</h1>
+
 					<div className="opacity-50 scale-90">
 						<ModeToggle compactMode={true} />
 					</div>
+
+					<h2 className="tracking-wide text-xs opacity-50 flex-auto">
+						v {version}
+					</h2>
 				</div>
 
 
