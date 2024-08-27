@@ -41,21 +41,42 @@ const getCurrentDate = (): string => {
   return format(new Date(), "yyyy-MM-dd");
 };
 
+//! DEPRECATED V1
 // Fetch today's records for a specific student
+// const fetchTodayRecords = async (schoolId: string): Promise<Attendance[]> => {
+//   const { startOfDay, endOfDay } = getTodayDateRange();
+//   const { data, error } = await supabase
+//     .from("attendance")
+//     .select("*")
+//     .eq("school_id", schoolId)
+//     .gte("date", startOfDay)
+//     .lte("date", endOfDay)
+//     .order("date", { ascending: true });
+
+//   if (error)
+//     throw new Error(
+//       "Error fetching today's attendance records: " + error.message
+//     );
+
+//   return data as Attendance[];
+// };
+
+//* V2
 const fetchTodayRecords = async (schoolId: string): Promise<Attendance[]> => {
-  const { startOfDay, endOfDay } = getTodayDateRange();
+  const today = getCurrentDate(); // This function returns the date in 'YYYY-MM-DD' format
+
   const { data, error } = await supabase
     .from("attendance")
     .select("*")
     .eq("school_id", schoolId)
-    .gte("date", startOfDay)
-    .lte("date", endOfDay)
+    .eq("date", today)
     .order("date", { ascending: true });
 
-  if (error)
+  if (error) {
     throw new Error(
       "Error fetching today's attendance records: " + error.message
     );
+  }
 
   return data as Attendance[];
 };
@@ -274,6 +295,8 @@ export const getAttendanceRecordsBySchoolId = async (
 
   if (error)
     throw new Error("Error fetching attendance records: " + error.message);
+
+  console.log("ATTENDANCE RECORDS for school_id ", schoolId, data);
 
   return data as Attendance[];
 };

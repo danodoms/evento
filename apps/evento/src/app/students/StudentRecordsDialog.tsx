@@ -44,7 +44,7 @@ import { Student } from "@repo/models/Student";
 import useMediaQuery from "@custom-react-hooks/use-media-query";
 import { useQuery } from "@tanstack/react-query";
 import { format, parseISO } from "date-fns";
-import { TableProperties, CircleAlert, Eye, AlignLeft, LogIn, LogOut } from "lucide-react";
+import { TableProperties, CircleAlert, Eye, AlignLeft, LogIn, LogOut, Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 type StudentRecordsDialogProps = {
@@ -61,7 +61,7 @@ const formatDate = (dateString: string): string =>
 //*V2 This version also checks if event is active
 const getEventNameFromDate = (events: Event[], date: string) => {
 	const event = events.find((event) => event.date === date && event.is_active === true);
-	return event ? event.name : formatDate(date);
+	return event && event.name;
 };
 
 //*V1 
@@ -71,7 +71,10 @@ const getEventNameFromDate = (events: Event[], date: string) => {
 // };
 
 
-
+type GroupedAttendance = {
+	date: string;
+	records: Attendance[];
+};
 
 const StudentRecordsDialog = ({ schoolId, student }: StudentRecordsDialogProps) => {
 
@@ -104,6 +107,15 @@ const StudentRecordsDialog = ({ schoolId, student }: StudentRecordsDialogProps) 
 	});
 
 
+	const groupedAttendanceRecords = Object.entries(
+		attendanceRecords.reduce((acc, record) => {
+			(acc[record.date] = acc[record.date] || []).push(record);
+			return acc;
+		}, {} as Record<string, typeof attendanceRecords>)
+	).map(([date, records]) => ({ date, records }));
+
+
+
 
 
 	const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -130,7 +142,7 @@ const StudentRecordsDialog = ({ schoolId, student }: StudentRecordsDialogProps) 
 						</DialogDescription>
 					</DialogHeader>
 
-					<AttendanceRecordsSection attendanceRecords={attendanceRecords} events={events} />
+					<AttendanceRecordsSection groupedAttendanceRecords={groupedAttendanceRecords} events={events} />
 
 					{/* <DialogFooter>
                 <Button type="submit">Save changes</Button>
@@ -155,7 +167,7 @@ const StudentRecordsDialog = ({ schoolId, student }: StudentRecordsDialogProps) 
 					<DrawerDescription className="text-balance text-xs px-4"></DrawerDescription>
 				</DrawerHeader>
 
-				<AttendanceRecordsSection attendanceRecords={attendanceRecords} events={events} />
+				<AttendanceRecordsSection groupedAttendanceRecords={groupedAttendanceRecords} events={events} />
 
 				<DrawerFooter>
 					{/* <Button>Submit</Button> */}
@@ -174,7 +186,7 @@ const StudentRecordsDialog = ({ schoolId, student }: StudentRecordsDialogProps) 
 
 
 type AttendanceSectionProps = {
-	attendanceRecords: Attendance[];
+	groupedAttendanceRecords: GroupedAttendance[];
 	events: Event[];
 }
 
@@ -192,44 +204,106 @@ const Trigger = () => {
 	)
 }
 
-const AttendanceRecordsSection: React.FC<AttendanceSectionProps> = ({ attendanceRecords, events }) => {
+
+
+
+
+
+
+const AttendanceRecordsSection: React.FC<AttendanceSectionProps> = ({ groupedAttendanceRecords, events }) => {
 
 	return (
-		<div className="p-4 max-h-96 overflow-y-auto">
-			{attendanceRecords.length > 0 ? (
-				<Table>
-					{/* <TableCaption>A list of your recent invoices.</TableCaption> */}
-					<TableHeader>
-						<TableRow>
-							<TableHead>Date</TableHead>
-							<TableHead>Time</TableHead>
-							{/* <TableHead>Time Out</TableHead> */}
-						</TableRow>
-					</TableHeader>
-					<TableBody className="">
-						{attendanceRecords?.map((record) => (
-							<TableRow key={record.id}>
-								<TableCell className="font-medium">
-									{getEventNameFromDate(events, record.date)}
-								</TableCell>
-
-								{record.is_time_in ?
-									(<TableCell className="flex gap-4 items-center"> <Badge variant={"secondary"} className="flex gap-2"><LogIn className="size-3" />{record.time}</Badge></TableCell>) :
-									(<TableCell className="flex gap-4 items-center"> <Badge variant={"destructive"} className="flex gap-2"><LogOut className="size-3" />{record.time}</Badge></TableCell>)
-								}
+		<div className="max-h-96 overflow-y-auto p-2 border-red-500 border-1 flex flex-col gap-2 overflow-auto">
 
 
-								{/* <TableCell>{record.time_out}</TableCell> */}
-								{/* <TableCell className="text-right">$250.00</TableCell> */}
-							</TableRow>
-						))}
-					</TableBody>
-				</Table>
+			{groupedAttendanceRecords.length > 0 ? (
+
+
+				groupedAttendanceRecords.map((attendanceGroup) => (
+
+					<div key={attendanceGroup.date} className="min-w-full p-4 border bg-neutral-500 bg-opacity-10 rounded-md">
+
+						<div className="flex justify-between items-center mb-4 p-4 bg-neutral-500 bg-opacity-10 rounded-md">
+							{getEventNameFromDate(events, attendanceGroup.date) ? (
+								<span className="font-medium text-sm">
+									{getEventNameFromDate(events, attendanceGroup.date)}
+								</span>
+							) : (
+								<span className="text-sm font-extralight italic opacity-50">
+									No Event
+								</span>
+							)}
+
+
+							<p className="text-xs flex  gap-2 items-center">
+								<Calendar className="size-3" />
+								{formatDate(attendanceGroup.date)}
+							</p>
+						</div>
+
+
+
+
+
+
+
+
+
+
+						{/* SECTION FOR EACH ATTENDANCE RECORD */}
+						<Table>
+							{/* <TableCaption>A list of your recent invoices.</TableCaption> */}
+							<TableHeader>
+								<TableRow>
+									<TableHead>Time</TableHead>
+									<TableHead>Scanner</TableHead>
+
+								</TableRow>
+							</TableHeader>
+							<TableBody className="">
+								{attendanceGroup?.records.map((record) => (
+									<TableRow key={record.id}>
+
+
+										{record.is_time_in ?
+											(<TableCell className="flex gap-4 items-center"> <Badge variant={"secondary"} className="flex gap-2"><LogIn className="size-3" />{record.time}</Badge></TableCell>) :
+											(<TableCell className="flex gap-4 items-center"> <Badge variant={"destructive"} className="flex gap-2"><LogOut className="size-3" />{record.time}</Badge></TableCell>)
+										}
+
+										{/* <TableCell className="font-medium">
+											{getEventNameFromDate(events, record.date)}
+										</TableCell> */}
+
+
+										{record.scanned_by_email ? (
+											<TableCell className="text-xs">
+												{record.scanned_by_email}
+											</TableCell>
+										) : (
+											<TableCell className="text-xs">
+												<span className="text-xs tracking-wide opacity-50">
+													Unspecified
+												</span>
+											</TableCell>
+										)}
+
+
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
+					</div>
+				))
+
+
+
+
 			) : (
 				<div className="flex items-center justify-center h-full">
 					<p className="text-center text-sm px-4 py-2 rounded-full flex items-center gap-2"><CircleAlert className="size-4" />No records found</p>
 				</div>
 			)}
+
 		</div>
 	)
 
