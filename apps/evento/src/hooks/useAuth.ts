@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { convertRole, getAllUsers, role, User } from "@repo/models/User"; // Adjust this import based on your actual implementation
+import { useCurrentUserStore } from "@/store/useCurrentUserStore";
 
 export function useAuth() {
   const { isSignedIn, isLoaded } = useClerkAuth();
@@ -12,6 +13,8 @@ export function useAuth() {
 
   const [currentUserRole, setCurrentUserRole] =
     useState<role>("REPRESENTATIVE");
+
+  const setCurrentLoggedEmail = useCurrentUserStore((state) => state.setEmail);
 
   //THIS SETS THE INITIAL SCREEN WHEN AUTHENTICATING:  when set to TRUE, it does not show the authenticating screen to authorized users but shows unauthorized users the homescreen briefly
   const [isAuthorized, setIsAuthorized] = useState(true);
@@ -48,6 +51,9 @@ export function useAuth() {
       console.log("No user email found yet");
       return;
     }
+
+    //save/persist the current user primary email to zustand global store for use in other components
+    setCurrentLoggedEmail(String(user.primaryEmailAddress));
 
     //if clerk user is loaded and users was queried successfully from supabase
     if (isLoaded && !isUsersLoading && authorizedUsers.length > 0) {
