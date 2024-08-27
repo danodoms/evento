@@ -19,6 +19,8 @@ import { useAttendanceStore } from "@/store/useAttendanceStore";
 import { LogIn, LogOut, TriangleAlert, UserRound } from 'lucide-react';
 import useOnlineStatus from "@/hooks/useOnlineStatus";
 import { useAuth } from "@/hooks/useAuth";
+import { useCurrentUserStore } from '@/store/useCurrentUserStore';
+
 
 interface ModalContent {
     desc: string;
@@ -35,7 +37,9 @@ export default function Scanner() {
     const [scannedMessage, setScannedMessage] = useState<string>("");
 
 
-    const currentLoggedUserEmail = String(useAuth().user?.primaryEmailAddress)
+    // const currentLoggedUserEmail = String(useAuth().user?.emailAddresses[0].emailAddress)
+
+    const currentLoggedUserEmail = useCurrentUserStore(state => state.email);
 
 
     useEffect(() => {
