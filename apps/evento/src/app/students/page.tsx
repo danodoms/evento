@@ -55,7 +55,6 @@ import { type Department, getDepartments } from "@repo/models/Department";
 import {
 	type Student,
 	deactivateStudent,
-	getAllStudents,
 	getFilteredPaginatedStudents,
 } from "@repo/models/Student";
 import StudentFormDialog from "./StudentFormDialog";

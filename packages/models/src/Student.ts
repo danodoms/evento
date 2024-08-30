@@ -4,18 +4,23 @@ const supabase = createClient();
 
 export type Student = {
   id: number;
-  created_at: string | null;
-  is_active: boolean | undefined;
   school_id: string;
-  name: string;
+  first_name: string;
+  last_name: string;
   dept_id: number | null;
+  is_active: boolean | undefined;
+  created_at: string | null;
 };
 
-export async function getStudentByIdNum(idNum: string) {
+export function getStudentFullName(student: Student): string {
+  return `${student.first_name} ${student.last_name}`;
+}
+
+export async function getStudentBySchoolId(schoolId: string) {
   const { data, error } = await supabase
     .from("students")
     .select("*")
-    .eq("school_id", idNum)
+    .eq("school_id", schoolId)
     .single(); // Use .single() if you expect only one row to be returned
 
   if (error) {
@@ -27,15 +32,16 @@ export async function getStudentByIdNum(idNum: string) {
   return data;
 }
 
-export function getStudentBySchoolId(
-  students: Student[],
-  schoolId: string
-): Student | undefined {
-  const student = students.find((student) => student.school_id === schoolId);
+//! V1 DEPRECATED this function does not directly query  the database, instead it uses the students data from the cache which fetches all students at once
+// export function getStudentBySchoolId(
+//   students: Student[],
+//   schoolId: string
+// ): Student | undefined {
+//   const student = students.find((student) => student.school_id === schoolId);
 
-  console.log("Student found:", student);
-  return student;
-}
+//   console.log("Student found:", student);
+//   return student;
+// }
 
 export async function getAllStudents(): Promise<Student[]> {
   const { data, error } = await supabase.from("students").select("*");
