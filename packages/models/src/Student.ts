@@ -84,7 +84,8 @@ export async function updateStudent(
     .from("students")
     .update(student)
     .eq("id", student.id)
-    .single();
+    .select()
+    .maybeSingle();
 
   if (error) {
     console.error("Error updating student:", error);
@@ -103,7 +104,8 @@ export async function updateStudentBySchoolId(
     .from("students")
     .update(updates)
     .eq("school_id", schoolId)
-    .single(); // Use .single() if you expect only one row to be updated
+    .select()
+    .maybeSingle();
 
   if (error) {
     console.error("Error updating student:", error);
@@ -143,7 +145,9 @@ export async function getFilteredPaginatedStudents(
     .from("students")
     .select("*", { count: "exact" })
     .eq("is_active", status)
-    .or(`name.ilike.%${query}%,school_id.ilike.%${query}%`)
+    .or(
+      `first_name.ilike.%${query}%,last_name.ilike.%${query}%,school_id.ilike.%${query}%`
+    )
     .range((currentPage - 1) * limit, currentPage * limit - 1); // Adjust range to be inclusive of the last item
 
   if (deptId) {

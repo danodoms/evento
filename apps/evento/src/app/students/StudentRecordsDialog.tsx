@@ -40,7 +40,7 @@ import {
 	getAttendanceRecordsBySchoolId,
 } from "@repo/models/Attendance";
 import { Event, getEvents } from "@repo/models/Event";
-import { Student } from "@repo/models/Student";
+import { getStudentFullName, Student } from "@repo/models/Student";
 import useMediaQuery from "@custom-react-hooks/use-media-query";
 import { useQuery } from "@tanstack/react-query";
 import { format, parseISO } from "date-fns";
@@ -85,7 +85,7 @@ const StudentRecordsDialog = ({ schoolId, student }: StudentRecordsDialogProps) 
 		schoolIdToUse = schoolId
 	} else if (student) {
 		schoolIdToUse = student.school_id
-		studentName = student.name
+		studentName = getStudentFullName(student)
 	}
 
 	const {
