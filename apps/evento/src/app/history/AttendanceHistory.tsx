@@ -3,7 +3,7 @@
 
 import AttendanceCard from "@/components/AttendanceCard";
 import { Separator } from "@/components/ui/separator";
-import { getAllAttendance, getAllAttendanceRecords, type Attendance, type AttendanceRecord } from "@repo/models/Attendance"
+import { getAllAttendance, getRecentAttendance, RecentAttendanceRecord, type Attendance, type AttendanceRecord } from "@repo/models/Attendance"
 import { Student } from "@repo/models/Student";
 import { useQuery } from "@tanstack/react-query";
 
@@ -15,12 +15,12 @@ const AttendanceHistory: React.FC<AttendanceHistoryProps> = ({
 	title = "Recent scan results",
 }) => {
 	const {
-		data: allAttendance = [],
+		data: recentAttendance = [],
 		error,
 		isLoading,
-	} = useQuery<Attendance[]>({
-		queryKey: ["attendanceRecords"],
-		queryFn: getAllAttendance,
+	} = useQuery<RecentAttendanceRecord[]>({
+		queryKey: ["recentAttendanceRecords"],
+		queryFn: getRecentAttendance,
 	});
 
 	if (isLoading) {
@@ -31,22 +31,33 @@ const AttendanceHistory: React.FC<AttendanceHistoryProps> = ({
 		return <p>Error: {error.message}</p>; // Optional error handling
 	}
 
-	const studentPlaceholder: Student =
-	{
-		first_name: "Student",
-		last_name: "",
-		id: 0,
-		created_at: "",
-		is_active: true,
-		school_id: "0000-0000",
-		dept_id: 0
-	}
+
+
+
 
 	return (
 		<section className="flex flex-col gap-2 h-full overflow-auto">
 			{/* <h1 className="font-semibold text-lg">{title}</h1> */}
-			{allAttendance?.map((attendance: Attendance) => (
-				<AttendanceCard key={attendance.id} result={{ ...attendance, student: studentPlaceholder } as AttendanceRecord} />
+			{recentAttendance?.map((attendance: RecentAttendanceRecord) => (
+				<AttendanceCard key={attendance.id} result={
+					{
+						id: attendance.id,
+						student: {
+							id: 0,
+							first_name: attendance.first_name,
+							school_id: attendance.school_id,
+							last_name: attendance.last_name,
+							dept_id: attendance.dept_id,
+							is_active: true,
+							created_at: "",
+						},
+						time: attendance.time,
+						date: attendance.date,
+						scanned_by_email: attendance.scanned_by_email,
+						school_id: attendance.school_id,
+						is_time_in: attendance.is_time_in,
+					}
+				} />
 			))}
 		</section>
 	);

@@ -14,15 +14,21 @@ const AttendanceCard: React.FC<Props> = ({ result }) => {
         // Find the position of the "@" symbol
         const atIndex = email.indexOf('@');
 
-        // If "@" is found, return the substring before it
+        // If "@" is found, process the substring before it
         if (atIndex !== -1) {
-            return email.substring(0, atIndex);
+            const username = email.substring(0, atIndex);
+
+            // If the username is longer than 10 characters, add an ellipsis
+            if (username.length > 10) {
+                return username.substring(0, 10) + '...';
+            }
+
+            return username;
         }
 
         // If "@" is not found, return the original email (or handle as needed)
         return email;
     }
-
 
     const isTimeOut = !result.is_time_in;
 

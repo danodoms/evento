@@ -25,6 +25,21 @@ export type AttendanceRecord = Attendance & {
   uniqueId?: number;
 };
 
+export type RecentAttendanceRecord = {
+  id: number; // or number if using JavaScript numbers
+  time: string; // "time without time zone" in ISO format
+  date: string; // "date" in ISO format
+  school_id: string; // text
+  scanned_by_email: string; // text
+  first_name: string; // text
+  last_name: string; // text
+  dept_id: number; // integer
+  dept_short_name: string; // text
+  dept_name: string; // text
+  is_time_in: boolean; // boolean
+  is_active: boolean; // boolean
+};
+
 // Utility functions
 const getCurrentTime = (): string =>
   new Date().toLocaleTimeString("en-US", { hour12: false });
@@ -229,6 +244,7 @@ export const createOrUpdateAttendanceRecord = async (
 //   }
 // };
 
+//! DEPRECATED
 // Fetch all attendance records with student details
 export const getAllAttendanceRecords = async (): Promise<
   AttendanceRecord[]
@@ -241,6 +257,19 @@ export const getAllAttendanceRecords = async (): Promise<
     throw new Error("Error fetching attendance records: " + error.message);
 
   return data as AttendanceRecord[];
+};
+
+export const getRecentAttendance = async (): Promise<
+  RecentAttendanceRecord[]
+> => {
+  const { data, error } = await supabase
+    .from("attendance_recent")
+    .select("*")
+    .limit(100);
+
+  if (error) throw new Error("Error fetching attendance: " + error.message);
+
+  return data as RecentAttendanceRecord[];
 };
 
 //* V2
