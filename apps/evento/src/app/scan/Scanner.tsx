@@ -21,6 +21,7 @@ import useOnlineStatus from "@/hooks/useOnlineStatus";
 import { useAuth } from "@/hooks/useAuth";
 import { useCurrentUserStore } from '@/store/useCurrentUserStore';
 import { Department, getDepartments } from '@repo/models/Department';
+import { de } from '@faker-js/faker';
 
 
 interface ModalContent {
@@ -195,7 +196,13 @@ export default function Scanner() {
             //* VALIDATE SCANNED QR CODE FORMAT
             //* IT SHOULD BE IN THE FORMAT: "school_id,first_name,last_name,dept_id"
             //* e.g. "1234-5678,John,Doe,1"
-            if (!isQRcodeFormatValid(decodedText)) throw new Error("INVALID_QR_CODE_FORMAT");
+
+            if (!isQRcodeFormatValid(decodedText)) {
+                console.log("INVALID QR CODE FORMAT: ", decodedText);
+                console.log("INVALID QR CODE FORMAT: ", decodedText);
+                console.log("INVALID QR CODE FORMAT: ", decodedText);
+                throw new Error("INVALID_QR_CODE_FORMAT")
+            };
 
 
 
