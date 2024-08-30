@@ -21,7 +21,7 @@ export async function getStudentBySchoolId(schoolId: string) {
     .from("students")
     .select("*")
     .eq("school_id", schoolId)
-    .single(); // Use .single() if you expect only one row to be returned
+    .maybeSingle();
 
   if (error) {
     console.error("Error fetching student:", error);
@@ -56,11 +56,12 @@ export async function getAllStudents(): Promise<Student[]> {
 
 export async function addStudent(
   student: Omit<Student, "id" | "created_at">
-): Promise<Student | null | "SCHOOL_ID_EXISTS"> {
+): Promise<Student | "SCHOOL_ID_EXISTS" | null> {
   const { data, error } = await supabase
     .from("students")
     .insert(student)
-    .single(); // Use .single() if you expect only one row to be inserted
+    .select()
+    .maybeSingle();
 
   if (error?.code === "23505") {
     console.log("School ID already exists");
@@ -78,7 +79,7 @@ export async function addStudent(
 
 export async function updateStudent(
   student: Omit<Student, "created_at">
-): Promise<unknown> {
+): Promise<Student> {
   const { data, error } = await supabase
     .from("students")
     .update(student)
@@ -91,7 +92,26 @@ export async function updateStudent(
   }
 
   console.log("Updated student:", data);
-  return data as unknown;
+  return data as Student;
+}
+
+export async function updateStudentBySchoolId(
+  schoolId: string,
+  updates: Partial<Omit<Student, "school_id">>
+): Promise<Student | null> {
+  const { data, error } = await supabase
+    .from("students")
+    .update(updates)
+    .eq("school_id", schoolId)
+    .single(); // Use .single() if you expect only one row to be updated
+
+  if (error) {
+    console.error("Error updating student:", error);
+    return null; // Return null or handle the error appropriately
+  }
+
+  console.log("Updated student:", data);
+  return data; // Return the updated data
 }
 
 export async function deactivateStudent(

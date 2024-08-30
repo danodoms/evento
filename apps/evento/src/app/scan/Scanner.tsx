@@ -3,7 +3,7 @@
 import { StudentMissingModal } from '@/components/modals/StudentMissingModal';
 // import { createQueuedAttendanceRecord } from '@repo/models/Attendance';
 // import type { QueuedAttendance } from '@repo/models/Attendance';
-import { type Student, getAllStudents, getStudentBySchoolId, getStudentFullName, isValidSchoolId } from '@repo/models/Student';
+import { type Student, addStudent, getAllStudents, getStudentBySchoolId, getStudentFullName, isValidSchoolId, updateStudent, updateStudentBySchoolId } from '@repo/models/Student';
 // import useQueuedAttendanceStore from '@/store/useQueuedAttendanceStore';
 import { failSound, networkErrorSound, offlineSound, successSound } from '@/utils/sound';
 import { type Html5QrcodeResult, Html5QrcodeScanner, Html5QrcodeScannerState } from 'html5-qrcode';
@@ -80,11 +80,63 @@ export default function Scanner() {
         setTimeout(resumeScanner, milliseconds);
     };
 
-    const splitIdAndName = (input: String) => {
-        const [id, ...nameParts] = input.split(',');
-        const name = nameParts.join(',').trim();
-        return { id: id.trim(), name };
-    };
+
+    //! DEPRECATED
+    // const splitIdAndName = (input: String) => {
+    //     const [id, ...nameParts] = input.split(',');
+    //     const name = nameParts.join(',').trim();
+    //     return { id: id.trim(), name };
+    // };
+
+
+    function extractQRCodeData(input: string): { schoolId: string, firstName: string, lastName: string, deptId: number } {
+        // Split the input string by commas
+        const parts = input.split(',');
+
+
+        // Destructure parts into variables
+        const [schoolId, firstName, lastName, deptIdString] = parts;
+
+        // Parse department ID to a number
+        const deptId = parseInt(deptIdString, 10);
+
+
+        // Return the extracted parts in an object
+        return {
+            schoolId,
+            firstName,
+            lastName,
+            deptId
+        };
+    }
+
+    async function handleStudentRegistration(studentFromQRCode: Omit<Student, "id" | "created_at">) {
+        // * CHECK IF STUDENT EXISTS IN THE DATABASE
+        const studentFromDatabase = await getStudentBySchoolId(studentFromQRCode.school_id);
+
+        // * IF STUDENT DOES NOT EXIST IN THE DATABASE, ADD THEM AND RETURN THE NEW STUDENT
+        if (!studentFromDatabase) {
+            const newStudent = await addStudent(studentFromQRCode);
+            console.log("SCANNER: NEW STUDENT ADDED TO DATABASE", newStudent);
+            return newStudent;
+        }
+
+        // * CHECK FOR DATA MISMATCHES AND UPDATE IF NECESSARY
+        const isFirstNameMatch = studentFromDatabase.first_name === studentFromQRCode.first_name;
+        const isLastNameMatch = studentFromDatabase.last_name === studentFromQRCode.last_name;
+        const isDeptIdMatch = studentFromDatabase.dept_id === studentFromQRCode.dept_id;
+
+        // * IF ANY STUDENT DATA HAS MISMATCH, UPDATE AND RETURN THE UPDATED STUDENT
+        if (!isFirstNameMatch || !isLastNameMatch || !isDeptIdMatch) {
+            const updatedStudent = await updateStudentBySchoolId(studentFromQRCode.school_id, studentFromQRCode);
+            console.log("SCANNER: STUDENT UPDATED", updatedStudent);
+            return updatedStudent;
+        }
+
+        // * IF ALL STUDENT DATA MATCHES, RETURN THE EXISTING STUDENT
+        console.log("SCANNER: STUDENT ALREADY EXISTS", studentFromDatabase);
+        return studentFromDatabase;
+    }
 
 
     type ScanErrorType =
@@ -115,16 +167,23 @@ export default function Scanner() {
             //* Pause scanning immediately
             pauseScanner();
 
+
+
             //* IF USER IS OFFLINE THEN THROW OFFLINE ERROR
             if (!isOnline) throw new Error("OFFLINE");
 
-            // *VALIDATE SCANNED QR CODE FORMAT
+
+
+            //* VALIDATE SCANNED QR CODE FORMAT
             //* IT SHOULD BE IN THE FORMAT: "school_id,first_name,last_name,dept_id"
             //* e.g. "1234-5678,John,Doe,1"
             if (!isQRcodeFormatValid(decodedText)) throw new Error("INVALID_QR_CODE_FORMAT");
 
+
+
             //* EXTRACT THE DATA FROM THE SCANNED QR CODE
-            const { id: scannedSchoolId, name } = splitIdAndName(decodedText);
+            const { schoolId: scannedSchoolId, firstName: scannedFirstName, lastName: scannedLastName, deptId: scannedDeptId } = extractQRCodeData(decodedText);
+            // const { id: scannedSchoolId, name } = splitIdAndName(decodedText);
 
 
 
@@ -133,15 +192,21 @@ export default function Scanner() {
 
 
 
-            const student: Student = {
-                first_name: name || "Student",
-                last_name: "",
-                id: 100,
-                created_at: String(Date.now()),
-                is_active: true,
+            //* CREATE STUDENT OBJECT FROM THE SCANNED QR CODE
+            const studentFromQRCode: Omit<Student, "id" | "created_at"> = {
                 school_id: scannedSchoolId,
-                dept_id: null
-            };
+                first_name: scannedFirstName,
+                last_name: scannedLastName,
+                dept_id: scannedDeptId,
+                is_active: true
+            }
+
+
+
+            //* RETURNS THE STUDENT OBJECT BASED ON DEFINED RULES
+            const student = await handleStudentRegistration(studentFromQRCode)
+
+
 
             console.log("currentLoggedUserEmail: ", currentLoggedUserEmail);
             setScannedStudent(student);
@@ -159,9 +224,11 @@ export default function Scanner() {
             if (!newAttendanceRecord) throw new Error("DAILY_LIMIT_REACHED");
 
             setScannedStatus(newAttendanceRecord.is_time_in ? "TIMED IN" : "TIMED OUT");
-            addAttendanceRecord({ ...newAttendanceRecord, student });
-            successSound?.play();
 
+            //* ADD THE RETURNED ATTENDANCE OBJECT TO THE GLOBAL ATTENDANCE RECORDS STATE ARRAY ON THE QUEUE SECTION BELOW THE SCANNER UI
+            addAttendanceRecord({ ...newAttendanceRecord, student });
+
+            successSound?.play();
             setTimeout(resumeScanner, 1250);
 
         } catch (error) {

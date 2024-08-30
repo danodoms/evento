@@ -1,6 +1,7 @@
 import React from 'react';
 import { UserRound, LogIn, LogOut, Scan } from 'lucide-react';
 import type { Attendance, AttendanceRecord } from "@repo/models/Attendance";
+import { getStudentFullName } from '@repo/models/Student';
 
 interface Props {
     result: AttendanceRecord;
@@ -33,7 +34,9 @@ const AttendanceCard: React.FC<Props> = ({ result }) => {
     };
 
     // Determine the display name
-    const displayName = result.student?.name ? result.student.name : 'Student';
+
+    const studentFullName = getStudentFullName(result.student)
+    const displayName = studentFullName ? studentFullName : 'Student';
 
     return (
         <div className="flex justify-between gap-4 items-center border-1 border-solid rounded-md relative p-2">
