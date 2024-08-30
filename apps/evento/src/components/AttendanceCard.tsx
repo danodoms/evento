@@ -2,6 +2,7 @@ import React from 'react';
 import { UserRound, LogIn, LogOut, Scan } from 'lucide-react';
 import type { Attendance, AttendanceRecord } from "@repo/models/Attendance";
 import { getStudentFullName } from '@repo/models/Student';
+import { Badge } from './ui/badge';
 
 interface Props {
     result: AttendanceRecord;
@@ -49,14 +50,27 @@ const AttendanceCard: React.FC<Props> = ({ result }) => {
             <div className={`${cardConfig.backgroundColor} w-2 flex-initial h-14 opacity-50 rounded-md`} />
             <div className="flex gap-2 w-full flex-col">
                 <div className="flex gap-4 items-center">
-                    <UserRound />
-                    <div className="flex flex-col">
-                        <div className="text-normal font-medium">{displayName}</div>
+                    {/* <UserRound /> */}
+                    <div className="flex flex-col gap-1">
+
+                        <div className='flex gap-2'>
+                            <div className="text-normal font-medium">{displayName}</div>
+
+                            {result.department?.short_name &&
+                                <Badge variant={"outline"} className="flex gap-2">
+                                    {result.department?.short_name}
+                                </Badge>
+                            }
+
+                        </div>
+
                         <div className='flex '>
                             <div className="text-xs font-extralight">{result.school_id}</div>
+
                             <div className="text-xs font-extralight border-1 rounded-full px-2 flex gap-1 items-center opacity-50">
                                 <Scan className='size-3' />
                                 {trimEmailDomain(result.scanned_by_email)}
+
                             </div>
                         </div>
 

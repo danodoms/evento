@@ -116,9 +116,9 @@ export default function AdminPage() {
     }
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col h-full gap-4">
             <div className="flex gap-2 items-center">
-                <h1 className="text-3xl font-bold tracking-tight mr-auto">Users</h1>
+                <h1 className="text-2xl font-bold tracking-tight mr-auto">Users</h1>
                 <Link href="/admin/create">
                     <Button variant={"ghost"}>
                         <Plus className="size-4" />

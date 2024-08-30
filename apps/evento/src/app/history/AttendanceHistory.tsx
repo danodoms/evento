@@ -42,6 +42,12 @@ const AttendanceHistory: React.FC<AttendanceHistoryProps> = ({
 				<AttendanceCard key={attendance.id} result={
 					{
 						id: attendance.id,
+
+						time: attendance.time,
+						date: attendance.date,
+						scanned_by_email: attendance.scanned_by_email,
+						school_id: attendance.school_id,
+						is_time_in: attendance.is_time_in,
 						student: {
 							id: 0,
 							first_name: attendance.first_name,
@@ -51,11 +57,12 @@ const AttendanceHistory: React.FC<AttendanceHistoryProps> = ({
 							is_active: true,
 							created_at: "",
 						},
-						time: attendance.time,
-						date: attendance.date,
-						scanned_by_email: attendance.scanned_by_email,
-						school_id: attendance.school_id,
-						is_time_in: attendance.is_time_in,
+						department: {
+							id: 0,
+							created_at: "",
+							name: attendance.dept_name,
+							short_name: attendance.dept_short_name
+						}
 					}
 				} />
 			))}

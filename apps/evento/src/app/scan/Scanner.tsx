@@ -20,6 +20,7 @@ import { LogIn, LogOut, TriangleAlert, UserRound } from 'lucide-react';
 import useOnlineStatus from "@/hooks/useOnlineStatus";
 import { useAuth } from "@/hooks/useAuth";
 import { useCurrentUserStore } from '@/store/useCurrentUserStore';
+import { Department, getDepartments } from '@repo/models/Department';
 
 
 interface ModalContent {
@@ -40,6 +41,18 @@ export default function Scanner() {
     // const currentLoggedUserEmail = String(useAuth().user?.emailAddresses[0].emailAddress)
 
     const currentLoggedUserEmail = useCurrentUserStore(state => state.email);
+
+
+    const {
+        data: departments = [],
+        error: departmentsError,
+        isLoading: isDepartmentsLoading,
+    } = useQuery<Department[]>({
+        queryKey: ["departments"],
+        queryFn: getDepartments,
+    });
+
+
 
 
     useEffect(() => {
@@ -160,6 +173,11 @@ export default function Scanner() {
         return qrCodePattern.test(qrCodeValue);
     }
 
+    function getDepartmentNameById(departmentId: number): string | undefined {
+        const department = departments.find((dept) => dept.id === departmentId);
+        return department ? department.short_name : undefined;
+    }
+
 
 
     const onScanSuccess = async (decodedText: string, decodedResult: Html5QrcodeResult) => {
@@ -226,7 +244,10 @@ export default function Scanner() {
             setScannedStatus(newAttendanceRecord.is_time_in ? "TIMED IN" : "TIMED OUT");
 
             //* ADD THE RETURNED ATTENDANCE OBJECT TO THE GLOBAL ATTENDANCE RECORDS STATE ARRAY ON THE QUEUE SECTION BELOW THE SCANNER UI
-            addAttendanceRecord({ ...newAttendanceRecord, student });
+            addAttendanceRecord({
+                ...newAttendanceRecord, student,
+                department: { id: 0, name: "", created_at: "", short_name: getDepartmentNameById(student.dept_id) as string }
+            });
 
             successSound?.play();
             setTimeout(resumeScanner, 1250);
@@ -392,7 +413,3 @@ export default function Scanner() {
         </div>
     );
 };
-function Integer(random: () => number): number {
-    throw new Error('Function not implemented.');
-}
-

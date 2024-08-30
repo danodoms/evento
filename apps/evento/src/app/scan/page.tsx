@@ -16,7 +16,7 @@ const ScanPage = () => {
 	return (
 		<section className="flex flex-col gap-3 justify-center bg-background h-full">
 			<div className="flex gap-2 justify-between items-center">
-				<h1 className="text-3xl font-bold">Scan</h1>
+				<h1 className="text-2xl font-bold">Scan</h1>
 
 				{/* <div className='bg-red-500 size-3 rounded-full animate-pulse' /> */}
 				<div className="flex-auto  w-full">

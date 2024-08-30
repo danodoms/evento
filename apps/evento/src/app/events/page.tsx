@@ -189,9 +189,9 @@ export default function EventsPage() {
 		months.map((month) => format(new Date(2021, month, 1), "MMMM"));
 
 	return (
-		<div className="flex flex-col gap-4">
+		<div className="flex flex-col h-full gap-4">
 			<div className="flex gap-2 items-center">
-				<h1 className="text-3xl font-bold tracking-tight mr-auto">Events</h1>
+				<h1 className="text-2xl font-bold tracking-tight mr-auto">Events</h1>
 				<Link href="/events/create">
 					<Button variant={"ghost"}>
 						<Plus className="size-4" />

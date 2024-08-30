@@ -1,6 +1,8 @@
 // import useQueuedAttendanceStore from "@/store/useQueuedAttendanceStore";
 import { createClient } from "@repo/utils/supabase";
 import type { Student } from "./Student.ts";
+import type { Department } from "./Department.ts";
+
 import {
   differenceInMinutes,
   differenceInSeconds,
@@ -22,6 +24,7 @@ export type Attendance = {
 
 export type AttendanceRecord = Attendance & {
   student: Student;
+  department?: Department;
   uniqueId?: number;
 };
 

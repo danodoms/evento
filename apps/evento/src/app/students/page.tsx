@@ -180,9 +180,9 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 
 
 	return (
-		<div className="flex flex-col gap-3">
+		<div className="flex flex-col h-full gap-3">
 			<div className="flex justify-between gap-2 items-center">
-				<h1 className="text-3xl font-bold tracking-tight mr-auto">Students</h1>
+				<h1 className="text-2xl font-bold tracking-tight mr-auto">Students</h1>
 				{/* <Link href="/students/create">
 					<Button variant={"ghost"}>
 						<Plus className="size-4" />
