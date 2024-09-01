@@ -5,7 +5,8 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "pages:build": "npx @cloudflare/next-on-pages@1"
   },
   "devDependencies": {
     "prettier": "^3.2.5",
