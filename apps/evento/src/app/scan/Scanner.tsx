@@ -70,6 +70,9 @@ export default function Scanner() {
     }, []);
 
 
+
+
+
     const html5QrcodeScannerRef = useRef<Html5QrcodeScanner | null>(null);
     const [modalContent, setModalContent] = useState<ModalContent | null>(null);
 
@@ -239,20 +242,14 @@ export default function Scanner() {
 
 
 
-            {!scannedStudent && (
-                // <div className='absolute inset-0 flex items-center justify-center'>
-                //     <div className='px-4 py-2 opacity-90 backdrop-blur-lg rounded-md text-center flex items-center flex-col gap-1 outline-1 bg-primary mt-20 animate-pulse'>
-                //         <p className='text-sm text-background font-medium'>Attendees will be timed in</p>
-                //         <p className='text-xs text-background'>
-                //             Tap to change
-                //         </p>
-                //     </div>
-                // </div>
-
+            {/* {(!scannedStudent && html5QrcodeScannerRef.current?.getState() === Html5QrcodeScannerState.SCANNING) && (
                 <ScanModeDialog />
-            )
+            )} */}
 
-            }
+
+            {!scannedStudent && (
+                <ScanModeDialog />
+            )}
 
 
 

@@ -124,6 +124,7 @@ const ScanModeDialog = () => {
 const Trigger = () => {
 
     const { mode: scanMode, setMode: setScanMode } = useScanModeStore();
+    const [text, setText] = useState('');
 
     useEffect(() => {
         switch (scanMode) {
@@ -142,19 +143,23 @@ const Trigger = () => {
     }, [scanMode]);
 
 
-    const [text, setText] = useState('');
+    // Determine the background color class based on scanMode
+    const bgColorClass = scanMode === 'in' ? 'bg-green-500 bg-opacity-80 text-primary' : scanMode === 'out' ? 'bg-red-500  bg-opacity-80' : 'bg-primary';
+
+    const textColorClass = scanMode === 'in' || scanMode === 'out' ? 'text-primary' : 'text-background';
+
     return (
-        <div className='absolute inset-0 flex items-center justify-center'>
-            <div className='px-4 py-2 opacity-90 backdrop-blur-lg rounded-md text-center flex items-center flex-col gap-1 outline-1 bg-primary mt-20 animate-pulse'>
+        <div className='absolute inset-0 flex items-center justify-center h-fit'>
+            <div className={`px-4 py-2 opacity-90 backdrop-blur-lg rounded-b-md text-center flex items-center flex-col gap-1 outline-1 ${bgColorClass} animate-pulse`}>
                 {text && (
-                    <p className="text-sm text-background font-medium">{text}</p>
+                    <p className={`text-sm ${textColorClass} font-medium`}>{text}</p>
                 )}
-                <p className='text-xs text-background'>
+                <p className={`text-xs ${textColorClass}`}>
                     Tap to change
                 </p>
             </div>
         </div>
-    )
+    );
 }
 
 const Content = () => {
