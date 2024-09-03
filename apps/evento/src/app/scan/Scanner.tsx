@@ -20,6 +20,9 @@ import { LogIn, LogOut, TriangleAlert, UserRound } from 'lucide-react';
 import useOnlineStatus from "@/hooks/useOnlineStatus";
 import { useAuth } from "@/hooks/useAuth";
 import { useCurrentUserStore } from '@/store/useCurrentUserStore';
+import { Label } from "@/components/ui/label"
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectItem } from "@/components/ui/select"
+import ScanModeDialog from './ScanModeDialog';
 
 
 interface ModalContent {
@@ -216,6 +219,24 @@ export default function Scanner() {
     return (
         <div className="flex flex-col items-center justify-center relative">
             <div id="reader" ref={setScannerRef} className="w-full max-w-sm border-none outline-none rounded-md" />
+
+
+
+
+            {!scannedStudent && (
+                // <div className='absolute inset-0 flex items-center justify-center'>
+                //     <div className='px-4 py-2 opacity-90 backdrop-blur-lg rounded-md text-center flex items-center flex-col gap-1 outline-1 bg-primary mt-20 animate-pulse'>
+                //         <p className='text-sm text-background font-medium'>Attendees will be timed in</p>
+                //         <p className='text-xs text-background'>
+                //             Tap to change
+                //         </p>
+                //     </div>
+                // </div>
+
+                <ScanModeDialog />
+            )
+
+            }
 
 
 
