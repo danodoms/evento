@@ -19,4 +19,12 @@ export const IdSchema = z.object({
       /^[a-zA-Z.\s]+$/,
       "Last name can only contain letters, spaces, and dots"
     ),
+  department: z.string().length(1, "Department can't be empty"),
+  profilePhoto: z
+    .instanceof(File)
+    .refine((file) => file.size <= 5000000, `Max file size is 5MB.`)
+    .refine(
+      (file) => ["image/jpeg", "image/png", "image/webp"].includes(file.type),
+      "Only .jpg, .png and .webp formats are supported."
+    ),
 });
