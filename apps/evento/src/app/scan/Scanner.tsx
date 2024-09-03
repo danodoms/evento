@@ -20,6 +20,10 @@ import { LogIn, LogOut, TriangleAlert, UserRound } from 'lucide-react';
 import useOnlineStatus from "@/hooks/useOnlineStatus";
 import { useAuth } from "@/hooks/useAuth";
 import { useCurrentUserStore } from '@/store/useCurrentUserStore';
+import { Label } from "@/components/ui/label"
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectItem } from "@/components/ui/select"
+import ScanModeDialog from './ScanModeDialog';
+import useScanModeStore from '@/store/useScanModeStore';
 
 
 interface ModalContent {
@@ -28,6 +32,8 @@ interface ModalContent {
 }
 
 export default function Scanner() {
+
+
     const isOnline = useOnlineStatus();
 
     const { addAttendanceRecord } = useAttendanceStore();
@@ -41,6 +47,7 @@ export default function Scanner() {
 
     const currentLoggedUserEmail = useCurrentUserStore(state => state.email);
 
+    const scanModeRef = useRef(useScanModeStore.getState().mode);
 
     useEffect(() => {
         let timer: NodeJS.Timeout;
@@ -51,6 +58,19 @@ export default function Scanner() {
         }
         return () => clearTimeout(timer);
     }, [scannedStudent]);
+
+
+
+    useEffect(() => {
+        const unsubscribe = useScanModeStore.subscribe(
+            (state) => (scanModeRef.current = state.mode)
+        );
+
+        return unsubscribe;
+    }, []);
+
+
+
 
 
     const html5QrcodeScannerRef = useRef<Html5QrcodeScanner | null>(null);
@@ -89,6 +109,8 @@ export default function Scanner() {
 
     const onScanSuccess = async (decodedText: string, decodedResult: Html5QrcodeResult) => {
         try {
+
+
             // SCANNING SHOULD BE PAUSED IMMEDIATELY SINCE FOLLOWING CODE ARE ASYNC
             pauseScanner(); // Pause scanning
 
@@ -130,7 +152,7 @@ export default function Scanner() {
                 setScannedStudent(student);
                 setScannedStatus(null);
                 setScannedMessage("");
-                const newAttendanceRecord: Attendance | null = await throwErrorAfterTimeout(2300, () => createOrUpdateAttendanceRecord(scannedSchoolId, currentLoggedUserEmail), "TIME_LIMIT_REACHED");
+                const newAttendanceRecord: Attendance | null = await throwErrorAfterTimeout(2300, () => createOrUpdateAttendanceRecord(scannedSchoolId, currentLoggedUserEmail, scanModeRef.current), "TIME_LIMIT_REACHED");
 
                 if (newAttendanceRecord) {
                     if (newAttendanceRecord.is_time_in) {
@@ -216,6 +238,18 @@ export default function Scanner() {
     return (
         <div className="flex flex-col items-center justify-center relative">
             <div id="reader" ref={setScannerRef} className="w-full max-w-sm border-none outline-none rounded-md" />
+
+
+
+
+            {/* {(!scannedStudent && html5QrcodeScannerRef.current?.getState() === Html5QrcodeScannerState.SCANNING) && (
+                <ScanModeDialog />
+            )} */}
+
+
+            {!scannedStudent && (
+                <ScanModeDialog />
+            )}
 
 
 
