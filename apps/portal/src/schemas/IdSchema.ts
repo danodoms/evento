@@ -9,15 +9,15 @@ export const IdSchema = z.object({
     .string()
     .min(1, "First name is required")
     .regex(
-      /^[a-zA-ZñÑ.\s]+$/,
-      "First name can only contain letters, spaces, and dots"
+      /^[a-zA-ZñÑ\s]+$/, // Updated regex to disallow dots
+      "First name can only contain letters and spaces"
     ),
   lastName: z
     .string()
     .min(1, "Last name is required")
     .regex(
-      /^[a-zA-ZñÑ.\s]+$/,
-      "Last name can only contain letters, spaces, and dots"
+      /^[a-zA-ZñÑ\s]+$/, // Updated regex to disallow dots
+      "Last name can only contain letters and spaces"
     ),
 
   department: z.string().length(1, "Department can't be empty"),
