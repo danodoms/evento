@@ -31,37 +31,37 @@ import { Info, QrCode } from "lucide-react";
 import { Department } from "@repo/models/Department";
 
 import { useRef, useState } from "react";
+import { departments } from "@/departments"
 
 
 
+// const departments: Department[] = [
+//     {
+//         id: 1,
+//         created_at: null,
+//         short_name: "BSIT",
+//         name: "Bachelor of Science in Information Technology"
+//     },
+//     {
+//         id: 2,
+//         created_at: null,
+//         short_name: "BSBA",
+//         name: "Bachelor of Science in Business Administration"
+//     },
+//     {
+//         id: 3,
+//         created_at: null,
+//         short_name: "BSA",
+//         name: "Bachelor of Science in Agriculture"
+//     },
+//     {
+//         id: 4,
+//         created_at: null,
+//         short_name: "BTLED",
+//         name: "Bachelor of Science in Technological Education"
+//     }
+// ];
 
-
-const departments: Department[] = [
-    {
-        id: 1,
-        created_at: null,
-        short_name: "BSIT",
-        name: "Bachelor of Science in Information Technology"
-    },
-    {
-        id: 2,
-        created_at: null,
-        short_name: "BSBA",
-        name: "Bachelor of Science in Business Administration"
-    },
-    {
-        id: 3,
-        created_at: null,
-        short_name: "BSA",
-        name: "Bachelor of Science in Agriculture"
-    },
-    {
-        id: 4,
-        created_at: null,
-        short_name: "BTLED",
-        name: "Bachelor of Science in Technological Education"
-    }
-];
 
 // Define the form schema type
 type FormSchemaType = z.infer<typeof IdSchema>;
@@ -69,11 +69,13 @@ type FormSchemaType = z.infer<typeof IdSchema>;
 // Define the props for IdForm component
 interface IdFormProps {
     setId: React.Dispatch<React.SetStateAction<string>>;
-    setName: React.Dispatch<React.SetStateAction<string>>;
+    setFirstName: React.Dispatch<React.SetStateAction<string>>;
+    setLastName: React.Dispatch<React.SetStateAction<string>>;
+    setDept: React.Dispatch<React.SetStateAction<string>>;
 
 }
 
-export function IdForm({ setName, setId }: IdFormProps) {
+export function IdForm({ setFirstName, setLastName, setId, setDept }: IdFormProps) {
     const form = useForm<FormSchemaType>({
         resolver: zodResolver(IdSchema),
     });
@@ -81,8 +83,9 @@ export function IdForm({ setName, setId }: IdFormProps) {
     async function onSubmit(values: FormSchemaType) {
         console.log(values);
         setId(values.school_id);
-        setName(values.firstName.trim() + " " + values.lastName.trim());
-
+        setFirstName(values.firstName.trim())
+        setLastName(values.lastName.trim())
+        setDept(values.department.trim());
     }
 
     // const fileInputRef = useRef(null);
@@ -180,7 +183,7 @@ export function IdForm({ setName, setId }: IdFormProps) {
                                     <SelectContent>
                                         <SelectGroup>
                                             {/* <SelectLabel>Departments</SelectLabel> */}
-                                            <SelectItem value="0">No Department</SelectItem>
+                                            {/* <SelectItem value="0">No Department</SelectItem> */}
                                             {departments?.map((dept) => (
                                                 <SelectItem
                                                     key={dept.id}
@@ -194,8 +197,8 @@ export function IdForm({ setName, setId }: IdFormProps) {
                                 </Select>
                             </FormControl>
                             <FormMessage>
-                                {form.formState.errors.lastName && (
-                                    <p>{form.formState.errors.lastName.message}</p>
+                                {form.formState.errors.department && (
+                                    <p>{form.formState.errors.department.message}</p>
                                 )}
                             </FormMessage>
                         </FormItem>
@@ -205,14 +208,14 @@ export function IdForm({ setName, setId }: IdFormProps) {
 
 
 
-                <FormField
+                {/* <FormField
                     control={form.control}
                     name="department"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Department</FormLabel>
                             <FormControl>
-                                {/* <div className="flex items-center space-x-4">
+                                <div className="flex items-center space-x-4">
                                     <Avatar className="w-20 h-20">
                                         {previewUrl ? (
                                             <AvatarImage src={previewUrl} alt="Profile preview" />
@@ -233,7 +236,7 @@ export function IdForm({ setName, setId }: IdFormProps) {
                                     >
                                         Choose Photo
                                     </Button>
-                                </div> */}
+                                </div>
                             </FormControl>
                             <FormMessage>
                                 {form.formState.errors.lastName && (
@@ -242,7 +245,7 @@ export function IdForm({ setName, setId }: IdFormProps) {
                             </FormMessage>
                         </FormItem>
                     )}
-                />
+                /> */}
 
 
 

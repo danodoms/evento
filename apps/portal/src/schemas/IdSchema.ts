@@ -9,22 +9,45 @@ export const IdSchema = z.object({
     .string()
     .min(1, "First name is required")
     .regex(
-      /^[a-zA-Z.\s]+$/,
+      /^[a-zA-ZñÑ.\s]+$/,
       "First name can only contain letters, spaces, and dots"
     ),
   lastName: z
     .string()
     .min(1, "Last name is required")
     .regex(
-      /^[a-zA-Z.\s]+$/,
+      /^[a-zA-ZñÑ.\s]+$/,
       "Last name can only contain letters, spaces, and dots"
     ),
+
   department: z.string().length(1, "Department can't be empty"),
-  profilePhoto: z
-    .instanceof(File)
-    .refine((file) => file.size <= 5000000, `Max file size is 5MB.`)
-    .refine(
-      (file) => ["image/jpeg", "image/png", "image/webp"].includes(file.type),
-      "Only .jpg, .png and .webp formats are supported."
-    ),
+  // profilePhoto: z
+  //   .string()
+  //   .min(1, "Photo is required")
+  //   .refine((data) => {
+  //     try {
+  //       const [, , encodedData] = data.split(",");
+  //       if (!encodedData) return false;
+  //       const binaryData = atob(encodedData);
+  //       const arrayBuffer = new ArrayBuffer(binaryData.length);
+  //       const uint8Array = new Uint8Array(arrayBuffer);
+
+  //       for (let i = 0; i < binaryData.length; i++) {
+  //         uint8Array[i] = binaryData.charCodeAt(i);
+  //       }
+
+  //       const blob = new Blob([uint8Array], { type: "image/*" });
+  //       return blob.size > 0;
+  //     } catch {
+  //       return false;
+  //     }
+  //   }, "Invalid image data"),
 });
+
+// profilePhoto: z
+// .instanceof(File)
+// .refine((file) => file.size <= 5000000, `Max file size is 5MB.`)
+// .refine(
+//   (file) => ["image/jpeg", "image/png", "image/webp"].includes(file.type),
+//   "Only .jpg, .png and .webp formats are supported."
+// ),

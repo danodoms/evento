@@ -10,7 +10,7 @@ import { Separator } from "@radix-ui/react-dropdown-menu";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
 import { Vortex } from "@/components/ui/vortex";
 import { IdForm } from "@/components/IdForm";
-
+import { getDeptNameById, getDeptShortNameById } from "@/departments";
 import html2canvas from 'html2canvas'; // Import html2canvas
 
 
@@ -25,8 +25,10 @@ const QRCodeGenerator = () => {
 
     const [qrCodeUrl, setQrCodeUrl] = useState('');
 
-    const [name, setName] = useState("")
+    const [firstName, setFirstName] = useState("")
+    const [lastName, setLastName] = useState("")
     const [id, setId] = useState("")
+    const [dept, setDept] = useState("")
 
     // const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
     //     const { name, value } = e.target;
@@ -39,7 +41,7 @@ const QRCodeGenerator = () => {
     const generateQRCode = async () => {
         try {
             console.log
-            const data = id + "," + name;
+            const data = id + "," + firstName + "," + lastName + "," + dept;
             const url = await QRCode.toDataURL(data, {
                 width: 200,
                 margin: 2,
@@ -103,8 +105,8 @@ const QRCodeGenerator = () => {
 
     return (
         <div className="min-h-screen  flex items-center justify-center p-4 ">
-            {!name && !id ? (
-                <IdForm setId={setId} setName={setName} />
+            {!firstName && !lastName && !id && !dept ? (
+                <IdForm setId={setId} setFirstName={setFirstName} setLastName={setLastName} setDept={setDept} />
             ) : (
                 <div className="bg-background">
 
@@ -141,8 +143,9 @@ const QRCodeGenerator = () => {
                             </div>
 
                             <div className="flex flex-col">
-                                <h3 className=" font-semibold text-xl mb-1 text-wrap">{name}</h3>
-                                {/* <p className="text-muted-foreground text-sm font-medium">BSIT</p> */}
+                                <h3 className=" font-semibold text-xl mb-1 text-wrap">{`${firstName} ${lastName}`}</h3>
+                                {/* <p className="text-muted-foreground text-xs font-medium">{getDeptNameById(Number(dept))}</p> */}
+                                <p className="text-muted-foreground text tracking-wide font-medium">{getDeptShortNameById(Number(dept))}</p>
                             </div>
                         </div>
                         <div className="grid gap-4 z-50">
@@ -178,7 +181,9 @@ const QRCodeGenerator = () => {
                     <Button
                         onClick={() => {
                             setId("");
-                            setName("")
+                            setFirstName("")
+                            setLastName("")
+                            setDept("")
                         }}
                         variant={"ghost"}
                         className="w-full flex gap-2 items-center opacity-50"
