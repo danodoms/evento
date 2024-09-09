@@ -59,27 +59,6 @@ const getCurrentDate = (): string => {
   return format(new Date(), "yyyy-MM-dd");
 };
 
-//! DEPRECATED V1
-// Fetch today's records for a specific student
-// const fetchTodayRecords = async (schoolId: string): Promise<Attendance[]> => {
-//   const { startOfDay, endOfDay } = getTodayDateRange();
-//   const { data, error } = await supabase
-//     .from("attendance")
-//     .select("*")
-//     .eq("school_id", schoolId)
-//     .gte("date", startOfDay)
-//     .lte("date", endOfDay)
-//     .order("date", { ascending: true });
-
-//   if (error)
-//     throw new Error(
-//       "Error fetching today's attendance records: " + error.message
-//     );
-
-//   return data as Attendance[];
-// };
-
-//* V2
 const fetchTodayRecords = async (schoolId: string): Promise<Attendance[]> => {
   const today = getCurrentDate(); // This function returns the date in 'YYYY-MM-DD' format
 
@@ -99,15 +78,9 @@ const fetchTodayRecords = async (schoolId: string): Promise<Attendance[]> => {
   return data as Attendance[];
 };
 
-//* V2 Check if there are two complete records for today
 const hasCompleteRecords = (records: Attendance[]): boolean =>
-  records.length >= 4;
+  records.length >= 16;
 
-//* V1
-// const hasCompleteRecords = (records: Attendance[]): boolean =>
-//   records.filter((record) => record.time_in && record.time_out).length >= 2;
-
-//* V2 Check if the time out is too early
 const isEarlyTimeOut = (
   records: Attendance[],
   minutesSinceTimeIn: number = 1
@@ -134,23 +107,6 @@ const isEarlyTimeOut = (
   return false;
 };
 
-//* V1
-// const isEarlyTimeOut = (
-//   records: Attendance[],
-//   minutesSinceTimeIn: number = 1
-// ): boolean => {
-//   const incompleteRecord = records.find((record) => !record.time_out);
-//   if (incompleteRecord) {
-//     const timeIn = parseISO(
-//       `${incompleteRecord.date}T${incompleteRecord.time_in}`
-//     );
-//     const now = new Date();
-//     return differenceInMinutes(now, timeIn) < minutesSinceTimeIn;
-//   }
-//   return false;
-// };
-
-//* V2
 const isEarlyTimeIn = (
   records: Attendance[],
   secondsSinceLastTimeOut: number = 10
@@ -177,45 +133,34 @@ const isEarlyTimeIn = (
   return false;
 };
 
-//* V1
-// const isEarlyTimeIn = (
-//   records: Attendance[],
-//   secondsSinceLastTimeOut: number = 10
-// ): boolean => {
-//   const completedRecords = records.filter((record) => record.time_out);
-//   if (completedRecords.length === 1) {
-//     const lastRecord = completedRecords[0];
-//     const lastTimeOut = parseISO(`${lastRecord.date}T${lastRecord.time_out}`);
-//     const now = new Date();
-//     return differenceInSeconds(now, lastTimeOut) < secondsSinceLastTimeOut;
-//   }
-//   return false;
-// };
-
-//! DEPRECATED - Find the first incomplete attendance record
-// const findIncompleteRecord = (records: Attendance[]): Attendance | undefined =>
-//   records.find((record) => !record.time_out);
-
-// Create or update an attendance record for a student
 export const createOrUpdateAttendanceRecord = async (
   schoolId: string,
-  scannedByEmail: string
+  scannedByEmail: string,
+  scanModeOverride: "auto" | "in" | "out"
 ): Promise<Attendance | null> => {
   const records = await fetchTodayRecords(schoolId);
 
-  if (isEarlyTimeOut(records)) {
-    throw new Error("EARLY_TIMEOUT");
-  }
+  if (scanModeOverride === "auto") {
+    if (isEarlyTimeOut(records)) {
+      throw new Error("EARLY_TIMEOUT");
+    }
 
-  if (isEarlyTimeIn(records)) {
-    throw new Error("EARLY_TIMEIN");
+    if (isEarlyTimeIn(records)) {
+      throw new Error("EARLY_TIMEIN");
+    }
   }
 
   if (hasCompleteRecords(records)) {
     return null; // Exit if there are already two complete records
   }
 
-  const isTimeIn = records.length % 2 === 0;
+  let isTimeIn: boolean;
+
+  if (scanModeOverride === "auto") {
+    isTimeIn = records.length % 2 === 0;
+  } else {
+    isTimeIn = scanModeOverride === "in";
+  }
 
   const { data, error } = await supabase
     .from("attendance")
@@ -234,17 +179,43 @@ export const createOrUpdateAttendanceRecord = async (
   return data[0] as Attendance;
 };
 
-//! DEPRECATED
-// Handle attendance record creation and pushing to the database
-// export const handleAttendanceRecord = async (
-//   studentId: number
+//* V1
+// Create or update an attendance record for a student
+// export const createOrUpdateAttendanceRecord = async (
+//   schoolId: string,
+//   scannedByEmail: string,
 // ): Promise<Attendance | null> => {
-//   try {
-//     return await createOrUpdateAttendanceRecord(studentId);
-//   } catch (error) {
-//     console.error(error);
-//     return null;
+//   const records = await fetchTodayRecords(schoolId);
+
+//   if (isEarlyTimeOut(records)) {
+//     throw new Error("EARLY_TIMEOUT");
 //   }
+
+//   if (isEarlyTimeIn(records)) {
+//     throw new Error("EARLY_TIMEIN");
+//   }
+
+//   if (hasCompleteRecords(records)) {
+//     return null; // Exit if there are already two complete records
+//   }
+
+//   const isTimeIn = records.length % 2 === 0;
+
+//   const { data, error } = await supabase
+//     .from("attendance")
+//     .insert({
+//       date: getCurrentDate(),
+//       school_id: schoolId,
+//       time: getCurrentTime(),
+//       is_time_in: isTimeIn,
+//       scanned_by_email: scannedByEmail,
+//     } as Attendance)
+//     .select("*");
+
+//   if (error)
+//     throw new Error("Error adding new attendance record: " + error.message);
+
+//   return data[0] as Attendance;
 // };
 
 //! DEPRECATED

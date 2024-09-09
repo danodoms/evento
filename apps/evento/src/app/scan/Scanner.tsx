@@ -22,6 +22,10 @@ import { useAuth } from "@/hooks/useAuth";
 import { useCurrentUserStore } from '@/store/useCurrentUserStore';
 import { Department, getDepartments } from '@repo/models/Department';
 import { de } from '@faker-js/faker';
+import { Label } from "@/components/ui/label"
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectItem } from "@/components/ui/select"
+import ScanModeDialog from './ScanModeDialog';
+import useScanModeStore from '@/store/useScanModeStore';
 
 
 interface ModalContent {
@@ -30,6 +34,8 @@ interface ModalContent {
 }
 
 export default function Scanner() {
+
+
     const isOnline = useOnlineStatus();
 
     const { addAttendanceRecord } = useAttendanceStore();
@@ -43,6 +49,7 @@ export default function Scanner() {
 
     const currentLoggedUserEmail = useCurrentUserStore(state => state.email);
 
+    const scanModeRef = useRef(useScanModeStore.getState().mode);
 
     const {
         data: departments = [],
@@ -65,6 +72,19 @@ export default function Scanner() {
         }
         return () => clearTimeout(timer);
     }, [scannedStudent]);
+
+
+
+    useEffect(() => {
+        const unsubscribe = useScanModeStore.subscribe(
+            (state) => (scanModeRef.current = state.mode)
+        );
+
+        return unsubscribe;
+    }, []);
+
+
+
 
 
     const html5QrcodeScannerRef = useRef<Html5QrcodeScanner | null>(null);
@@ -242,7 +262,7 @@ export default function Scanner() {
 
             const newAttendanceRecord: Attendance | null = await throwErrorAfterTimeout(
                 2300,
-                () => createOrUpdateAttendanceRecord(scannedSchoolId, currentLoggedUserEmail),
+                () => createOrUpdateAttendanceRecord(scannedSchoolId, currentLoggedUserEmail, scanModeRef.current),
                 "TIME_LIMIT_REACHED"
             );
 
@@ -337,6 +357,18 @@ export default function Scanner() {
     return (
         <div className="flex flex-col items-center justify-center relative">
             <div id="reader" ref={setScannerRef} className="w-full max-w-sm border-none outline-none rounded-md" />
+
+
+
+
+            {/* {(!scannedStudent && html5QrcodeScannerRef.current?.getState() === Html5QrcodeScannerState.SCANNING) && (
+                <ScanModeDialog />
+            )} */}
+
+
+            {!scannedStudent && (
+                <ScanModeDialog />
+            )}
 
 
 
