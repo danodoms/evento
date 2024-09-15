@@ -24,7 +24,6 @@ export type Attendance = {
 
 export type AttendanceRecord = Attendance & {
   student: Student;
-  department?: Department;
   uniqueId?: number;
 };
 

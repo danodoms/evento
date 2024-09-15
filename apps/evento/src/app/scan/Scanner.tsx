@@ -20,7 +20,6 @@ import { LogIn, LogOut, TriangleAlert, UserRound } from 'lucide-react';
 import useOnlineStatus from "@/hooks/useOnlineStatus";
 import { useAuth } from "@/hooks/useAuth";
 import { useCurrentUserStore } from '@/store/useCurrentUserStore';
-import { Department, getDepartments } from '@repo/models/Department';
 import { de } from '@faker-js/faker';
 import { Label } from "@/components/ui/label"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectItem } from "@/components/ui/select"
@@ -40,6 +39,7 @@ export default function Scanner() {
 
     const { addAttendanceRecord } = useAttendanceStore();
 
+
     const [scannedStudent, setScannedStudent] = useState<Student | null>(null);
     const [scannedStatus, setScannedStatus] = useState<"TIMED IN" | "TIMED OUT" | null>(null);
     const [scannedMessage, setScannedMessage] = useState<string>("");
@@ -50,16 +50,6 @@ export default function Scanner() {
     const currentLoggedUserEmail = useCurrentUserStore(state => state.email);
 
     const scanModeRef = useRef(useScanModeStore.getState().mode);
-
-    const {
-        data: departments = [],
-        error: departmentsError,
-        isLoading: isDepartmentsLoading,
-    } = useQuery<Department[]>({
-        queryKey: ["departments"],
-        queryFn: getDepartments,
-    });
-
 
 
 
@@ -194,10 +184,11 @@ export default function Scanner() {
         return qrCodePattern.test(qrCodeValue);
     }
 
-    function getDepartmentNameById(departmentId: number): string | undefined {
-        const department = departments.find((dept) => dept.id === departmentId);
-        return department ? department.short_name : undefined;
-    }
+    //! DEPRECATED
+    // function getDepartmentNameById(departmentId: number): string | undefined {
+    //     const department = departments.find((dept) => dept.id === departmentId);
+    //     return department ? department.short_name : undefined;
+    // }
 
 
 
@@ -272,8 +263,7 @@ export default function Scanner() {
 
             //* ADD THE RETURNED ATTENDANCE OBJECT TO THE GLOBAL ATTENDANCE RECORDS STATE ARRAY ON THE QUEUE SECTION BELOW THE SCANNER UI
             addAttendanceRecord({
-                ...newAttendanceRecord, student,
-                department: { id: 0, name: "", created_at: "", short_name: getDepartmentNameById(student.dept_id) as string }
+                ...newAttendanceRecord, student
             });
 
             successSound?.play();

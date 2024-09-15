@@ -3,12 +3,31 @@ import { UserRound, LogIn, LogOut, Scan } from 'lucide-react';
 import type { Attendance, AttendanceRecord } from "@repo/models/Attendance";
 import { getStudentFullName } from '@repo/models/Student';
 import { Badge } from './ui/badge';
+import { useQuery } from '@tanstack/react-query';
+import { Department, getDepartments } from '@repo/models/Department';
+
 
 interface Props {
     result: AttendanceRecord;
 }
 
 const AttendanceCard: React.FC<Props> = ({ result }) => {
+
+
+    const {
+        data: departments = [],
+        error: departmentsError,
+        isLoading: isDepartmentsLoading,
+    } = useQuery<Department[]>({
+        queryKey: ["departments"],
+        queryFn: getDepartments,
+    });
+
+
+    function getDepartmentShortNameById(departmentId: number): string | undefined {
+        const department = departments.find((dept) => dept.id === departmentId);
+        return department ? department.short_name : undefined;
+    }
 
 
     function trimEmailDomain(email: string) {
@@ -20,8 +39,8 @@ const AttendanceCard: React.FC<Props> = ({ result }) => {
             const username = email.substring(0, atIndex);
 
             // If the username is longer than 10 characters, add an ellipsis
-            if (username.length > 10) {
-                return username.substring(0, 10) + '...';
+            if (username.length > 20) {
+                return username.substring(0, 20) + '...';
             }
 
             return username;
@@ -47,8 +66,8 @@ const AttendanceCard: React.FC<Props> = ({ result }) => {
 
     return (
         <div className="flex justify-between gap-4 items-center border-1 border-solid rounded-md relative p-2">
-            <div className={`${cardConfig.backgroundColor} w-2 flex-initial h-14 opacity-50 rounded-md`} />
-            <div className="flex gap-2 w-full flex-col">
+            <div className={`${cardConfig.backgroundColor} w-2 flex-initial h-20 opacity-50 rounded-md`} />
+            <div className="flex w-full flex-col">
                 <div className="flex gap-4 items-center">
                     {/* <UserRound /> */}
                     <div className="flex flex-col gap-1">
@@ -56,23 +75,27 @@ const AttendanceCard: React.FC<Props> = ({ result }) => {
                         <div className='flex gap-2'>
                             <div className="text-normal font-medium">{displayName}</div>
 
-                            {result.department?.short_name &&
-                                <Badge variant={"outline"} className="flex gap-2">
-                                    {result.department?.short_name}
-                                </Badge>
-                            }
+
 
                         </div>
 
-                        <div className='flex '>
+                        <div className='flex gap-2 items-center'>
+
+
                             <div className="text-xs font-extralight">{result.school_id}</div>
 
-                            <div className="text-xs font-extralight border-1 rounded-full px-2 flex gap-1 items-center opacity-50">
-                                <Scan className='size-3' />
-                                {trimEmailDomain(result.scanned_by_email)}
+                            {result.student.dept_id &&
+                                (
+                                    <div className='text-xs font-bold tracking-wider opacity-80'>
+                                        • {getDepartmentShortNameById(result.student.dept_id)}
+                                    </div>
+                                )
+                            }
 
-                            </div>
+
                         </div>
+
+
 
                     </div>
                     <div className="p-2 items-end flex flex-col ml-auto">
@@ -85,7 +108,15 @@ const AttendanceCard: React.FC<Props> = ({ result }) => {
 
                             {result.date}
                         </p>
+
+
                     </div>
+
+
+                </div>
+                <div className="text-xs font-extralight border-1 rounded-full flex gap-1 items-center opacity-50">
+                    <Scan className='size-3' />
+                    {trimEmailDomain(result.scanned_by_email)}
                 </div>
             </div>
         </div>

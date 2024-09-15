@@ -12,11 +12,19 @@ export const useAttendanceStore = create<AttendanceState>((set) => ({
     set((state) => {
       // Generate a unique ID if not provided
       const uniqueId = record.uniqueId ?? new Date().getTime();
+      const updatedRecords = [
+        ...state.attendanceRecords,
+        { ...record, uniqueId },
+      ];
+
+      // Log the new value of attendanceRecords
+      console.log(
+        "Updated zustand global state attendance records:",
+        updatedRecords
+      );
+
       return {
-        attendanceRecords: [
-          ...state.attendanceRecords,
-          { ...record, uniqueId },
-        ],
+        attendanceRecords: updatedRecords,
       };
     }),
 }));
