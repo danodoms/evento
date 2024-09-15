@@ -5,6 +5,7 @@ import { getStudentFullName } from '@repo/models/Student';
 import { Badge } from './ui/badge';
 import { useQuery } from '@tanstack/react-query';
 import { Department, getDepartments } from '@repo/models/Department';
+import StudentRecordsDialog from './StudentRecordsDialog';
 
 
 interface Props {
@@ -114,10 +115,19 @@ const AttendanceCard: React.FC<Props> = ({ result }) => {
 
 
                 </div>
-                <div className="text-xs font-extralight border-1 rounded-full flex gap-1 items-center opacity-50">
-                    <Scan className='size-3' />
-                    {trimEmailDomain(result.scanned_by_email)}
+
+                <div className='flex gap-2 items-center'>
+                    <div className='opacity-50 fitems-center flex'>
+                        <StudentRecordsDialog student={result.student} />
+                    </div>
+                    <div className="text-xs font-extralight border-1 rounded-full flex gap-1 items-center opacity-50">
+                        <Scan className='size-3' />
+                        {trimEmailDomain(result.scanned_by_email)}
+                    </div>
+
+
                 </div>
+
             </div>
         </div>
     );

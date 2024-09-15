@@ -74,7 +74,7 @@ import {
 
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import StudentRecordsDialog from "./StudentRecordsDialog";
+import StudentRecordsDialog from "../../components/StudentRecordsDialog";
 import Search from "@/app/students/Search";
 import PaginationComponent from "./Pagination";
 import Loading from "@/components/Loading";
@@ -108,6 +108,7 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 		"active",
 	);
 	const [isCompactView, setIsCompactView] = useState(false);
+	const [isRenderStudentsList, setIsRenderStudentsList] = useState(true)
 
 
 	const {
@@ -182,13 +183,22 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 	return (
 		<div className="flex flex-col h-full gap-3">
 			<div className="flex justify-between gap-2 items-center">
-				<h1 className="text-2xl font-bold tracking-tight mr-auto">Students</h1>
-				{/* <Link href="/students/create">
+				<div className="flex mr-auto gap-4">
+					<h1 className="text-2xl font-bold tracking-tight ">Students</h1>
+					<div className="flex items-center space-x-2">
+						<Switch id="id-only-mode" onCheckedChange={() => setIsRenderStudentsList(!isRenderStudentsList)} />
+						<Label htmlFor="id-only-mode" className="">Attendance Based</Label>
+					</div>
+					{/* <Link href="/students/create">
 					<Button variant={"ghost"}>
 						<Plus className="size-4" />
 						Add
 					</Button>
 				</Link> */}
+				</div>
+
+
+
 				<Sheet>
 					<SheetTrigger asChild>
 						<Button variant="outline">
@@ -287,10 +297,12 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 			</div>
 
 
+			{isRenderStudentsList
+				? renderStudentList(isStudentsLoading, prevStudentCount, students, studentRowCount, departments)
+				: renderSchoolIdList(isSchoolIdsLoading, prevSchoolIdCount, schoolIds, schoolIdRowCount)
+			}
 
-			{renderStudentList(isStudentsLoading, prevStudentCount, students, studentRowCount, departments)}
 
-			{/* {renderSchoolIdList(isSchoolIdsLoading, prevSchoolIdCount, schoolIds, schoolIdRowCount)} */}
 
 
 
