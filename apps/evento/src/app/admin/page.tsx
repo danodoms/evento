@@ -214,10 +214,11 @@ export default function AdminPage() {
 
             {filteredUsers.length ? (
                 <div className="flex flex-col gap-3 md:grid grid-cols-2 overflow-y-auto max-h-screen rounded-md">
-                    {filteredUsers.map((user) => (
+                    {filteredUsers.map((user: any) => (
                         <div
                             key={user.id}
-                            className="p-4 rounded-lg flex flex-col gap-2 backdrop-contrast-50 backdrop-opacity-20"
+                            className={`p-4 rounded-lg flex flex-col gap-2 backdrop-contrast-50 backdrop-opacity-20 ${user.role === 0 ? 'bg-teal-300 bg-opacity-10' : ''
+                                }`}
                         >
                             <div className="flex justify-between items-center">
                                 <div className="flex gap-2 items-center">
@@ -262,9 +263,13 @@ export default function AdminPage() {
                                 </div>
                             </div>
                             {/* <Separator className="my-1" /> */}
-                            <h2 className="font-bold mt-1">{user.email}</h2>
+                            <div className="flex flex-col gap-1">
+                                <h2 className="">{user.name}</h2>
+                                <h3 className="opacity-60 text-sm">{user.email}</h3>
+                            </div>
+
                             <div className="text-xs text-balance truncate mt-1 opacity-50 flex items-center gap-1">
-                                <Plus className="size-4" />
+                                <Plus className="size-3" />
                                 Added on {format(user?.created_at, 'MMMM dd, yyyy HH:mm:ss')}
                             </div>
                             {/* <div className="flex gap-2 flex-wrap mt-1">
