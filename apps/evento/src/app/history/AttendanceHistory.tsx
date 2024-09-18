@@ -57,12 +57,6 @@ const AttendanceHistory: React.FC<AttendanceHistoryProps> = ({
 							is_active: true,
 							created_at: "",
 						},
-						department: {
-							id: 0,
-							created_at: "",
-							name: attendance.dept_name,
-							short_name: attendance.dept_short_name
-						}
 					}
 				} />
 			))}

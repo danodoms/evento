@@ -27,7 +27,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { IdSchema } from "@/schemas/IdSchema";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
-import { Info, QrCode } from "lucide-react";
+import { Info, QrCode, UserRound } from "lucide-react";
 import { Department } from "@repo/models/Department";
 
 import { useRef, useState } from "react";
@@ -72,13 +72,16 @@ interface IdFormProps {
     setFirstName: React.Dispatch<React.SetStateAction<string>>;
     setLastName: React.Dispatch<React.SetStateAction<string>>;
     setDept: React.Dispatch<React.SetStateAction<string>>;
+    setPhoto: React.Dispatch<React.SetStateAction<File | null>>;
 
 }
 
-export function IdForm({ setFirstName, setLastName, setId, setDept }: IdFormProps) {
+export function IdForm({ setFirstName, setLastName, setId, setDept, setPhoto }: IdFormProps) {
     const form = useForm<FormSchemaType>({
         resolver: zodResolver(IdSchema),
     });
+
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
     async function onSubmit(values: FormSchemaType) {
         console.log(values);
@@ -86,18 +89,11 @@ export function IdForm({ setFirstName, setLastName, setId, setDept }: IdFormProp
         setFirstName(values.firstName.trim())
         setLastName(values.lastName.trim())
         setDept(values.department.trim());
+        setPhoto(selectedImage);
     }
 
-    // const fileInputRef = useRef(null);
-    // const [previewUrl, setPreviewUrl] = useState(null);
 
-    // const handleFileChange = (event) => {
-    //     const file = event.target.files[0];
-    //     if (file) {
-    //         form.setValue('profilePhoto', file);
-    //         setPreviewUrl(URL.createObjectURL(file));
-    //     }
-    // };
+
 
     return (
         <Form {...form}>
@@ -207,45 +203,153 @@ export function IdForm({ setFirstName, setLastName, setId, setDept }: IdFormProp
 
 
 
+                {/* Image Upload Section */}
+                {/* <div className="flex items-center space-x-4">
+                    <Avatar className="w-20 h-20">
+                        {previewUrl ? (
+                            <AvatarImage src={previewUrl} alt="Profile preview" />
+                        ) : (
+                            <AvatarFallback>Upload</AvatarFallback>
+                        )}
+                    </Avatar>
 
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        ref={fileInputRef}
+                        className="hidden"
+                    />
+
+                  
+                    <Button type="button" onClick={() => fileInputRef.current?.click()}>
+                        Choose Photo
+                    </Button>
+                </div> */}
+
+
+                {/* Image Upload */}
                 {/* <FormField
                     control={form.control}
-                    name="department"
-                    render={({ field }) => (
+                    name="profilePhoto"
+                    render={() => (
                         <FormItem>
-                            <FormLabel>Department</FormLabel>
+                            <FormLabel>Profile Photo</FormLabel>
                             <FormControl>
                                 <div className="flex items-center space-x-4">
                                     <Avatar className="w-20 h-20">
                                         {previewUrl ? (
                                             <AvatarImage src={previewUrl} alt="Profile preview" />
                                         ) : (
-                                            <AvatarFallback>Upload</AvatarFallback>
+                                            <AvatarFallback>No Image</AvatarFallback>
                                         )}
                                     </Avatar>
                                     <Input
                                         type="file"
-                                        accept="image/jpeg,image/png,image/webp"
+                                        accept="image/*"
                                         onChange={handleFileChange}
                                         ref={fileInputRef}
-                                        className="hidden"
                                     />
-                                    <Button
-                                        type="button"
-                                        onClick={() => fileInputRef.current.click()}
-                                    >
-                                        Choose Photo
-                                    </Button>
                                 </div>
                             </FormControl>
                             <FormMessage>
-                                {form.formState.errors.lastName && (
-                                    <p>{form.formState.errors.lastName.message}</p>
+                                {form.formState.errors.profilePhoto && (
+                                    <p>{form.formState.errors.profilePhoto.message}</p>
                                 )}
                             </FormMessage>
                         </FormItem>
                     )}
                 /> */}
+
+
+                {/* {selectedImage ? (
+                    <div className="md:max-w-[200px]">
+                        <img
+                            src={URL.createObjectURL(selectedImage)}
+                            alt="Selected"
+                        />
+                    </div>
+                ) : (
+                    <div className="inline-flex items-center justify-between">
+                        <div className="p-3 bg-slate-200  justify-center items-center flex">
+                          
+                        </div>
+                    </div>
+                )} */}
+
+
+
+
+
+                <FormField
+                    control={form.control}
+                    name="profilePhoto"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Profile Photo</FormLabel>
+                            <FormControl>
+                                {/* <Button size="lg" type="button"> */}
+
+                                <div className="flex items-center space-x-4">
+                                    <div className="flex items-center space-x-4 justify-center">
+                                        <Avatar className="w-20 h-20">
+                                            {selectedImage ? (
+                                                <AvatarImage src={URL.createObjectURL(selectedImage)} alt="Profile preview" />
+                                            ) : (
+                                                <AvatarFallback>
+                                                    <UserRound className="size-8" />
+                                                </AvatarFallback>
+                                            )}
+                                        </Avatar>
+                                    </div>
+
+                                    <Input
+                                        type="file"
+                                        className="mouse-pointer"
+                                        id="fileInput"
+                                        accept="image/*"
+                                        onBlur={field.onBlur}
+                                        name={field.name}
+                                        onChange={(e) => {
+                                            field.onChange(e.target.files);
+                                            setSelectedImage(e.target.files?.[0] || null);
+                                        }}
+                                        ref={field.ref}
+                                    />
+
+
+                                </div>
+
+
+
+
+
+                                {/* <label
+                                        htmlFor="fileInput"
+                                        className="bg-blue-500 hover:bg-blue-600 text-neutral-90  rounded-md cursor-pointer inline-flex items-center"
+                                    >
+
+                                        <span className="whitespace-nowrap">
+                                            choose your image
+                                        </span>
+                                    </label> */}
+                                {/* </Button> */}
+                            </FormControl>
+                            {/* <FormDescription>This is your public display email.</FormDescription> */}
+
+
+
+
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+
+
+
+
+
 
 
 
@@ -254,7 +358,7 @@ export function IdForm({ setFirstName, setLastName, setId, setDept }: IdFormProp
 
                 <p className="text-sm text-balance  leading-relaxed tracking-tight text-muted-foreground max-w-2xl text-center mb-8 flex gap-2 items-center justify-center">
                     <Info className="size-4" />
-                    Ensure your ID is correct
+                    Ensure your ID Number is correct
                 </p>
 
             </form>
