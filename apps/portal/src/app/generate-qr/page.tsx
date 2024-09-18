@@ -13,7 +13,7 @@ import { IdForm } from "@/components/IdForm";
 import { getDeptNameById, getDeptShortNameById } from "@/departments";
 import html2canvas from 'html2canvas'; // Import html2canvas
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
+import { useStudentStore } from "@/store/useStudentStore";
 
 
 
@@ -21,24 +21,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 
 const QRCodeGenerator = () => {
-
-
-
+    const { id, firstName, lastName, dept, photo, croppedPhoto, setId, setFirstName, setLastName, setDept, setPhoto, setCroppedPhoto } = useStudentStore();
     const [qrCodeUrl, setQrCodeUrl] = useState('');
 
-    const [firstName, setFirstName] = useState("")
-    const [lastName, setLastName] = useState("")
-    const [id, setId] = useState("")
-    const [dept, setDept] = useState("")
-    const [photo, setPhoto] = useState<File | null>(null)
-
-    // const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
-    //     const { name, value } = e.target;
-    //     setFormData(prevData => ({
-    //         ...prevData,
-    //         [name]: value
-    //     }));
-    // };
 
     const generateQRCode = async () => {
         try {
@@ -63,20 +48,6 @@ const QRCodeGenerator = () => {
     }, [id])
 
 
-    // const onSubmit = () => {
-    //     generateQRCode()
-    // }
-
-
-
-    // const downloadQRCode = () => {
-    //     const link = document.createElement('a');
-    //     link.href = qrCodeUrl;
-    //     link.download = 'qrcode.png';
-    //     document.body.appendChild(link);
-    //     link.click();
-    //     document.body.removeChild(link);
-    // };
 
     const downloadCardAsImage = async () => {
         const cardElement = document.getElementById('card'); // Get the card element by id
@@ -96,19 +67,11 @@ const QRCodeGenerator = () => {
         }
     };
 
-    const downloadQRCode = () => {
-        const link = document.createElement('a');
-        link.href = qrCodeUrl;
-        link.download = 'qrcode.png';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    };
 
     return (
         <div className="min-h-screen  flex items-center justify-center p-4 ">
             {!firstName && !lastName && !id && !dept ? (
-                <IdForm setId={setId} setFirstName={setFirstName} setLastName={setLastName} setDept={setDept} setPhoto={setPhoto} />
+                <IdForm />
             ) : (
                 <div className="bg-background">
 
@@ -149,7 +112,7 @@ const QRCodeGenerator = () => {
 
                             <Avatar className="size-28 flex items-center justify-center m-auto outline bg-background outline-slate-500">
                                 {photo
-                                    ? <AvatarImage src={URL.createObjectURL(photo)} alt="Profile photo" />
+                                    ? <AvatarImage src={photo} alt="Profile photo" />
                                     : <AvatarFallback>
                                         <UserRound className="size-8" />
                                     </AvatarFallback>
@@ -215,7 +178,7 @@ const QRCodeGenerator = () => {
                             setFirstName("")
                             setLastName("")
                             setDept("")
-                            setPhoto(null)
+                            setPhoto(undefined)
                         }}
                         variant={"ghost"}
                         className="w-full flex gap-2 items-center opacity-50"

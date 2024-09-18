@@ -30,58 +30,26 @@ import type { z } from "zod";
 import { Info, QrCode, UserRound } from "lucide-react";
 import { Department } from "@repo/models/Department";
 
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { departments } from "@/departments"
-
-
-
-// const departments: Department[] = [
-//     {
-//         id: 1,
-//         created_at: null,
-//         short_name: "BSIT",
-//         name: "Bachelor of Science in Information Technology"
-//     },
-//     {
-//         id: 2,
-//         created_at: null,
-//         short_name: "BSBA",
-//         name: "Bachelor of Science in Business Administration"
-//     },
-//     {
-//         id: 3,
-//         created_at: null,
-//         short_name: "BSA",
-//         name: "Bachelor of Science in Agriculture"
-//     },
-//     {
-//         id: 4,
-//         created_at: null,
-//         short_name: "BTLED",
-//         name: "Bachelor of Science in Technological Education"
-//     }
-// ];
+import Cropper from "react-easy-crop";
+import { Slider } from "@/components/ui/slider";
+import CropperDialog from "./CropperDialog";
+import { useStudentStore } from "@/store/useStudentStore";
 
 
 // Define the form schema type
 type FormSchemaType = z.infer<typeof IdSchema>;
 
-// Define the props for IdForm component
-interface IdFormProps {
-    setId: React.Dispatch<React.SetStateAction<string>>;
-    setFirstName: React.Dispatch<React.SetStateAction<string>>;
-    setLastName: React.Dispatch<React.SetStateAction<string>>;
-    setDept: React.Dispatch<React.SetStateAction<string>>;
-    setPhoto: React.Dispatch<React.SetStateAction<File | null>>;
 
-}
-
-export function IdForm({ setFirstName, setLastName, setId, setDept, setPhoto }: IdFormProps) {
+export function IdForm() {
     const form = useForm<FormSchemaType>({
         resolver: zodResolver(IdSchema),
     });
 
-    const [selectedImage, setSelectedImage] = useState<File | null>(null);
+    const { id, firstName, lastName, dept, photo, croppedPhoto, setId, setFirstName, setLastName, setDept, setPhoto, setCroppedPhoto } = useStudentStore();
+
+
 
     async function onSubmit(values: FormSchemaType) {
         console.log(values);
@@ -89,7 +57,13 @@ export function IdForm({ setFirstName, setLastName, setId, setDept, setPhoto }: 
         setFirstName(values.firstName.trim())
         setLastName(values.lastName.trim())
         setDept(values.department.trim());
-        setPhoto(selectedImage);
+
+        if (croppedPhoto) {
+            setPhoto(croppedPhoto);
+        } else {
+            setPhoto(photo);
+        }
+
     }
 
 
@@ -101,13 +75,11 @@ export function IdForm({ setFirstName, setLastName, setId, setDept, setPhoto }: 
 
 
             <form onSubmit={form.handleSubmit(onSubmit)} className="min-w-96 p-8 rounded-md flex gap-4 flex-col ">
-
                 <h1 className="text-2xl max-w-2xl tracking-tighter  font-regular mb-4 flex justify-center gap-2 items-center">
-
                     <QrCode className="size-8" />
                     Generate QR Code
-
                 </h1>
+
                 <FormField
                     control={form.control}
                     name="school_id"
@@ -125,6 +97,7 @@ export function IdForm({ setFirstName, setLastName, setId, setDept, setPhoto }: 
                         </FormItem>
                     )}
                 />
+
                 <FormField
                     control={form.control}
                     name="firstName"
@@ -203,84 +176,6 @@ export function IdForm({ setFirstName, setLastName, setId, setDept, setPhoto }: 
 
 
 
-                {/* Image Upload Section */}
-                {/* <div className="flex items-center space-x-4">
-                    <Avatar className="w-20 h-20">
-                        {previewUrl ? (
-                            <AvatarImage src={previewUrl} alt="Profile preview" />
-                        ) : (
-                            <AvatarFallback>Upload</AvatarFallback>
-                        )}
-                    </Avatar>
-
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                        ref={fileInputRef}
-                        className="hidden"
-                    />
-
-                  
-                    <Button type="button" onClick={() => fileInputRef.current?.click()}>
-                        Choose Photo
-                    </Button>
-                </div> */}
-
-
-                {/* Image Upload */}
-                {/* <FormField
-                    control={form.control}
-                    name="profilePhoto"
-                    render={() => (
-                        <FormItem>
-                            <FormLabel>Profile Photo</FormLabel>
-                            <FormControl>
-                                <div className="flex items-center space-x-4">
-                                    <Avatar className="w-20 h-20">
-                                        {previewUrl ? (
-                                            <AvatarImage src={previewUrl} alt="Profile preview" />
-                                        ) : (
-                                            <AvatarFallback>No Image</AvatarFallback>
-                                        )}
-                                    </Avatar>
-                                    <Input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={handleFileChange}
-                                        ref={fileInputRef}
-                                    />
-                                </div>
-                            </FormControl>
-                            <FormMessage>
-                                {form.formState.errors.profilePhoto && (
-                                    <p>{form.formState.errors.profilePhoto.message}</p>
-                                )}
-                            </FormMessage>
-                        </FormItem>
-                    )}
-                /> */}
-
-
-                {/* {selectedImage ? (
-                    <div className="md:max-w-[200px]">
-                        <img
-                            src={URL.createObjectURL(selectedImage)}
-                            alt="Selected"
-                        />
-                    </div>
-                ) : (
-                    <div className="inline-flex items-center justify-between">
-                        <div className="p-3 bg-slate-200  justify-center items-center flex">
-                          
-                        </div>
-                    </div>
-                )} */}
-
-
-
-
-
                 <FormField
                     control={form.control}
                     name="profilePhoto"
@@ -293,14 +188,21 @@ export function IdForm({ setFirstName, setLastName, setId, setDept, setPhoto }: 
                                 <div className="flex items-center space-x-4">
                                     <div className="flex items-center space-x-4 justify-center">
                                         <Avatar className="w-20 h-20">
-                                            {selectedImage ? (
-                                                <AvatarImage src={URL.createObjectURL(selectedImage)} alt="Profile preview" />
+                                            {croppedPhoto ? (
+                                                <AvatarImage src={croppedPhoto} alt="Profile preview" />
+                                            ) : photo ? (
+                                                <AvatarImage src={photo} alt="Profile preview" />
                                             ) : (
                                                 <AvatarFallback>
                                                     <UserRound className="size-8" />
                                                 </AvatarFallback>
                                             )}
                                         </Avatar>
+
+
+                                        {photo && (
+                                            <CropperDialog />
+                                        )}
                                     </div>
 
                                     <Input
@@ -311,17 +213,19 @@ export function IdForm({ setFirstName, setLastName, setId, setDept, setPhoto }: 
                                         onBlur={field.onBlur}
                                         name={field.name}
                                         onChange={(e) => {
+                                            const file = e.target.files?.[0] || null;
                                             field.onChange(e.target.files);
-                                            setSelectedImage(e.target.files?.[0] || null);
+
+                                            if (file) {
+                                                const fileUrl = URL.createObjectURL(file);
+                                                setPhoto(fileUrl); // Set the file URL as a string
+                                            } else {
+                                                setPhoto(undefined); // Handle null case
+                                            }
                                         }}
                                         ref={field.ref}
                                     />
-
-
                                 </div>
-
-
-
 
 
                                 {/* <label
@@ -335,22 +239,10 @@ export function IdForm({ setFirstName, setLastName, setId, setDept, setPhoto }: 
                                     </label> */}
                                 {/* </Button> */}
                             </FormControl>
-                            {/* <FormDescription>This is your public display email.</FormDescription> */}
-
-
-
-
                             <FormMessage />
                         </FormItem>
                     )}
                 />
-
-
-
-
-
-
-
 
 
 
@@ -360,6 +252,8 @@ export function IdForm({ setFirstName, setLastName, setId, setDept, setPhoto }: 
                     <Info className="size-4" />
                     Ensure your ID Number is correct
                 </p>
+
+
 
             </form>
         </Form>
