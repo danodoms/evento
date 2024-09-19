@@ -104,13 +104,13 @@ const QRCodeGenerator = () => {
                     {/* <div className="aspect-w-5 aspect-h-3 w-full max-w-md"> */}
                     <Card id="card" className="aspect-[2/3] p-2 max-w-sm min-w-80 grid gap-0 rounded-lg shadow-neutral-500 bg-muted shadow-sm bg-gradient-to-br from-muted to-slate-500 relative overflow-hidden drop-shadow-xl" >
 
-                        <div className="absolute  z-10 w-full h-28 bg-gradient-to-b from-current to-slate-400 border-b-4 border-slate-500" />
+                        {/* <div className="absolute  z-10 w-full h-28 bg-gradient-to-b from-current to-slate-400 border-b-4 border-slate-500" /> */}
 
 
-                        <div className="absolute font-bold text-9xl rotate-90 top-52 right-4 z-0 opacity-40 bg-gradient-to-r bg-clip-text text-transparent from-transparent to-slate-500">
+                        <div className="absolute font-bold text-9xl rotate-90 top-52 right-4 z-0 opacity-30 bg-gradient-to-r bg-clip-text text-transparent from-transparent to-slate-500">
                             evento
                         </div>
-                        <div className="absolute font-bold text-9xl rotate-90 top-8 left-8 z-0 opacity-40 bg-gradient-to-l bg-clip-text text-transparent from-transparent to-slate-500 ">
+                        <div className="absolute font-bold text-9xl rotate-90 top-8 left-8 z-0 opacity-30 bg-gradient-to-l bg-clip-text text-transparent from-transparent to-slate-500 ">
                             evento
                         </div>
 
@@ -118,11 +118,11 @@ const QRCodeGenerator = () => {
                         <div className="flex flex-col bg-opacity-20 p-2 rounded-full z-50">
                             <div className="flex items-center gap-2 justify-between">
 
-                                <p className="font-bold  text-background">evento</p>
-                                <BadgeCheck className=" text-background" />
+                                <p className="font-bold ">evento</p>
+                                <BadgeCheck className="" />
                             </div>
 
-                            <Avatar className="size-32 flex items-center justify-center m-auto outline bg-background outline-slate-500">
+                            <Avatar className="size-32 flex items-center justify-center m-auto outline-slate-500 outline bg-background">
                                 {
                                     croppedPhoto
                                         ? <AvatarImage src={croppedPhoto} alt="Cropped profile photo" className="object-cover" />
@@ -157,7 +157,7 @@ const QRCodeGenerator = () => {
                             {/* <h1 className="text-lg font-semibold tracking-widest mb-2 text-center">2021-3439</h1> */}
 
                             <div className="flex justify-center rounded-md flex-col items-center">
-                                {qrCodeUrl && <img src={qrCodeUrl} alt="QR Code" className="outline-2 outline-slate-500 outline rounded-md opacity-80" />}
+                                {qrCodeUrl && <img src={qrCodeUrl} alt="QR Code" className=" rounded-md opacity-80" />}
                                 <h1 className=" font-semibold tracking-widest my-2 text-center opacity-80">{id}</h1>
                             </div>
 
