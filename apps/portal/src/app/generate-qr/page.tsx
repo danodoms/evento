@@ -83,7 +83,7 @@ const QRCodeGenerator = () => {
 
 
     return (
-        <div className="min-h-screen  flex items-center justify-center p-4 pt-16 ">
+        <div className="min-h-screen  flex items-center justify-center p-4 pt-8 ">
             {(!firstName && !lastName && !id && !dept) || isEditing ? (
                 <IdForm />
             ) : (
