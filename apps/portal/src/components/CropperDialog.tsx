@@ -26,7 +26,7 @@ import { Label } from "@/components/ui/label";
 
 import { Student } from "@repo/models/Student";
 import useMediaQuery from "@custom-react-hooks/use-media-query";
-import { TableProperties, CircleAlert, Eye, AlignLeft, GalleryHorizontalEnd } from "lucide-react";
+import { TableProperties, CircleAlert, Eye, AlignLeft, GalleryHorizontalEnd, Crop } from "lucide-react";
 
 import Cropper from "react-easy-crop";
 import { Slider } from "@/components/ui/slider";
@@ -161,7 +161,11 @@ const CropperDialog = () => {
 
 const Trigger = () => {
     return (
-        <Button >Edit</Button>
+        // <Button >Edit</Button>
+        <Button variant="ghost" type="button" className="flex gap-1 items-center">
+            <Crop className="size-4" />
+            Crop & Resize
+        </Button>
     )
 }
 

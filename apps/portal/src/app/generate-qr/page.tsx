@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card"
 
 import React, { useEffect, useState } from 'react';
 import QRCode from 'qrcode';
-import { ArrowDownToLine, BadgeCheck, Building2, CircleUserRound, QrCode, RotateCw, Scan, UserRound, UserRoundIcon } from "lucide-react";
+import { ArrowDownToLine, BadgeCheck, Building2, CircleUserRound, Pen, QrCode, RotateCw, Scan, UserRound, UserRoundIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
@@ -16,12 +16,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useStudentStore } from "@/store/useStudentStore";
 
 
+import * as htmlToImage from 'html-to-image';
+import { toPng, toJpeg, toBlob, toPixelData, toSvg } from 'html-to-image';
+
+
 
 
 
 
 const QRCodeGenerator = () => {
-    const { id, firstName, lastName, dept, photo, croppedPhoto, setId, setFirstName, setLastName, setDept, setPhoto, setCroppedPhoto } = useStudentStore();
+    const { id, firstName, lastName, dept, photo, croppedPhoto, isEditing, setId, setFirstName, setLastName, setDept, setPhoto, setCroppedPhoto, setIsEditing } = useStudentStore();
     const [qrCodeUrl, setQrCodeUrl] = useState('');
 
 
@@ -51,31 +55,39 @@ const QRCodeGenerator = () => {
 
     const downloadCardAsImage = async () => {
         const cardElement = document.getElementById('card'); // Get the card element by id
+
+
+
         if (cardElement) {
-            try {
-                const canvas = await html2canvas(cardElement);
-                const imgData = canvas.toDataURL('image/png');
-                const link = document.createElement('a');
-                link.href = imgData;
-                link.download = 'qrcode.png';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            } catch (error) {
-                console.error('Error capturing the card as an image:', error);
-            }
+            htmlToImage.toJpeg(cardElement, { quality: 0.95 })
+                .then(function (dataUrl) {
+                    var link = document.createElement('a');
+                    link.download = 'my-evento-qrcode.jpeg';
+                    link.href = dataUrl;
+                    link.click();
+                });
+
+
+            // htmlToImage.toPng(cardElement)
+            //     .then(function (dataUrl) {
+            //         var img = new Image();
+            //         img.src = dataUrl;
+            //         document.body.appendChild(img);
+            //     })
+            //     .catch(function (error) {
+            //         console.error('oops, something went wrong!', error);
+            //     });
         }
+
     };
 
 
     return (
-        <div className="min-h-screen  flex items-center justify-center p-4 ">
-            {!firstName && !lastName && !id && !dept ? (
+        <div className="min-h-screen  flex items-center justify-center p-4 pt-8 ">
+            {(!firstName && !lastName && !id && !dept) || isEditing ? (
                 <IdForm />
             ) : (
                 <div className="bg-background">
-
-
 
                     <h1 className="text-xl max-w-2xl tracking-tighter text-center font-regular ">
                         This is your QR Code
@@ -95,28 +107,32 @@ const QRCodeGenerator = () => {
                         <div className="absolute  z-10 w-full h-28 bg-gradient-to-b from-current to-slate-400 border-b-4 border-slate-500" />
 
 
-                        {/* <div className="absolute font-bold text-9xl rotate-90 top-52 right-4 z-0 opacity-40 bg-gradient-to-r bg-clip-text text-transparent from-transparent to-slate-500">
+                        <div className="absolute font-bold text-9xl rotate-90 top-52 right-4 z-0 opacity-40 bg-gradient-to-r bg-clip-text text-transparent from-transparent to-slate-500">
                             evento
                         </div>
                         <div className="absolute font-bold text-9xl rotate-90 top-8 left-8 z-0 opacity-40 bg-gradient-to-l bg-clip-text text-transparent from-transparent to-slate-500 ">
                             evento
-                        </div> */}
+                        </div>
 
 
-                        <div className="flex flex-col bg-opacity-20 p-2 rounded-full gap-2 z-50">
+                        <div className="flex flex-col bg-opacity-20 p-2 rounded-full z-50">
                             <div className="flex items-center gap-2 justify-between">
 
                                 <p className="font-bold  text-background">evento</p>
                                 <BadgeCheck className=" text-background" />
                             </div>
 
-                            <Avatar className="size-28 flex items-center justify-center m-auto outline bg-background outline-slate-500">
-                                {photo
-                                    ? <AvatarImage src={photo} alt="Profile photo" />
-                                    : <AvatarFallback>
-                                        <UserRound className="size-8" />
-                                    </AvatarFallback>
+                            <Avatar className="size-32 flex items-center justify-center m-auto outline bg-background outline-slate-500">
+                                {
+                                    croppedPhoto
+                                        ? <AvatarImage src={croppedPhoto} alt="Cropped profile photo" className="object-cover" />
+                                        : photo
+                                            ? <AvatarImage src={photo} alt="Profile photo" className="object-cover" />
+                                            : <AvatarFallback>
+                                                <UserRound className="size-8" />
+                                            </AvatarFallback>
                                 }
+
                             </Avatar>
 
 
@@ -131,8 +147,6 @@ const QRCodeGenerator = () => {
                                 </div>
 
                             </div>
-
-
                         </div>
                         <div className="grid gap-4 z-50">
                             {/* <div className="flex items-center justify-between border-b border-muted pb-2">
@@ -155,8 +169,6 @@ const QRCodeGenerator = () => {
 
 
 
-
-
                     <div className="flex flex-col my-8 gap-2">
                         <Button
                             onClick={downloadCardAsImage}
@@ -172,20 +184,39 @@ const QRCodeGenerator = () => {
                     </div>
 
 
+
+
+
+
                     <Button
+                        onClick={() => {
+                            setIsEditing(true);
+                            setPhoto(undefined)
+                            setCroppedPhoto(undefined)
+                        }}
+                        variant={"ghost"}
+                        className="w-full flex gap-2 items-center opacity-50"
+                    >
+                        <Pen className="size-4" />
+                        Edit
+                    </Button>
+
+
+                    {/* <Button
                         onClick={() => {
                             setId("");
                             setFirstName("")
                             setLastName("")
                             setDept("")
                             setPhoto(undefined)
+                            setCroppedPhoto(undefined)
                         }}
                         variant={"ghost"}
                         className="w-full flex gap-2 items-center opacity-50"
                     >
                         <RotateCw className="size-4" />
                         Generate another
-                    </Button>
+                    </Button> */}
 
 
                 </div>

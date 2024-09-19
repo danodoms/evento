@@ -30,43 +30,26 @@ export const IdSchema = z.object({
     ),
 
   department: z.string().length(1, "Department can't be empty"),
-  // profilePhoto: z
-  //   .string()
-  //   .min(1, "Photo is required")
-  //   .refine((data) => {
-  //     try {
-  //       const [, , encodedData] = data.split(",");
-  //       if (!encodedData) return false;
-  //       const binaryData = atob(encodedData);
-  //       const arrayBuffer = new ArrayBuffer(binaryData.length);
-  //       const uint8Array = new Uint8Array(arrayBuffer);
 
-  //       for (let i = 0; i < binaryData.length; i++) {
-  //         uint8Array[i] = binaryData.charCodeAt(i);
-  //       }
+  // photo: z
+  //   .any()
+  //   .refine((files) => {
+  //     return files?.[0]?.size <= MAX_FILE_SIZE;
+  //   }, `Max image size is 5MB.`)
+  //   .refine(
+  //     (files) => ACCEPTED_IMAGE_MIME_TYPES.includes(files?.[0]?.type),
+  //     "Only .jpg, .jpeg, .png and .webp formats are supported."
+  //   ),
 
-  //       const blob = new Blob([uint8Array], { type: "image/*" });
-  //       return blob.size > 0;
-  //     } catch {
-  //       return false;
-  //     }
-  //   }, "Invalid image data"),
-
-  profilePhoto: z
+  photo: z
     .any()
-    .refine((files) => {
-      return files?.[0]?.size <= MAX_FILE_SIZE;
-    }, `Max image size is 5MB.`)
+    .refine((files) => files?.length > 0, "Missing profile photo") // Check if file is present
+    .refine(
+      (files) => files?.[0]?.size <= MAX_FILE_SIZE,
+      "Max image size is 5MB."
+    ) // Check file size
     .refine(
       (files) => ACCEPTED_IMAGE_MIME_TYPES.includes(files?.[0]?.type),
-      "Only .jpg, .jpeg, .png and .webp formats are supported."
+      "Only .jpg, .jpeg, .png and .webp formats are supported." // Check file type
     ),
 });
-
-// profilePhoto: z
-// .instanceof(File)
-// .refine((file) => file.size <= 5000000, `Max file size is 5MB.`)
-// .refine(
-//   (file) => ["image/jpeg", "image/png", "image/webp"].includes(file.type),
-//   "Only .jpg, .png and .webp formats are supported."
-// ),
