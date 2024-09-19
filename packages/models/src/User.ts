@@ -8,6 +8,7 @@ export type User = {
   role: number;
   is_active?: boolean;
   created_at: string;
+  name: string;
 };
 
 export async function getAllUsers(): Promise<User[]> {

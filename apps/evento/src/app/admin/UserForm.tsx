@@ -44,10 +44,12 @@ export function UserForm({ user, handleClose, handleError }: UserFormProps) {
             ? {
                 email: user.email,
                 role: String(user.role),
+                name: user.name,
             }
             : {
                 email: "",
                 role: "",
+                name: "",
             },
     });
 
@@ -61,6 +63,7 @@ export function UserForm({ user, handleClose, handleError }: UserFormProps) {
                 id: user.id,
                 is_active: user.is_active,
                 email: values.email,
+                name: values.name,
                 role: Number(values.role)
             })
                 .then((student) => {
@@ -93,6 +96,7 @@ export function UserForm({ user, handleClose, handleError }: UserFormProps) {
         await addUser({
             email: values.email,
             role: Number(values.role),
+            name: values.name,
         })
             .then((user) => {
                 // if (student === "SCHOOL_ID_EXISTS") {
@@ -120,6 +124,27 @@ export function UserForm({ user, handleClose, handleError }: UserFormProps) {
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+
+
+
+                <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Name</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Enter name" {...field} />
+                            </FormControl>
+                            {form.formState.errors.name && (
+                                <FormMessage>
+                                    {form.formState.errors.name.message}
+                                </FormMessage>
+                            )}
+                        </FormItem>
+                    )}
+                />
+
                 <FormField
                     control={form.control}
                     name="email"

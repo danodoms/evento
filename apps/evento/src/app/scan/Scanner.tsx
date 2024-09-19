@@ -3,7 +3,7 @@
 import { StudentMissingModal } from '@/components/modals/StudentMissingModal';
 // import { createQueuedAttendanceRecord } from '@repo/models/Attendance';
 // import type { QueuedAttendance } from '@repo/models/Attendance';
-import { type Student, getAllStudents, getStudentByIdNum, getStudentBySchoolId, isValidSchoolId } from '@repo/models/Student';
+import { type Student, addStudent, getAllStudents, getStudentBySchoolId, getStudentFullName, isValidSchoolId, updateStudent, updateStudentBySchoolId } from '@repo/models/Student';
 // import useQueuedAttendanceStore from '@/store/useQueuedAttendanceStore';
 import { failSound, networkErrorSound, offlineSound, successSound } from '@/utils/sound';
 import { type Html5QrcodeResult, Html5QrcodeScanner, Html5QrcodeScannerState } from 'html5-qrcode';
@@ -20,6 +20,7 @@ import { LogIn, LogOut, TriangleAlert, UserRound } from 'lucide-react';
 import useOnlineStatus from "@/hooks/useOnlineStatus";
 import { useAuth } from "@/hooks/useAuth";
 import { useCurrentUserStore } from '@/store/useCurrentUserStore';
+import { de } from '@faker-js/faker';
 import { Label } from "@/components/ui/label"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectItem } from "@/components/ui/select"
 import ScanModeDialog from './ScanModeDialog';
@@ -38,6 +39,7 @@ export default function Scanner() {
 
     const { addAttendanceRecord } = useAttendanceStore();
 
+
     const [scannedStudent, setScannedStudent] = useState<Student | null>(null);
     const [scannedStatus, setScannedStatus] = useState<"TIMED IN" | "TIMED OUT" | null>(null);
     const [scannedMessage, setScannedMessage] = useState<string>("");
@@ -48,6 +50,8 @@ export default function Scanner() {
     const currentLoggedUserEmail = useCurrentUserStore(state => state.email);
 
     const scanModeRef = useRef(useScanModeStore.getState().mode);
+
+
 
     useEffect(() => {
         let timer: NodeJS.Timeout;
@@ -100,116 +104,221 @@ export default function Scanner() {
         setTimeout(resumeScanner, milliseconds);
     };
 
-    const splitIdAndName = (input: String) => {
-        const [id, ...nameParts] = input.split(',');
-        const name = nameParts.join(',').trim();
-        return { id: id.trim(), name };
-    };
+
+    //! DEPRECATED
+    // const splitIdAndName = (input: String) => {
+    //     const [id, ...nameParts] = input.split(',');
+    //     const name = nameParts.join(',').trim();
+    //     return { id: id.trim(), name };
+    // };
+
+
+    function extractQRCodeData(input: string): { schoolId: string, firstName: string, lastName: string, deptId: number } {
+        // Split the input string by commas
+        const parts = input.split(',');
+
+
+        // Destructure parts into variables
+        const [schoolId, firstName, lastName, deptIdString] = parts;
+
+        // Parse department ID to a number
+        const deptId = parseInt(deptIdString, 10);
+
+
+        // Return the extracted parts in an object
+        return {
+            schoolId,
+            firstName,
+            lastName,
+            deptId
+        };
+    }
+
+    async function handleStudentRegistration(studentFromQRCode: Omit<Student, "id" | "created_at">) {
+        // * CHECK IF STUDENT EXISTS IN THE DATABASE
+        const studentFromDatabase = await getStudentBySchoolId(studentFromQRCode.school_id);
+
+        // * IF STUDENT DOES NOT EXIST IN THE DATABASE, ADD THEM AND RETURN THE NEW STUDENT
+        if (!studentFromDatabase) {
+            const newStudent = await addStudent(studentFromQRCode);
+            console.log("SCANNER: NEW STUDENT ADDED TO DATABASE", newStudent);
+            return newStudent;
+        }
+
+        // * CHECK FOR DATA MISMATCHES AND UPDATE IF NECESSARY
+        const isFirstNameMatch = studentFromDatabase.first_name === studentFromQRCode.first_name;
+        const isLastNameMatch = studentFromDatabase.last_name === studentFromQRCode.last_name;
+        const isDeptIdMatch = studentFromDatabase.dept_id === studentFromQRCode.dept_id;
+
+        // * IF ANY STUDENT DATA HAS MISMATCH, UPDATE AND RETURN THE UPDATED STUDENT
+        if (!isFirstNameMatch || !isLastNameMatch || !isDeptIdMatch) {
+            const updatedStudent = await updateStudentBySchoolId(studentFromQRCode.school_id, studentFromQRCode);
+            console.log("SCANNER: STUDENT UPDATED", updatedStudent);
+            return updatedStudent;
+        }
+
+        // * IF ALL STUDENT DATA MATCHES, RETURN THE EXISTING STUDENT
+        console.log("SCANNER: STUDENT ALREADY EXISTS", studentFromDatabase);
+        return studentFromDatabase;
+    }
+
+
+    type ScanErrorType =
+        | "EARLY_TIMEOUT"
+        | "EARLY_TIMEIN"
+        | "OFFLINE"
+        | "TIME_LIMIT_REACHED"
+        | "EMPTY_STUDENTS_REFERENCE"
+        | "INVALID_SCHOOL_ID"
+        | "DAILY_LIMIT_REACHED"
+        | "UNKNOWN_ERROR"
+        | "INVALID_QR_CODE_FORMAT";
+
+    function isQRcodeFormatValid(qrCodeValue: string): boolean {
+        //* IT SHOULD BE IN THE FORMAT: "school_id,first_name,last_name,dept_id"
+        //* e.g. "1234-5678,John,Doe,1"
+
+        // Updated pattern to include accented characters and special letters like ñ
+        const qrCodePattern = /^\d{4}-\d{4},[A-Za-zñÑáéíóúÁÉÍÓÚüÜ\s]+,[A-Za-zñÑáéíóúÁÉÍÓÚüÜ\s]+,\d+$/;
+
+        return qrCodePattern.test(qrCodeValue);
+    }
+
+    //! DEPRECATED
+    // function getDepartmentNameById(departmentId: number): string | undefined {
+    //     const department = departments.find((dept) => dept.id === departmentId);
+    //     return department ? department.short_name : undefined;
+    // }
+
 
 
     const onScanSuccess = async (decodedText: string, decodedResult: Html5QrcodeResult) => {
         try {
-
-
-            // SCANNING SHOULD BE PAUSED IMMEDIATELY SINCE FOLLOWING CODE ARE ASYNC
-            pauseScanner(); // Pause scanning
-
-
-            if (!isOnline) {
-                throw new Error("OFFLINE");
-            }
-
-
-            // checks first if there are students in the variable fetched by react-tanstack-query
-            // if (studentsRef.current.length === 0) {
-            //     throw new Error("EMPTY_STUDENTS_REFERENCE");
-            // }
-
-            //! DEPRECATED 
-            // const student = await throwErrorAfterTimeout(2000, () => getStudentByIdNum(decodedText), "TIME_LIMIT_REACHED");
+            //* Pause scanning immediately
+            pauseScanner();
 
 
 
-            const { id, name } = splitIdAndName(decodedText);
-            const scannedSchoolId = id
-            const scannedStudentName = name ? name : "Student"
-            const isValidId = isValidSchoolId(scannedSchoolId)
+            //* IF USER IS OFFLINE THEN THROW OFFLINE ERROR
+            if (!isOnline) throw new Error("OFFLINE");
 
 
-            //* THIS IS JUST A PLACEHOLDER STUDENT OBJECT FOR ANONYMOUS ID SCANNING
-            const student: Student = {
-                name: scannedStudentName,
-                id: 100,
-                created_at: String(Date.now),
-                is_active: true,
+
+            //* VALIDATE SCANNED QR CODE FORMAT
+            //* IT SHOULD BE IN THE FORMAT: "school_id,first_name,last_name,dept_id"
+            //* e.g. "1234-5678,John,Doe,1"
+
+            if (!isQRcodeFormatValid(decodedText)) {
+                console.log("INVALID QR CODE FORMAT: ", decodedText);
+                console.log("INVALID QR CODE FORMAT: ", decodedText);
+                console.log("INVALID QR CODE FORMAT: ", decodedText);
+                throw new Error("INVALID_QR_CODE_FORMAT")
+            };
+
+
+
+            //* EXTRACT THE DATA FROM THE SCANNED QR CODE
+            const { schoolId: scannedSchoolId, firstName: scannedFirstName, lastName: scannedLastName, deptId: scannedDeptId } = extractQRCodeData(decodedText);
+            // const { id: scannedSchoolId, name } = splitIdAndName(decodedText);
+
+
+
+            //* PROCEED OR CONTINUE CODE EXECUTION ONLY IF THE SCHOOL ID IS VALID
+            if (!isValidSchoolId(scannedSchoolId)) throw new Error("INVALID_SCHOOL_ID");
+
+
+
+            //* CREATE STUDENT OBJECT FROM THE SCANNED QR CODE
+            const studentFromQRCode: Omit<Student, "id" | "created_at"> = {
                 school_id: scannedSchoolId,
-                dept_id: null
+                first_name: scannedFirstName,
+                last_name: scannedLastName,
+                dept_id: scannedDeptId,
+                is_active: true
             }
 
 
-            if (isValidId) {
-                console.log("currentLoggedUserEmail: ", currentLoggedUserEmail)
-                setScannedStudent(student);
-                setScannedStatus(null);
-                setScannedMessage("");
-                const newAttendanceRecord: Attendance | null = await throwErrorAfterTimeout(2300, () => createOrUpdateAttendanceRecord(scannedSchoolId, currentLoggedUserEmail, scanModeRef.current), "TIME_LIMIT_REACHED");
 
-                if (newAttendanceRecord) {
-                    if (newAttendanceRecord.is_time_in) {
-                        setScannedStatus("TIMED IN")
-                    } else {
-                        setScannedStatus("TIMED OUT")
-                    }
+            //* RETURNS THE STUDENT OBJECT BASED ON DEFINED RULES
+            const student = await handleStudentRegistration(studentFromQRCode)
 
-                    addAttendanceRecord({ ...newAttendanceRecord, student });
-                    successSound?.play();
-                } else {
-                    // toast.error("Daily attendance limit reached!", { autoClose: 2500, toastId: "toast-daily-limit-reached" });
+
+
+            console.log("currentLoggedUserEmail: ", currentLoggedUserEmail);
+            setScannedStudent(student);
+
+            //* ATTEMPTS TO RESET THE SPLASH TEXT
+            setScannedStatus(null);
+            setScannedMessage("");
+
+            const newAttendanceRecord: Attendance | null = await throwErrorAfterTimeout(
+                2300,
+                () => createOrUpdateAttendanceRecord(scannedSchoolId, currentLoggedUserEmail, scanModeRef.current),
+                "TIME_LIMIT_REACHED"
+            );
+
+            if (!newAttendanceRecord) throw new Error("DAILY_LIMIT_REACHED");
+
+            setScannedStatus(newAttendanceRecord.is_time_in ? "TIMED IN" : "TIMED OUT");
+
+            //* ADD THE RETURNED ATTENDANCE OBJECT TO THE GLOBAL ATTENDANCE RECORDS STATE ARRAY ON THE QUEUE SECTION BELOW THE SCANNER UI
+            addAttendanceRecord({
+                ...newAttendanceRecord, student
+            });
+
+            successSound?.play();
+            setTimeout(resumeScanner, 1250);
+
+        } catch (error) {
+            console.error("Error in scan process:", error);
+
+            const errorType = (error as Error).message as ScanErrorType;
+
+            switch (errorType) {
+                case "INVALID_QR_CODE_FORMAT":
+                    toast.error("Invalid QR Code Format", { autoClose: 1500, toastId: "toast-invalid-qr-code" });
+                    failSound?.play();
+                    pauseAndResumeScanner(1000);
+                    break;
+                case "EARLY_TIMEOUT":
+                    setScannedMessage("Early timeout, retry in 1 min");
+                    failSound?.play();
+                    pauseAndResumeScanner(1000);
+                    break;
+                case "EARLY_TIMEIN":
+                    setScannedMessage("Early time-in, retry in 10 sec");
+                    failSound?.play();
+                    pauseAndResumeScanner(1000);
+                    break;
+                case "OFFLINE":
+                    offlineSound?.play();
+                    toast.error("You are offline, please check your internet connection", { autoClose: 2500, toastId: "toast-offline" });
+                    pauseAndResumeScanner(1000);
+                    break;
+                case "TIME_LIMIT_REACHED":
+                    networkErrorSound?.play();
+                    toast.error("Server took too long to respond, try again", { autoClose: 2500 });
+                    pauseAndResumeScanner(1000);
+                    break;
+                case "EMPTY_STUDENTS_REFERENCE":
+                    toast.error("No students to compare in the database", { autoClose: 2500, toastId: "toast-empty-students" });
+                    failSound?.play();
+                    pauseAndResumeScanner(1000);
+                    break;
+                case "INVALID_SCHOOL_ID":
+                    setModalContent({ desc: "The scanned ID does not match any student", subtitle: `Scanned ID: ${decodedText}` });
+                    failSound?.play();
+                    pauseScanner(true);
+                    break;
+                case "DAILY_LIMIT_REACHED":
                     setScannedMessage("Daily attendance limit reached!");
-                }
-
-                setTimeout(() => {
-                    resumeScanner(); // Resume scanning after a delay
-                }, 1250);
-
-            } else {
-                setModalContent({ desc: "The scanned ID does not match any student", subtitle: `Scanned ID: ${decodedText}` });
-                failSound?.play();
-                pauseScanner(true); // Pause scanning
+                    pauseAndResumeScanner(1000);
+                    break;
+                default:
+                    setModalContent({ desc: "An error occurred while fetching student details.", subtitle: `Scanned ID: ${decodedText}` });
+                    failSound?.play();
+                    pauseScanner();
             }
-
-
-        } catch (error: Error | any) {
-            console.error("Error fetching student details:", error);
-
-            if (error.message === "EARLY_TIMEOUT") {
-                setScannedMessage("Early timeout, retry in 1 min");
-                failSound?.play();
-                // toast.error("Early time out detected, retry in a minute", { autoClose: 2500, toastId: "toast-early-timeout" });
-                pauseAndResumeScanner(1000)
-            } else if (error.message === "EARLY_TIMEIN") {
-                setScannedMessage("Early time-in, retry in 10 sec");
-                failSound?.play();
-                // toast.error("Early time in detected, retry in 10 seconds", { autoClose: 2500, toastId: "toast-early-timein" });
-                pauseAndResumeScanner(1000)
-            } else if (error.message === "OFFLINE") {
-                offlineSound?.play();
-                toast.error("You are offline, please check your internet connection", { autoClose: 2500, toastId: "toast-offline" });
-                pauseAndResumeScanner(1000)
-            } else if (error.message === "TIME_LIMIT_REACHED") {
-                networkErrorSound?.play();
-                toast.error("Server took too long to respond, try again", { autoClose: 2500 });
-                pauseAndResumeScanner(1000)
-            } else if (error.message === "EMPTY_STUDENTS_REFERENCE") {
-                toast.error("No students to compare in the database", { autoClose: 2500, toastId: "toast-empty-students" });
-                failSound?.play();
-                pauseAndResumeScanner(1000)
-            } else {
-                setModalContent({ desc: "An error occurred while fetching student details.", subtitle: `Scanned ID: ${decodedText}` });
-                failSound?.play();
-                pauseScanner(); // Pause scanning
-            }
-
         }
     };
 
@@ -265,7 +374,7 @@ export default function Scanner() {
                     <div className="p-4 bg-background opacity-90 backdrop-blur-lg rounded-md text-center flex items-center flex-col gap-1 outline-1 mb-16">
                         <UserRound className='size-8' />
                         <div>
-                            <p className='font-bold'>{scannedStudent.name}</p>
+                            <p className='font-bold'>{getStudentFullName(scannedStudent)}</p>
                             <p className='text-sm'>{scannedStudent.school_id}</p>
 
                         </div>
@@ -333,7 +442,3 @@ export default function Scanner() {
         </div>
     );
 };
-function Integer(random: () => number): number {
-    throw new Error('Function not implemented.');
-}
-

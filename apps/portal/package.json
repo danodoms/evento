@@ -9,8 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@repo/models": "*",
-    "@repo/utils": "*",
     "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-dialog": "^1.1.1",
@@ -18,11 +16,16 @@
     "@radix-ui/react-hover-card": "^1.1.1",
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-navigation-menu": "^1.2.0",
+    "@radix-ui/react-select": "^2.1.1",
+    "@radix-ui/react-slider": "^1.2.0",
     "@radix-ui/react-slot": "^1.1.0",
+    "@repo/models": "*",
+    "@repo/utils": "*",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.1.8",
     "framer-motion": "^11.3.22",
+    "html-to-image": "^1.11.11",
     "html2canvas": "^1.4.1",
     "lucide-react": "^0.424.0",
     "next": "14.2.5",
@@ -33,7 +36,9 @@
     "simplex-noise": "^4.0.3",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.23.8"
+    "vaul": "^0.9.3",
+    "zod": "^3.23.8",
+    "zustand": "^5.0.0-rc.2"
   },
   "devDependencies": {
     "@types/node": "^20",

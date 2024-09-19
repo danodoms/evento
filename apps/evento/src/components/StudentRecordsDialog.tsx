@@ -23,9 +23,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import { StudentForm } from "./StudentForm";
 
-import { log } from "console";
 import {
 	Table,
 	TableBody,
@@ -40,7 +38,7 @@ import {
 	getAttendanceRecordsBySchoolId,
 } from "@repo/models/Attendance";
 import { Event, getEvents } from "@repo/models/Event";
-import { Student } from "@repo/models/Student";
+import { getStudentFullName, Student } from "@repo/models/Student";
 import useMediaQuery from "@custom-react-hooks/use-media-query";
 import { useQuery } from "@tanstack/react-query";
 import { format, parseISO } from "date-fns";
@@ -85,7 +83,7 @@ const StudentRecordsDialog = ({ schoolId, student }: StudentRecordsDialogProps) 
 		schoolIdToUse = schoolId
 	} else if (student) {
 		schoolIdToUse = student.school_id
-		studentName = student.name
+		studentName = getStudentFullName(student)
 	}
 
 	const {
@@ -107,12 +105,32 @@ const StudentRecordsDialog = ({ schoolId, student }: StudentRecordsDialogProps) 
 	});
 
 
+	//* V2
 	const groupedAttendanceRecords = Object.entries(
 		attendanceRecords.reduce((acc, record) => {
-			(acc[record.date] = acc[record.date] || []).push(record);
+			// Initialize array if it does not exist for the date
+			if (!acc[record.date]) {
+				acc[record.date] = [];
+			}
+
+			// Add the record to the array
+			acc[record.date].push(record);
+
 			return acc;
 		}, {} as Record<string, typeof attendanceRecords>)
-	).map(([date, records]) => ({ date, records }));
+	).map(([date, records]) => ({
+		date,
+		// Sort records by time from earliest to latest
+		records: records.sort((a, b) => a.time.localeCompare(b.time)),
+	}));
+
+	//* V1
+	// const groupedAttendanceRecords = Object.entries(
+	// 	attendanceRecords.reduce((acc, record) => {
+	// 		(acc[record.date] = acc[record.date] || []).push(record);
+	// 		return acc;
+	// 	}, {} as Record<string, typeof attendanceRecords>)
+	// ).map(([date, records]) => ({ date, records }));
 
 
 
@@ -240,11 +258,6 @@ const AttendanceRecordsSection: React.FC<AttendanceSectionProps> = ({ groupedAtt
 								{formatDate(attendanceGroup.date)}
 							</p>
 						</div>
-
-
-
-
-
 
 
 

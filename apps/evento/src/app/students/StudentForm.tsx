@@ -52,13 +52,15 @@ export function StudentForm({ student, handleClose, handleError }: StudentFormPr
 		resolver: zodResolver(formSchema),
 		defaultValues: student
 			? {
-				name: student.name,
+				first_name: student.first_name,
+				last_name: student.last_name,
 				school_id: student.school_id,
 				dept_id: student.dept_id?.toString(),
 			}
 			: {
 				school_id: "",
-				name: "",
+				first_name: "",
+				last_name: "",
 				dept_id: "0",
 			},
 	});
@@ -73,20 +75,14 @@ export function StudentForm({ student, handleClose, handleError }: StudentFormPr
 				id: student.id,
 				is_active: student.is_active,
 				school_id: values.school_id,
-				name: values.name,
+				first_name: values.first_name,
+				last_name: values.last_name,
 				dept_id: values.dept_id != "0" ? Number(values.dept_id) : null,
 			})
 				.then((student) => {
-					if (student === "SCHOOL_ID_EXISTS") {
-						console.log("School ID already exists");
-						handleError?.("School ID already in use");
-					} else {
-						console.log("Student updated successfully");
-						form.reset();
-						handleClose?.()
-					}
-
-					handleClose?.();
+					console.log("Student updated successfully");
+					form.reset();
+					handleClose?.()
 				})
 				.catch((error) => {
 					if (error?.code === "23505") {
@@ -104,7 +100,8 @@ export function StudentForm({ student, handleClose, handleError }: StudentFormPr
 		await addStudent({
 			school_id: values.school_id,
 			is_active: undefined,
-			name: values.name,
+			first_name: values.first_name,
+			last_name: values.last_name,
 			dept_id: values.dept_id != "0" ? Number(values.dept_id) : null,
 		})
 			.then((student) => {
@@ -147,15 +144,30 @@ export function StudentForm({ student, handleClose, handleError }: StudentFormPr
 				/>
 				<FormField
 					control={form.control}
-					name="name"
+					name="first_name"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Name</FormLabel>
+							<FormLabel>First Name</FormLabel>
 							<FormControl>
-								<Input placeholder="Enter name" {...field} />
+								<Input placeholder="Enter first name" {...field} />
 							</FormControl>
-							{form.formState.errors.name && (
-								<FormMessage>{form.formState.errors.name.message}</FormMessage>
+							{form.formState.errors.first_name && (
+								<FormMessage>{form.formState.errors.first_name.message}</FormMessage>
+							)}
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="last_name"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Last Name</FormLabel>
+							<FormControl>
+								<Input placeholder="Enter last name" {...field} />
+							</FormControl>
+							{form.formState.errors.last_name && (
+								<FormMessage>{form.formState.errors.last_name.message}</FormMessage>
 							)}
 						</FormItem>
 					)}

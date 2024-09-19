@@ -4,19 +4,24 @@ const supabase = createClient();
 
 export type Student = {
   id: number;
-  created_at: string | null;
-  is_active: boolean | undefined;
   school_id: string;
-  name: string;
+  first_name: string;
+  last_name: string;
   dept_id: number | null;
+  is_active: boolean | undefined;
+  created_at: string | null;
 };
 
-export async function getStudentByIdNum(idNum: string) {
+export function getStudentFullName(student: Student): string {
+  return `${student.first_name} ${student.last_name}`;
+}
+
+export async function getStudentBySchoolId(schoolId: string) {
   const { data, error } = await supabase
     .from("students")
     .select("*")
-    .eq("school_id", idNum)
-    .single(); // Use .single() if you expect only one row to be returned
+    .eq("school_id", schoolId)
+    .maybeSingle();
 
   if (error) {
     console.error("Error fetching student:", error);
@@ -27,15 +32,16 @@ export async function getStudentByIdNum(idNum: string) {
   return data;
 }
 
-export function getStudentBySchoolId(
-  students: Student[],
-  schoolId: string
-): Student | undefined {
-  const student = students.find((student) => student.school_id === schoolId);
+//! V1 DEPRECATED this function does not directly query  the database, instead it uses the students data from the cache which fetches all students at once
+// export function getStudentBySchoolId(
+//   students: Student[],
+//   schoolId: string
+// ): Student | undefined {
+//   const student = students.find((student) => student.school_id === schoolId);
 
-  console.log("Student found:", student);
-  return student;
-}
+//   console.log("Student found:", student);
+//   return student;
+// }
 
 export async function getAllStudents(): Promise<Student[]> {
   const { data, error } = await supabase.from("students").select("*");
@@ -50,11 +56,12 @@ export async function getAllStudents(): Promise<Student[]> {
 
 export async function addStudent(
   student: Omit<Student, "id" | "created_at">
-): Promise<Student | null | "SCHOOL_ID_EXISTS"> {
+): Promise<Student | "SCHOOL_ID_EXISTS" | null> {
   const { data, error } = await supabase
     .from("students")
     .insert(student)
-    .single(); // Use .single() if you expect only one row to be inserted
+    .select()
+    .maybeSingle();
 
   if (error?.code === "23505") {
     console.log("School ID already exists");
@@ -72,12 +79,13 @@ export async function addStudent(
 
 export async function updateStudent(
   student: Omit<Student, "created_at">
-): Promise<unknown> {
+): Promise<Student> {
   const { data, error } = await supabase
     .from("students")
     .update(student)
     .eq("id", student.id)
-    .single();
+    .select()
+    .maybeSingle();
 
   if (error) {
     console.error("Error updating student:", error);
@@ -85,7 +93,27 @@ export async function updateStudent(
   }
 
   console.log("Updated student:", data);
-  return data as unknown;
+  return data as Student;
+}
+
+export async function updateStudentBySchoolId(
+  schoolId: string,
+  updates: Partial<Omit<Student, "school_id">>
+): Promise<Student | null> {
+  const { data, error } = await supabase
+    .from("students")
+    .update(updates)
+    .eq("school_id", schoolId)
+    .select()
+    .maybeSingle();
+
+  if (error) {
+    console.error("Error updating student:", error);
+    return null; // Return null or handle the error appropriately
+  }
+
+  console.log("Updated student:", data);
+  return data; // Return the updated data
 }
 
 export async function deactivateStudent(
@@ -117,7 +145,9 @@ export async function getFilteredPaginatedStudents(
     .from("students")
     .select("*", { count: "exact" })
     .eq("is_active", status)
-    .or(`name.ilike.%${query}%,school_id.ilike.%${query}%`)
+    .or(
+      `first_name.ilike.%${query}%,last_name.ilike.%${query}%,school_id.ilike.%${query}%`
+    )
     .range((currentPage - 1) * limit, currentPage * limit - 1); // Adjust range to be inclusive of the last item
 
   if (deptId) {

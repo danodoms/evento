@@ -15,7 +15,7 @@ const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({ headerText }) => {
     return (
         <div className="flex flex-col gap-3">
             <div className="flex justify-between gap-2 items-center">
-                <h1 className="text-3xl font-bold tracking-tight mr-auto">{headerText}</h1>
+                <h1 className="text-2xl font-bold tracking-tight mr-auto">{headerText}</h1>
 
 
                 <div className='gap-2 flex '>

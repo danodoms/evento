@@ -189,9 +189,9 @@ export default function EventsPage() {
 		months.map((month) => format(new Date(2021, month, 1), "MMMM"));
 
 	return (
-		<div className="flex flex-col gap-4">
+		<div className="flex flex-col h-full gap-4">
 			<div className="flex gap-2 items-center">
-				<h1 className="text-3xl font-bold tracking-tight mr-auto">Events</h1>
+				<h1 className="text-2xl font-bold tracking-tight mr-auto">Events</h1>
 				<Link href="/events/create">
 					<Button variant={"ghost"}>
 						<Plus className="size-4" />
@@ -279,9 +279,9 @@ export default function EventsPage() {
 							className="p-4 rounded-lg flex flex-col gap-2 backdrop-contrast-50 backdrop-opacity-20"
 						>
 							<div className="flex justify-between items-center">
-								<div className="flex gap-2 items-center">
+								<div className="flex gap-2 items-center opacity-50">
 									<Calendar className="size-4" />
-									<p className="font-semibold text-sm">{formatDate(event.date)}</p>
+									<p className=" text-xs">{formatDate(event.date)}</p>
 
 								</div>
 								<div className="flex gap-2 items-center">
@@ -310,7 +310,7 @@ export default function EventsPage() {
 								</div>
 							</div>
 							{/* <Separator className="my-1" /> */}
-							<h2 className="font-bold text-lg mt-2">{event.name}</h2>
+							<h2 className="font-medium mt-1">{event.name}</h2>
 
 							{event.description && (
 								<div className="text-xs text-balance truncate opacity-60">

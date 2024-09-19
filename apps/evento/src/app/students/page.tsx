@@ -57,6 +57,7 @@ import {
 	deactivateStudent,
 	getAllStudents,
 	getFilteredPaginatedStudents,
+	getStudentFullName,
 } from "@repo/models/Student";
 import StudentFormDialog from "./StudentFormDialog";
 
@@ -73,7 +74,7 @@ import {
 
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import StudentRecordsDialog from "./StudentRecordsDialog";
+import StudentRecordsDialog from "../../components/StudentRecordsDialog";
 import Search from "@/app/students/Search";
 import PaginationComponent from "./Pagination";
 import Loading from "@/components/Loading";
@@ -94,6 +95,7 @@ type StudentsPageProps = {
 
 export default function StudentsPage({ searchParams }: StudentsPageProps) {
 
+
 	// const size = 9;
 	// const skeletons = new Array(size).fill(undefined);
 
@@ -106,6 +108,7 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 		"active",
 	);
 	const [isCompactView, setIsCompactView] = useState(false);
+	const [isRenderStudentsList, setIsRenderStudentsList] = useState(true)
 
 
 	const {
@@ -143,10 +146,7 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 	});
 
 
-	function getDepartmentNameById(departmentId: number): string | undefined {
-		const department = departments.find((dept) => dept.id === departmentId);
-		return department ? department.short_name : undefined;
-	}
+
 
 	const resetFilters = () => {
 		setStatusFilter("active");
@@ -177,30 +177,28 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 		}
 	}, [isStudentsSuccess, isSchoolIdsSuccess]);
 
-	const renderSkeleton = (count: number) => {
-		const size = count;
-		const skeletons = new Array(size).fill(undefined);
 
-		return (
-			<div className="flex flex-col gap-3 md:grid md:grid-cols-2 lg:grid-cols-3 overflow-y-auto rounded-md w-full">
-				{skeletons.map((index, skeleton) => (
-					<StudentCardSkeleton key={index} />
-				))}
-			</div>
-		);
-	};
 
 
 	return (
-		<div className="flex flex-col gap-3">
+		<div className="flex flex-col h-full gap-3">
 			<div className="flex justify-between gap-2 items-center">
-				<h1 className="text-3xl font-bold tracking-tight mr-auto">Students</h1>
-				<Link href="/students/create">
+				<div className="flex mr-auto gap-4">
+					<h1 className="text-2xl font-bold tracking-tight ">Students</h1>
+					<div className="flex items-center space-x-2">
+						<Switch id="id-only-mode" onCheckedChange={() => setIsRenderStudentsList(!isRenderStudentsList)} />
+						<Label htmlFor="id-only-mode" className="">Attendance Based</Label>
+					</div>
+					{/* <Link href="/students/create">
 					<Button variant={"ghost"}>
 						<Plus className="size-4" />
 						Add
 					</Button>
-				</Link>
+				</Link> */}
+				</div>
+
+
+
 				<Sheet>
 					<SheetTrigger asChild>
 						<Button variant="outline">
@@ -299,11 +297,50 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 			</div>
 
 
+			{isRenderStudentsList
+				? renderStudentList(isStudentsLoading, prevStudentCount, students, studentRowCount, departments)
+				: renderSchoolIdList(isSchoolIdsLoading, prevSchoolIdCount, schoolIds, schoolIdRowCount)
+			}
 
-			{/* {isStudentsLoading ? renderSkeleton(prevStudentCount) : null}
 
 
-			{students.length > 0 && !isStudentsLoading ? (
+
+
+			<ToastContainer />
+		</div>
+	);
+}
+
+const renderSkeleton = (count: number) => {
+	const size = count;
+	const skeletons = new Array(size).fill(undefined);
+
+	return (
+		<div className="flex flex-col gap-3 md:grid md:grid-cols-2 lg:grid-cols-3 overflow-y-auto rounded-md w-full">
+			{skeletons.map((index, skeleton) => (
+				<StudentCardSkeleton key={index} />
+			))}
+		</div>
+	);
+};
+
+
+
+
+
+function renderStudentList(isLoading: boolean, prevStudentCount: number, students: Student[], studentRowCount: number | null, departments: Department[]) {
+
+	function getDepartmentNameById(departmentId: number): string | undefined {
+		const department = departments.find((dept) => dept.id === departmentId);
+		return department ? department.short_name : undefined;
+	}
+
+	return (
+		<>
+			{isLoading ? renderSkeleton(prevStudentCount) : null}
+
+
+			{students.length > 0 && !isLoading ? (
 				<div className="flex flex-col gap-3 md:grid md:grid-cols-2 lg:grid-cols-3 overflow-y-auto rounded-md w-full">
 					{students.map((student, index) => (
 						<div
@@ -313,7 +350,7 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 							<div className="flex justify-between items-center">
 								<div className="flex gap-2 items-center">
 									<UserRound className="size-5" />
-									<h2 className="font-bold">{student.name}</h2>
+									<h2 className="font-bold">{getStudentFullName(student)}</h2>
 									{student.dept_id && (
 										<Badge className="flex gap-1" variant={"secondary"}>
 											<Building2 className="size-3" />
@@ -323,26 +360,26 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 								</div>
 
 
-								<div className="flex gap-4 items-center">
-									<DropdownMenu>
-										<DropdownMenuTrigger className=" rounded-full text-sm flex gap-2 items-center">
-											<Ellipsis className=" " />
-										</DropdownMenuTrigger>
-										<DropdownMenuContent>
-											<DropdownMenuLabel>Actions</DropdownMenuLabel>
-											<DropdownMenuSeparator />
-											<DropdownMenuItem asChild>
-												<StudentFormDialog student={student} />
-											</DropdownMenuItem>
-											<DropdownMenuItem
-												onClick={() => deactivateStudent(student)}
-											>
-												<Trash className="size-4 mr-2" />
-												Delete
-											</DropdownMenuItem>
-										</DropdownMenuContent>
-									</DropdownMenu>
-								</div>
+								{/* <div className="flex gap-4 items-center">
+						<DropdownMenu>
+							<DropdownMenuTrigger className=" rounded-full text-sm flex gap-2 items-center">
+								<Ellipsis className=" " />
+							</DropdownMenuTrigger>
+							<DropdownMenuContent>
+								<DropdownMenuLabel>Actions</DropdownMenuLabel>
+								<DropdownMenuSeparator />
+								<DropdownMenuItem asChild>
+									<StudentFormDialog student={student} />
+								</DropdownMenuItem>
+								<DropdownMenuItem
+									onClick={() => deactivateStudent(student)}
+								>
+									<Trash className="size-4 mr-2" />
+									Delete
+								</DropdownMenuItem>
+							</DropdownMenuContent>
+						</DropdownMenu>
+					</div> */}
 							</div>
 
 							<div className="flex gap-2 flex-wrap mt-1 justify-between">
@@ -360,14 +397,21 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 				<div className="flex flex-col mx-auto gap-4 p-20 opacity-50">
 					<p>No students</p>
 				</div>
-			)} */}
+			)}
 
 
+			<PaginationComponent totalItems={studentRowCount} itemsPerPage={10} /></>
+	)
+}
 
-			{isSchoolIdsLoading ? renderSkeleton(prevSchoolIdCount) : null}
+
+function renderSchoolIdList(isLoading: boolean, prevSchoolIdCount: number, schoolIds: string[], schoolIdRowCount: number | null) {
+	return (<>
+		{isLoading ? renderSkeleton(prevSchoolIdCount) : null}
 
 
-			{schoolIds.length > 0 && !isSchoolIdsLoading ? (
+		{
+			schoolIds.length > 0 && !isLoading ? (
 				<div className="flex flex-col gap-3 md:grid md:grid-cols-2 lg:grid-cols-3 overflow-y-auto rounded-md w-full">
 					{schoolIds.map((schoolId) => (
 						<div
@@ -397,13 +441,10 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 				<div className="flex flex-col mx-auto gap-4 p-20 opacity-50">
 					<p>No students</p>
 				</div>
-			)}
+			)
+		}
 
-
-			{/* <PaginationComponent totalItems={studentRowCount} itemsPerPage={10} /> */}
-			<PaginationComponent totalItems={schoolIdRowCount} itemsPerPage={10} />
-
-			<ToastContainer />
-		</div>
-	);
+		<PaginationComponent totalItems={schoolIdRowCount} itemsPerPage={10} />
+	</>
+	)
 }

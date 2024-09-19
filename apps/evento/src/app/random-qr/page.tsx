@@ -9,13 +9,14 @@ const RandomQRPage = () => {
     const [updateInterval, setUpdateInterval] = useState(1000);
     const [studentCount, setStudentCount] = useState(1000);
     const [currentStudentIndex, setCurrentStudentIndex] = useState(0);
-    const [customYear, setCustomYear] = useState(2024);
+    const [customYear, setCustomYear] = useState(2010);
 
     useEffect(() => {
         const generateRandomQR = () => {
+            const deptId = Math.floor(Math.random() * 4) + 1; // Generates a number from 1 to 4
             const rightSide = 1000 + (currentStudentIndex % studentCount);
             setCurrentStudentIndex((prevIndex) => (prevIndex + 1) % studentCount);
-            return `${customYear}-${rightSide},${faker.person.firstName()} ${faker.person.lastName()}`;
+            return `${customYear}-${rightSide},${faker.person.firstName()},${faker.person.lastName()},${deptId}`;
         };
 
         const intervalId = setInterval(() => {

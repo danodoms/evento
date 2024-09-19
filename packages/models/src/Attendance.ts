@@ -1,6 +1,8 @@
 // import useQueuedAttendanceStore from "@/store/useQueuedAttendanceStore";
 import { createClient } from "@repo/utils/supabase";
 import type { Student } from "./Student.ts";
+import type { Department } from "./Department.ts";
+
 import {
   differenceInMinutes,
   differenceInSeconds,
@@ -23,6 +25,21 @@ export type Attendance = {
 export type AttendanceRecord = Attendance & {
   student: Student;
   uniqueId?: number;
+};
+
+export type RecentAttendanceRecord = {
+  id: number; // or number if using JavaScript numbers
+  time: string; // "time without time zone" in ISO format
+  date: string; // "date" in ISO format
+  school_id: string; // text
+  scanned_by_email: string; // text
+  first_name: string; // text
+  last_name: string; // text
+  dept_id: number; // integer
+  dept_short_name: string; // text
+  dept_name: string; // text
+  is_time_in: boolean; // boolean
+  is_active: boolean; // boolean
 };
 
 // Utility functions
@@ -200,6 +217,7 @@ export const createOrUpdateAttendanceRecord = async (
 //   return data[0] as Attendance;
 // };
 
+//! DEPRECATED
 // Fetch all attendance records with student details
 export const getAllAttendanceRecords = async (): Promise<
   AttendanceRecord[]
@@ -212,6 +230,19 @@ export const getAllAttendanceRecords = async (): Promise<
     throw new Error("Error fetching attendance records: " + error.message);
 
   return data as AttendanceRecord[];
+};
+
+export const getRecentAttendance = async (): Promise<
+  RecentAttendanceRecord[]
+> => {
+  const { data, error } = await supabase
+    .from("attendance_recent")
+    .select("*")
+    .limit(100);
+
+  if (error) throw new Error("Error fetching attendance: " + error.message);
+
+  return data as RecentAttendanceRecord[];
 };
 
 //* V2

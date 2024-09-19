@@ -20,7 +20,7 @@ export const Header = () => {
     const [isOpen, setOpen] = useState(false);
     return (
         <header className="w-full z-40 fixed top-0 left-0 backdrop-blur-lg">
-            <div className="container relative mx-auto p-4 flex gap-4 flex-row  items-center">
+            <div className="container relative mx-auto px-4 py-2 flex gap-4 flex-row  items-center">
                 {/* <div className="justify-start items-center gap-4 lg:flex hidden flex-row">
 
                 </div> */}
