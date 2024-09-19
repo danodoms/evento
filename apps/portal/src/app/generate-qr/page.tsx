@@ -49,7 +49,7 @@ const QRCodeGenerator = () => {
 
     useEffect(() => {
         generateQRCode()
-    }, [id])
+    }, [id, firstName, lastName, dept])
 
 
 
