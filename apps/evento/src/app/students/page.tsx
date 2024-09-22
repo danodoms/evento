@@ -303,6 +303,10 @@ export default function StudentsPage({ searchParams }: StudentsPageProps) {
 			}
 
 
+			{/* {renderStudentList(isStudentsLoading, prevStudentCount, students, studentRowCount, departments)} */}
+
+
+
 
 
 
@@ -342,9 +346,9 @@ function renderStudentList(isLoading: boolean, prevStudentCount: number, student
 
 			{students.length > 0 && !isLoading ? (
 				<div className="flex flex-col gap-3 md:grid md:grid-cols-2 lg:grid-cols-3 overflow-y-auto rounded-md w-full">
-					{students.map((student, index) => (
+					{students.map((student) => (
 						<div
-							key={index}
+							key={`${student.created_at}-${student.school_id}`}
 							className="p-5 rounded-lg flex flex-col gap-1 backdrop-contrast-50 backdrop-opacity-20"
 						>
 							<div className="flex justify-between items-center">
