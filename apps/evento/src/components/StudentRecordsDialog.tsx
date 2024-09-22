@@ -81,9 +81,15 @@ const StudentRecordsDialog = ({ schoolId, student }: StudentRecordsDialogProps) 
 
 	if (schoolId) {
 		schoolIdToUse = schoolId
-	} else if (student) {
+		console.log("ON STUDENT RECORDS DIALOG: " + "using schoolId: " + schoolIdToUse)
+	}
+
+	if (student) {
 		schoolIdToUse = student.school_id
 		studentName = getStudentFullName(student)
+
+		console.log("ON STUDENT RECORDS DIALOG: " + "using schoolId: " + schoolIdToUse)
+		console.log("ON STUDENT RECORDS DIALOG: " + "using studentName: " + studentName)
 	}
 
 	const {
@@ -91,7 +97,7 @@ const StudentRecordsDialog = ({ schoolId, student }: StudentRecordsDialogProps) 
 		error: attendanceRecordsError,
 		isLoading: isAttendanceRecordsLoading,
 	} = useQuery<Attendance[]>({
-		queryKey: ["studentAttendanceRecords", schoolId],
+		queryKey: ["studentAttendanceRecords", schoolIdToUse],
 		queryFn: () => getAttendanceRecordsBySchoolId(schoolIdToUse),
 	});
 
