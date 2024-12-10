@@ -100,7 +100,7 @@ const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendance
 							</TableHeader> */}
                             <div className="">
                                 {attendanceGroup?.records.map((record) => (
-                                    <div key={record.id} className="border-none outline-none justify-left flex align-middle gap-4 py-2">
+                                    <div key={record.id} className="border-none outline-none justify-left flex align-middle gap-4 py-1">
 
 
                                         {record.is_time_in ?
