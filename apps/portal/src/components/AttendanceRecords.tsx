@@ -1,0 +1,133 @@
+
+
+
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+import {
+    Attendance,
+    getAttendanceRecordsBySchoolId,
+    type GroupedAttendance
+} from "@repo/models/Attendance";
+import { Event, getEvents } from "@repo/models/Event";
+import { getStudentFullName, Student } from "@repo/models/Student";
+import useMediaQuery from "@custom-react-hooks/use-media-query";
+import { useQuery } from "@tanstack/react-query";
+import { format, parseISO } from "date-fns";
+import { TableProperties, CircleAlert, Eye, AlignLeft, LogIn, LogOut, Calendar } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+// import { truncateString } from "@/utils/utils";
+
+type AttendanceSectionProps = {
+    groupedAttendanceRecords: GroupedAttendance[];
+    events: Event[];
+}
+
+
+
+const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendanceRecords, events }) => {
+
+
+
+
+
+
+    const formatDate = (dateString: string): string =>
+        format(parseISO(dateString), "MMMM d, yyyy");
+
+
+    //*V2 This version also checks if event is active
+    const getEventNameFromDate = (events: Event[], date: string) => {
+        const event = events.find((event) => event.date === date && event.is_active === true);
+        return event && event.name;
+    };
+
+    //*V1 
+    // const getEventNameFromDate = (events: Event[], date: string) => {
+    // 	const event = events.find((event) => event.date === date);
+    // 	return event ? event.name : formatDate(date);
+    // };
+
+    return (
+        <div className="md:max-h-96 overflow-scroll border-red-500 border-1 flex flex-col  gap-4 w-full">
+
+
+            {groupedAttendanceRecords.length > 0 ? (
+
+
+                groupedAttendanceRecords.map((attendanceGroup) => (
+
+                    <div key={attendanceGroup.date} className="min-w-full  bg-neutral-500  bg-opacity-10 rounded-md p-4">
+
+                        <div className="flex justify-between items-center opacity-50  rounded-md mb-2">
+                            {getEventNameFromDate(events, attendanceGroup.date) ? (
+                                <span className="font-bold text-sm">
+                                    {getEventNameFromDate(events, attendanceGroup.date)}
+                                </span>
+                            ) : (
+                                <span className="font-bold text-sm italic">
+                                    No Event
+                                </span>
+                            )}
+
+
+                            <p className="text-xs flex  font-bold gap-2 items-center">
+                                <Calendar className="size-3 " />
+                                {formatDate(attendanceGroup.date)}
+                            </p>
+                        </div>
+
+
+
+
+
+                        {/* SECTION FOR EACH ATTENDANCE RECORD */}
+                        <div className="">
+                            {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
+                            {/* <TableHeader>
+								<TableRow >
+									<TableHead className="hidden">Time</TableHead>
+									<TableHead className="hidden">Scanner</TableHead>
+
+								</TableRow>
+							</TableHeader> */}
+                            <div className="">
+                                {attendanceGroup?.records.map((record) => (
+                                    <div key={record.id} className="border-none outline-none justify-left flex align-middle gap-4 py-2">
+
+
+                                        {record.is_time_in ?
+                                            (<div className="flex gap-2 items-center font-bold text-xs"> <LogIn className="size-3" />{record.time}</div>) :
+                                            (<div className="flex gap-2 items-center font-bold text-xs"><LogOut className="size-3" />{record.time}</div>)
+                                        }
+
+
+
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                ))
+
+
+
+
+            ) : (
+                <div className="flex items-center justify-center h-full">
+                    <p className="text-center text-sm px-4 py-2 rounded-full flex items-center gap-2"><CircleAlert className="size-4" />No records found</p>
+                </div>
+            )}
+
+        </div>
+    )
+
+}
+
+export default AttendanceRecords
