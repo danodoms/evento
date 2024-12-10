@@ -20,7 +20,7 @@ import { getStudentFullName, Student } from "@repo/models/Student";
 import useMediaQuery from "@custom-react-hooks/use-media-query";
 import { useQuery } from "@tanstack/react-query";
 import { format, parseISO } from "date-fns";
-import { TableProperties, CircleAlert, Eye, AlignLeft, LogIn, LogOut, Calendar } from "lucide-react";
+import { TableProperties, CircleAlert, Eye, AlignLeft, LogIn, LogOut, Calendar, Redo, UndoIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 // import { truncateString } from "@/utils/utils";
 
@@ -55,7 +55,7 @@ const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendance
     // };
 
     return (
-        <div className="md:max-h-96 overflow-scroll border-red-500 border-1 flex flex-col  gap-4 w-full">
+        <div className=" overflow-scroll border-red-500 border-1  gap-4 w-full grid-cols-2 grid">
 
 
             {groupedAttendanceRecords.length > 0 ? (
@@ -63,24 +63,25 @@ const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendance
 
                 groupedAttendanceRecords.map((attendanceGroup) => (
 
-                    <div key={attendanceGroup.date} className="min-w-full  bg-neutral-500  bg-opacity-10 rounded-md p-4">
+                    <div key={attendanceGroup.date} className=" bg-neutral-500  bg-opacity-10 rounded-md p-4">
 
-                        <div className="flex justify-between items-center opacity-50  rounded-md mb-2">
-                            {getEventNameFromDate(events, attendanceGroup.date) ? (
-                                <span className="font-bold text-sm">
-                                    {getEventNameFromDate(events, attendanceGroup.date)}
-                                </span>
-                            ) : (
-                                <span className="font-bold text-sm italic">
-                                    No Event
-                                </span>
-                            )}
+                        <div className="flex flex-col justify-between items-left  rounded-md ">
 
-
-                            <p className="text-xs flex  font-bold gap-2 items-center">
+                            <p className="text-xs flex  font-bold gap-2 items-center opacity-50  mb-2">
                                 <Calendar className="size-3 " />
                                 {formatDate(attendanceGroup.date)}
                             </p>
+
+
+                            {getEventNameFromDate(events, attendanceGroup.date) ? (
+                                <span className="font-bold ">
+                                    {getEventNameFromDate(events, attendanceGroup.date)}
+                                </span>
+                            ) : (
+                                <span className="font-bold text italic">
+                                    No Event
+                                </span>
+                            )}
                         </div>
 
 
@@ -103,8 +104,8 @@ const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendance
 
 
                                         {record.is_time_in ?
-                                            (<div className="flex gap-2 items-center font-bold text-xs"> <LogIn className="size-3" />{record.time}</div>) :
-                                            (<div className="flex gap-2 items-center font-bold text-xs"><LogOut className="size-3" />{record.time}</div>)
+                                            (<div className="flex gap-2 items-center font-bold text-xs"> <div className="size-2 color-green-500 bg-green-500 opacity-80 rounded-full" />{record.time}</div>) :
+                                            (<div className="flex gap-2 items-center font-bold text-xs"><div className="size-2 color-green-500 bg-red-500 opacity-80 rounded-full" />{record.time}</div>)
                                         }
 
 

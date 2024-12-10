@@ -9,16 +9,16 @@ import { Attendance, getAttendanceRecordsBySchoolId } from "@repo/models/Attenda
 import { Event, getEvents } from "@repo/models/Event";
 import { useQuery } from "@tanstack/react-query";
 import AttendanceRecords from "@/components/AttendanceRecords";
-
+import { getStudentBySchoolId, Student } from "@repo/models/Student";
 
 export default function Records() {
 
-
-    const schoolIdToUse = "2021-3439"
-
-
+    const [schoolIdToUse, setSchoolIdToUse] = useState("2021-2473")
+    // setSchoolIdToUse("2021-2473")
 
     // studentName = getStudentFullName(student)
+
+
 
 
 
@@ -38,6 +38,15 @@ export default function Records() {
     } = useQuery<Event[]>({
         queryKey: ["events"],
         queryFn: getEvents,
+    });
+
+    const {
+        data: student = null,
+        error: studentError,
+        isLoading: isStudentLoading,
+    } = useQuery<Student>({
+        queryKey: ["student", schoolIdToUse],
+        queryFn: () => getStudentBySchoolId(schoolIdToUse),
     });
 
 
@@ -62,13 +71,26 @@ export default function Records() {
 
 
 
+    function truncateString(input: string, maxChars: number, extension: string = "..."): string {
+        if (input.length <= maxChars) {
+            return input;
+        }
+        return input.slice(0, maxChars) + extension;
+    }
+
 
     return (
-        <div className="min-h-screen  flex items-center  flex-col justify-center p-4 pt-8 ">
+        <div className="min-h-screen  flex items-center  flex-col justify-center p-4 pt-16 ">
 
             {/* <div>Records</div>
             <Button onClick={getDepartments}>fetch depts</Button> */}
-            <div className="max-h-screen w-full overflow-scroll">
+            <div className="p-4 text-center mb-4">
+                <p className="text-sm opacity-50 mb-2">Showing attendance records for</p>
+                <p className="text-3xl font-bold">{student && truncateString(student.first_name, 3, "...")} {student && truncateString(student.last_name, 1, ".")}</p>
+                <p className="tracking-wide opacity-50 font-bold">{student?.school_id}</p>
+            </div>
+
+            <div className="h-auto w-full overflow-scroll">
                 <AttendanceRecords groupedAttendanceRecords={groupedAttendanceRecords} events={events} />
             </div>
 
