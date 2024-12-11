@@ -8,19 +8,16 @@ import { getAttendanceRecordsBySchoolId } from "@repo/models/Attendance";
 import { getEvents } from "@repo/models/Event";
 import { getStudentBySchoolId } from "@repo/models/Student";
 import AttendanceRecords from "@/components/AttendanceRecords";
-import { debounce } from "@/utils/debounce"; // Create a debounce utility or use lodash
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 
 export default function Records() {
-
-
-
+    const COOLDOWN_TIME = 60000; // 1 minute in milliseconds
 
     const [schoolId, setSchoolId] = useState("");
-    // const [schoolIdToUse, setSchoolIdToUse] = useState("")
-    const [isStudentFound, setIsStudentFound] = useState(false)
-    const [isSchoolIdValid, setIsSchoolIdValid] = useState(false)
-    const [isStudentFetchFail, setIsStudentFetchFail] = useState(false)
+    const [isStudentFound, setIsStudentFound] = useState(false);
+    const [isSchoolIdValid, setIsSchoolIdValid] = useState(false);
+    const [isStudentFetchFail, setIsStudentFetchFail] = useState(false);
+    const [cooldownRemaining, setCooldownRemaining] = useState(0);
 
     useEffect(() => {
         function validateSchoolId(id: string): boolean {
@@ -34,12 +31,31 @@ export default function Records() {
             setIsSchoolIdValid(false); // Reset if schoolId is empty
         }
 
-        setIsStudentFetchFail(false)
+        setIsStudentFetchFail(false);
     }, [schoolId]);
 
+    // Initialize cooldown timer
+    useEffect(() => {
+        const lastQueryTime = localStorage.getItem("lastQueryTime");
+        if (lastQueryTime) {
+            const timeElapsed = Date.now() - parseInt(lastQueryTime, 10);
+            if (timeElapsed < COOLDOWN_TIME) {
+                setCooldownRemaining(COOLDOWN_TIME - timeElapsed);
+            }
+        }
+    }, []);
 
+    useEffect(() => {
+        if (cooldownRemaining > 0) {
+            const timer = setInterval(() => {
+                setCooldownRemaining((prev) => Math.max(0, prev - 1000));
+            }, 1000);
 
-    const { data: attendanceRecords = [], isLoading: isAttendanceRecordsLoading, refetch: refetchAttendanceRecords } = useQuery({
+            return () => clearInterval(timer);
+        }
+    }, [cooldownRemaining]);
+
+    const { data: attendanceRecords = [], refetch: refetchAttendanceRecords } = useQuery({
         queryKey: ["studentAttendanceRecords", schoolId],
         queryFn: () => getAttendanceRecordsBySchoolId(formatWithDash(schoolId)),
     });
@@ -49,27 +65,24 @@ export default function Records() {
         queryFn: getEvents,
     });
 
-    const { data: student, refetch: refetchStudent, isError: isStudentError, isRefetchError } = useQuery({
+    const { data: student, refetch: refetchStudent } = useQuery({
         queryKey: ["student", schoolId],
         queryFn: () => getStudentBySchoolId(formatWithDash(schoolId)),
-        enabled: false
+        enabled: false,
     });
 
-
     function formatWithDash(value: string): string {
-        // Remove all non-digit characters
         const digitsOnly = value.replace(/\D/g, "");
-
-        // Insert a dash after the 4th digit if there are at least 5 digits
         if (digitsOnly.length <= 4) return digitsOnly;
         return `${digitsOnly.slice(0, 4)}-${digitsOnly.slice(4, 8)}`;
     }
 
     async function handleSearch() {
-        const { data: fetchedStudent } = await refetchStudent(); // Wait for refetch and get the data
+        if (cooldownRemaining > 0) return;
+
+        const { data: fetchedStudent } = await refetchStudent();
 
         if (!fetchedStudent) {
-            console.log("NO STUDENT FOUND");
             setIsStudentFetchFail(true);
             setIsStudentFound(false);
             return;
@@ -77,16 +90,14 @@ export default function Records() {
 
         setIsStudentFetchFail(false);
         setIsStudentFound(true);
-        console.log(fetchedStudent);
 
         // Fetch attendance records
         refetchAttendanceRecords();
-    }
 
-
-
-    function displayErrorMessage() {
-
+        // Save the current time as the last query time
+        const currentTime = Date.now();
+        localStorage.setItem("lastQueryTime", currentTime.toString());
+        setCooldownRemaining(COOLDOWN_TIME);
     }
 
     const groupedAttendanceRecords = Object.entries(
@@ -100,7 +111,6 @@ export default function Records() {
         records: records.sort((a, b) => a.time.localeCompare(b.time)),
     }));
 
-
     function truncateString(input: string, maxChars: number, extension: string = "..."): string {
         if (input.length <= maxChars) {
             return input;
@@ -108,13 +118,10 @@ export default function Records() {
         return input.slice(0, maxChars) + extension;
     }
 
-
     return (
         <div className="min-h-screen flex items-center flex-col justify-center p-4 pt-16">
             {isStudentFound && student ? (
                 <div>
-
-
                     <div className="p-4 text-center mb-4">
                         <p className="text-sm opacity-50 mb-2">Showing attendance records for</p>
                         <p className="text-3xl font-bold">{student && truncateString(student.first_name, 3, "...")} {student && truncateString(student.last_name, 1, ".")}</p>
@@ -122,19 +129,16 @@ export default function Records() {
                         <Button className="w-full mt-4" variant="outline" onClick={() => setIsStudentFound(false)}>Search Again</Button>
                     </div>
 
-
                     <div className="h-auto w-full overflow-scroll">
                         <AttendanceRecords groupedAttendanceRecords={groupedAttendanceRecords} events={events} />
                     </div>
-
-
                 </div>
             ) : (
                 <div>
                     <p className="text-center text-3xl font-bold">evento Query</p>
                     <p className="text-center text-sm mb-8 opacity-50">Enter your school ID.</p>
 
-                    <InputOTP inputMode="numeric" maxLength={8} value={schoolId} onChange={(value) => setSchoolId(value)} pattern={REGEXP_ONLY_DIGITS} >
+                    <InputOTP inputMode="numeric" maxLength={8} value={schoolId} onChange={(value) => setSchoolId(value)} pattern={REGEXP_ONLY_DIGITS}>
                         <InputOTPGroup>
                             <InputOTPSlot index={0} />
                             <InputOTPSlot index={1} />
@@ -153,17 +157,17 @@ export default function Records() {
                     <Button
                         variant="default"
                         className="mt-4 w-full"
-                        onClick={() => handleSearch()}
-                        disabled={!isSchoolIdValid}
+                        onClick={handleSearch}
+                        disabled={!isSchoolIdValid || cooldownRemaining > 0}
                     >
-                        Search
+                        {cooldownRemaining > 0
+                            ? `Please wait ${Math.ceil(cooldownRemaining / 1000)}s`
+                            : "Search"}
                     </Button>
-
 
                     {isStudentFetchFail && (
                         <p className="text-center mt-4 text-red-500">No records found</p>
                     )}
-
                 </div>
             )}
         </div>
