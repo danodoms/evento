@@ -88,12 +88,10 @@ const AttendanceCard: React.FC<Props> = ({ result }) => {
                             {result.student.dept_id &&
                                 (
                                     <div className='text-xs font-bold tracking-wider opacity-80'>
-                                        • {getDepartmentShortNameById(result.student.dept_id)}
+                                        {getDepartmentShortNameById(result.student.dept_id)}
                                     </div>
                                 )
                             }
-
-
                         </div>
 
 

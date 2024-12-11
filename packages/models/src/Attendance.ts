@@ -42,6 +42,11 @@ export type RecentAttendanceRecord = {
   is_active: boolean; // boolean
 };
 
+export type GroupedAttendance = {
+  date: string;
+  records: Attendance[];
+};
+
 // Utility functions
 const getCurrentTime = (): string =>
   new Date().toLocaleTimeString("en-US", { hour12: false });

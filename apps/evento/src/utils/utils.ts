@@ -56,3 +56,25 @@ export const generateCSV = (data: object, fileName: string = "download") => {
 
   return result;
 };
+
+export function truncateString(
+  text: string,
+  maxChars: number,
+  extension = "..."
+) {
+  // Guard clause for short strings that don't need truncation
+  if (text.length <= maxChars) {
+    return text;
+  }
+
+  // Adjust maxChars to account for the length of the extension
+  const truncatedLength = maxChars - extension.length;
+
+  // Guard clause to handle cases where maxChars is too short to include extension
+  if (truncatedLength <= 0) {
+    return extension.slice(0, maxChars);
+  }
+
+  // Return the truncated string with the extension
+  return text.slice(0, truncatedLength) + extension;
+}
