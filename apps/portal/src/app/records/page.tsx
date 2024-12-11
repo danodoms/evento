@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp";
 import { getAttendanceRecordsBySchoolId } from "@repo/models/Attendance";
@@ -12,12 +12,34 @@ import { debounce } from "@/utils/debounce"; // Create a debounce utility or use
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 
 export default function Records() {
+
+
+
+
     const [schoolId, setSchoolId] = useState("");
+    // const [schoolIdToUse, setSchoolIdToUse] = useState("")
+    const [isStudentFound, setIsStudentFound] = useState(false)
+    const [isSchoolIdValid, setIsSchoolIdValid] = useState(false)
+    const [isStudentFetchFail, setIsStudentFetchFail] = useState(false)
+
+    useEffect(() => {
+        function validateSchoolId(id: string): boolean {
+            const regex = /^\d{8}$/; // Matches exactly 8 digits
+            return regex.test(id);
+        }
+
+        if (schoolId) {
+            setIsSchoolIdValid(validateSchoolId(schoolId));
+        } else {
+            setIsSchoolIdValid(false); // Reset if schoolId is empty
+        }
+
+        setIsStudentFetchFail(false)
+    }, [schoolId]);
 
 
 
-
-    const { data: attendanceRecords = [], isLoading: isAttendanceRecordsLoading } = useQuery({
+    const { data: attendanceRecords = [], isLoading: isAttendanceRecordsLoading, refetch: refetchAttendanceRecords } = useQuery({
         queryKey: ["studentAttendanceRecords", schoolId],
         queryFn: () => getAttendanceRecordsBySchoolId(formatWithDash(schoolId)),
     });
@@ -27,9 +49,10 @@ export default function Records() {
         queryFn: getEvents,
     });
 
-    const { data: student, refetch: refetchStudent } = useQuery({
+    const { data: student, refetch: refetchStudent, isError: isStudentError, isRefetchError } = useQuery({
         queryKey: ["student", schoolId],
         queryFn: () => getStudentBySchoolId(formatWithDash(schoolId)),
+        enabled: false
     });
 
 
@@ -42,7 +65,29 @@ export default function Records() {
         return `${digitsOnly.slice(0, 4)}-${digitsOnly.slice(4, 8)}`;
     }
 
+    async function handleSearch() {
+        const { data: fetchedStudent } = await refetchStudent(); // Wait for refetch and get the data
 
+        if (!fetchedStudent) {
+            console.log("NO STUDENT FOUND");
+            setIsStudentFetchFail(true);
+            setIsStudentFound(false);
+            return;
+        }
+
+        setIsStudentFetchFail(false);
+        setIsStudentFound(true);
+        console.log(fetchedStudent);
+
+        // Fetch attendance records
+        refetchAttendanceRecords();
+    }
+
+
+
+    function displayErrorMessage() {
+
+    }
 
     const groupedAttendanceRecords = Object.entries(
         attendanceRecords.reduce((acc, record) => {
@@ -63,9 +108,10 @@ export default function Records() {
         return input.slice(0, maxChars) + extension;
     }
 
+
     return (
         <div className="min-h-screen flex items-center flex-col justify-center p-4 pt-16">
-            {attendanceRecords.length > 0 ? (
+            {isStudentFound && student ? (
                 <div>
 
 
@@ -73,7 +119,7 @@ export default function Records() {
                         <p className="text-sm opacity-50 mb-2">Showing attendance records for</p>
                         <p className="text-3xl font-bold">{student && truncateString(student.first_name, 3, "...")} {student && truncateString(student.last_name, 1, ".")}</p>
                         <p className="tracking-wide opacity-50 font-bold">{student?.school_id}</p>
-                        <Button className="w-full mt-4" variant="outline" onClick={() => setSchoolId("")}>Search Again</Button>
+                        <Button className="w-full mt-4" variant="outline" onClick={() => setIsStudentFound(false)}>Search Again</Button>
                     </div>
 
 
@@ -88,7 +134,7 @@ export default function Records() {
                     <p className="text-center text-3xl font-bold">evento Query</p>
                     <p className="text-center text-sm mb-8 opacity-50">Enter your school ID.</p>
 
-                    <InputOTP inputMode="numeric" onComplete={refetchStudent} maxLength={8} value={schoolId} onChange={(value) => setSchoolId(value)} pattern={REGEXP_ONLY_DIGITS}>
+                    <InputOTP inputMode="numeric" maxLength={8} value={schoolId} onChange={(value) => setSchoolId(value)} pattern={REGEXP_ONLY_DIGITS} >
                         <InputOTPGroup>
                             <InputOTPSlot index={0} />
                             <InputOTPSlot index={1} />
@@ -104,14 +150,20 @@ export default function Records() {
                         </InputOTPGroup>
                     </InputOTP>
 
-                    {/* <Button
+                    <Button
                         variant="default"
                         className="mt-4 w-full"
-                        onClick={handleSearch}
-                        disabled={!isValidSchoolId}
+                        onClick={() => handleSearch()}
+                        disabled={!isSchoolIdValid}
                     >
                         Search
-                    </Button> */}
+                    </Button>
+
+
+                    {isStudentFetchFail && (
+                        <p className="text-center mt-4 text-red-500">No records found</p>
+                    )}
+
                 </div>
             )}
         </div>
