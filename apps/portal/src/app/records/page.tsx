@@ -118,12 +118,57 @@ export default function Records() {
         return input.slice(0, maxChars) + extension;
     }
 
+
+
+
+
+
+
+
+
+    function deduplicateRecords(data) {
+        const THIRTY_MINUTES = 30 * 60 * 1000; // 30 minutes in milliseconds
+
+        return data.map((day) => {
+            const sortedRecords = [...day.records].sort(
+                (a, b) => new Date(a.created_at) - new Date(b.created_at)
+            );
+
+            const deduplicated = [];
+            sortedRecords.forEach((record) => {
+                if (
+                    deduplicated.length === 0 || // Always keep the first record
+                    new Date(record.created_at) - new Date(deduplicated[deduplicated.length - 1].created_at) >=
+                    THIRTY_MINUTES
+                ) {
+                    deduplicated.push(record);
+                }
+            });
+
+            return {
+                date: day.date,
+                records: deduplicated,
+            };
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     return (
-        <div className="min-h-screen flex items-center flex-col justify-center p-4 pt-16">
+        <div className="min-h-screen flex items-center flex-col justify-center p-4 pt-16 w-full">
             {isStudentFound && student ? (
                 <div>
-                    <div className="p-4 text-center mb-4">
-                        <p className="text-sm opacity-50 mb-2">Showing attendance records for</p>
+                    <div className="p-4 text-center">
+                        {/* <p className="text-sm opacity-50 mb-2">Showing attendance records for</p> */}
                         <p className="text-3xl font-bold">{student && truncateString(student.first_name, 3, "...")} {student && truncateString(student.last_name, 1, ".")}</p>
                         <p className="tracking-wide opacity-50 font-bold">{student?.school_id}</p>
                         <Button className="w-full mt-4" variant="outline" onClick={() => setIsStudentFound(false)}>Search Again</Button>
@@ -131,6 +176,8 @@ export default function Records() {
 
                     <div className="h-auto w-full overflow-scroll">
                         <AttendanceRecords groupedAttendanceRecords={groupedAttendanceRecords} events={events} />
+                        {/* <h2 className="font-bold my-8">Deduplicated records</h2>
+                        <AttendanceRecords groupedAttendanceRecords={deduplicateRecords(groupedAttendanceRecords)} events={events} /> */}
                     </div>
                 </div>
             ) : (

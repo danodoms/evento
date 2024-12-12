@@ -33,7 +33,8 @@ type AttendanceSectionProps = {
 
 const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendanceRecords, events }) => {
 
-
+    // console.log("grouped attendance records: ", JSON.stringify(groupedAttendanceRecords))
+    // console.log("events: ", JSON.stringify(events))
 
 
 
@@ -54,79 +55,258 @@ const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendance
     // 	return event ? event.name : formatDate(date);
     // };
 
+
+
+
+    // Function to calculate attendance summary
+    function calculateEventSummary(events: Event[], attendanceRecords: GroupedAttendance[]) {
+        // Object to store the total summary counts
+        const totalSummary = {
+            attended: 0,
+            missed: 0,
+            incomplete: 0
+        };
+
+
+        const summary = events
+            .filter(event => event.is_active && event.is_required)  // Only process active events and required events
+            .map((event) => {
+                // Filter attendance records for the specific event date
+                const recordsForEvent = attendanceRecords.filter(
+                    (record) => record.date === event.date
+                );
+
+
+
+                // console.log("recordsForEvent", JSON.stringify(recordsForEvent))
+
+                // Initialize the remark as "missed" by default
+                let remark = "missed";
+
+                if (event.is_required) {
+                    if (recordsForEvent[0]?.records.length === 1) {
+                        // If only one record exists, mark as incomplete
+                        remark = "incomplete";
+
+                    } else if (recordsForEvent[0]?.records.length > 1) {
+
+                        console.log("dsdasbsid")
+
+                        // Calculate the duration covered by attendance
+                        const times = recordsForEvent[0].records.map((record) => record.time);
+                        // const earliest = Math.min(...times);
+                        // const latest = Math.max(...times);
+                        // const attendedDuration = (latest - earliest) / (60 * 1000); // in minutes
+
+
+
+
+
+
+                        // Step 1: Convert time strings to total seconds
+                        const totalSeconds = times.map(time => {
+                            const [hours, minutes, seconds] = time.split(":").map(Number);
+                            return hours * 3600 + minutes * 60 + seconds; // Total seconds from the start of the day
+                        });
+
+                        // Step 2: Find the earliest and latest times
+                        const earliestSeconds = Math.min(...totalSeconds);
+                        const latestSeconds = Math.max(...totalSeconds);
+
+                        // Step 3: Calculate the duration in minutes
+                        const durationSeconds = latestSeconds - earliestSeconds;
+                        const attendedDuration = durationSeconds / 60;
+
+
+                        console.log("YOU ATTENDED MINUTESSS: ", event.name, attendedDuration)
+
+                        // Compare attended duration with required duration
+                        if (attendedDuration >= 0) {
+                            remark = "attended";
+                        } else {
+                            remark = "incomplete";
+                        }
+
+
+                    }
+                }
+
+
+                // Update the total summary counts based on the remark
+                if (remark === "attended") {
+                    totalSummary.attended++;
+                } else if (remark === "missed") {
+                    totalSummary.missed++;
+                } else if (remark === "incomplete") {
+                    totalSummary.incomplete++;
+                }
+
+
+                // Return the event name, date, and calculated remark
+                return {
+                    name: event.name,
+                    date: event.date,
+                    duration_in_minutes: event.duration_in_minutes,
+                    remark,
+                };
+            });
+
+        // Return both the individual event summary and the total summary
+        return {
+            summary,
+            totalSummary
+        };
+    }
+
+
+
+    // console.log(calculateEventSummary(events, groupedAttendanceRecords))
+
+
+    const { summary: attendanceSummary, totalSummary } = calculateEventSummary(events, groupedAttendanceRecords)
+
+
+
+
     return (
-        <div className=" overflow-scroll border-red-500 border-1  gap-4 w-full grid-cols-2 grid">
+
+        <>
 
 
-            {groupedAttendanceRecords.length > 0 ? (
+            <div className="flex w-full gap-4 p-4">
+                <div className="p-4 bg-neutral-500 flex-auto rounded-md bg-opacity-20 items-center text-center">
+                    <p className="font-bold text-sm">
+                        Attended
+                    </p>
+
+                    <p className="font-bold text-xl">
+                        {totalSummary.attended}
+                    </p>
+                </div>
 
 
-                groupedAttendanceRecords.map((attendanceGroup) => (
 
-                    <div key={attendanceGroup.date} className=" bg-neutral-500  bg-opacity-10 rounded-md p-4">
+                <div className="p-4 bg-yellow-500 flex-auto rounded-md bg-opacity-70 items-center text-center">
+                    <p className="font-bold text-sm">
+                        Incomplete
+                    </p>
 
-                        <div className="flex flex-col justify-between items-left  rounded-md ">
+                    <p className="font-bold text-xl">
+                        {totalSummary.incomplete}
+                    </p>
+                </div>
 
-                            <p className="text-xs flex  font-bold gap-2 items-center opacity-50  mb-2">
-                                <Calendar className="size-3 " />
-                                {formatDate(attendanceGroup.date)}
-                            </p>
+                <div className="p-4 bg-red-500 flex-auto rounded-md bg-opacity-70 items-center text-center">
+                    <p className="font-bold text-sm">
+                        Missed
+                    </p>
 
+                    <p className="font-bold text-xl">
+                        {totalSummary.missed}
+                    </p>
+                </div>
+            </div>
 
-                            {getEventNameFromDate(events, attendanceGroup.date) ? (
-                                <span className="font-bold ">
-                                    {getEventNameFromDate(events, attendanceGroup.date)}
-                                </span>
-                            ) : (
-                                <span className="font-bold text italic">
-                                    No Event
-                                </span>
-                            )}
+            <div className="flex flex-col w-full">
+                {attendanceSummary.map((item, index) => (
+                    <div key={index} className=" rounded-md bg-neutral-500 bg-opacity-0 flex px-4 py-2 justify-between items-center gap-4">
+                        <div className="flex flex-col flex-initial">
+                            <p className="font-bold">{item.name}</p>
+                            <p className="text-xs opacity-50 font-bold">{item.date}</p>
+
+                            {/* <p className="opacity-50 mt-1 text-red-500">{item.duration_in_minutes}</p> */}
                         </div>
 
+                        <div className="font text-right bg-gradient-to-r from-transparent to-neutral-500/20 px-4 py-2 rounded-md flex-auto">
+                            <p>
+                                {item.remark}
+                            </p>
+                        </div>
+
+                    </div>
+                ))}
+            </div>
+
+
+            <div className=" overflow-scroll border-red-500 border-1  w-full grid-cols-2 grid">
 
 
 
 
-                        {/* SECTION FOR EACH ATTENDANCE RECORD */}
-                        <div className="">
-                            {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
-                            {/* <TableHeader>
+
+
+
+
+                {groupedAttendanceRecords.length > 0 ? (
+                    groupedAttendanceRecords.map((attendanceGroup) => (
+
+                        <div key={attendanceGroup.date} className=" bg-neutral-500  bg-opacity-0 rounded-md p-4 ">
+
+                            <div className="flex flex-col justify-between items-left  rounded-md ">
+
+                                <p className="text-xs flex  font-bold gap-1 items-center opacity-50">
+
+                                    <Calendar className="size-3 " />
+                                    {formatDate(attendanceGroup.date)}
+
+                                </p>
+
+
+                                {getEventNameFromDate(events, attendanceGroup.date) ? (
+                                    <span className="font-bold ">
+                                        {getEventNameFromDate(events, attendanceGroup.date)}
+                                    </span>
+                                ) : (
+                                    <span className="font-bold text italic">
+                                        No Event
+                                    </span>
+                                )}
+                            </div>
+
+
+
+
+
+                            {/* SECTION FOR EACH ATTENDANCE RECORD */}
+                            <div className="">
+                                {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
+                                {/* <TableHeader>
 								<TableRow >
 									<TableHead className="hidden">Time</TableHead>
 									<TableHead className="hidden">Scanner</TableHead>
 
 								</TableRow>
 							</TableHeader> */}
-                            <div className="">
-                                {attendanceGroup?.records.map((record) => (
-                                    <div key={record.id} className="border-none outline-none justify-left flex align-middle gap-4 py-1">
+                                <div className="">
+                                    {attendanceGroup?.records.map((record) => (
+                                        <div key={record.id} className="border-none outline-none justify-left flex align-middle gap-4 py-1">
 
 
-                                        {record.is_time_in ?
-                                            (<div className="flex gap-2 items-center font-bold text-xs"> <div className="size-2 color-green-500 bg-green-500 opacity-80 rounded-full" />{record.time}</div>) :
-                                            (<div className="flex gap-2 items-center font-bold text-xs"><div className="size-2 color-green-500 bg-red-500 opacity-80 rounded-full" />{record.time}</div>)
-                                        }
+                                            {record.is_time_in ?
+                                                (<div className="flex gap-2 items-center font-bold text-xs"> <div className="size-2 color-green-500 bg-green-500 opacity-80 rounded-full" />{record.time}</div>) :
+                                                (<div className="flex gap-2 items-center font-bold text-xs"><div className="size-2 color-green-500 bg-red-500 opacity-80 rounded-full" />{record.time}</div>)
+                                            }
 
 
 
-                                    </div>
-                                ))}
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
+                    ))
+
+
+
+
+                ) : (
+                    <div className="flex items-center justify-center h-full">
+                        <p className="text-center text-sm px-4 py-2 rounded-full flex items-center gap-2"><CircleAlert className="size-4" />No records found</p>
                     </div>
-                ))
+                )}
 
-
-
-
-            ) : (
-                <div className="flex items-center justify-center h-full">
-                    <p className="text-center text-sm px-4 py-2 rounded-full flex items-center gap-2"><CircleAlert className="size-4" />No records found</p>
-                </div>
-            )}
-
-        </div>
+            </div>
+        </>
     )
 
 }
