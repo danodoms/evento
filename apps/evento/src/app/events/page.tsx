@@ -47,7 +47,9 @@ import {
 	FileBarChart2,
 	PlusCircle,
 	LogIn,
-	LogOut
+	LogOut,
+	Hourglass,
+	BadgeCheck
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -324,6 +326,23 @@ export default function EventsPage() {
 								</Badge>
 
 
+
+								{event.duration_in_minutes && (
+									<Badge className="flex gap-1" variant={"secondary"}>
+										<Hourglass className="size-3" />
+										{event.duration_in_minutes} minutes
+									</Badge>
+								)}
+
+
+								{!event.is_required && (
+									<Badge className="flex gap-1" variant={"secondary"}>
+										<BadgeCheck className="size-3" />
+										Attendance is not required
+									</Badge>
+								)}
+
+
 								{getEventTimeInCount(event) !== "0" && (
 									<Badge className="flex gap-1 bg-green-500 bg-opacity-50" variant={"outline"}>
 										<LogIn className="size-3" />
@@ -357,6 +376,8 @@ export default function EventsPage() {
 									</Badge>
 								)
 								}
+
+
 							</div>
 						</div>
 					))}

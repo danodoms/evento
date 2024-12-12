@@ -11,6 +11,8 @@ export type Event = {
   description: string | undefined; // text type, represented as string
   location: string | undefined; // text type, represented as string
   duration: eventDuration;
+  duration_in_minutes: number | undefined;
+  is_required: boolean;
 };
 
 export type EventStat = {
