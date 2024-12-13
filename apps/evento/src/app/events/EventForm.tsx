@@ -93,7 +93,8 @@ export function EventForm({ event, handleClose, handleError }: EventFormProps) {
 				location: event.location,
 				duration: event.duration,
 				duration_in_minutes: event.duration_in_minutes,
-				is_required: event.is_required
+				is_required: event.is_required,
+				is_check_in_only: event.is_check_in_only
 			}
 			: {
 				name: "",
@@ -116,7 +117,8 @@ export function EventForm({ event, handleClose, handleError }: EventFormProps) {
 			location: values.location,
 			duration: values.duration,
 			duration_in_minutes: values.duration_in_minutes,
-			is_required: true
+			is_required: true,
+			is_check_in_only: false
 		};
 
 		if (event) {
@@ -130,7 +132,8 @@ export function EventForm({ event, handleClose, handleError }: EventFormProps) {
 				location: values.location,
 				duration: values.duration,
 				duration_in_minutes: values.duration_in_minutes,
-				is_required: values.is_required
+				is_required: values.is_required,
+				is_check_in_only: values.is_check_in_only
 			};
 
 			console.log("event to update: ", eventToUpdate);
@@ -333,6 +336,27 @@ export function EventForm({ event, handleClose, handleError }: EventFormProps) {
 							{form.formState.errors.is_required && (
 								<FormMessage>
 									{form.formState.errors.is_required.message}
+								</FormMessage>
+							)}
+						</FormItem>
+					)}
+				/>
+
+
+				<FormField
+					control={form.control}
+					name="is_check_in_only"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel className="flex gap-2 items-center">
+								Check In Only
+							</FormLabel>
+							<FormControl>
+								<Checkbox checked={field.value} onCheckedChange={field.onChange} />
+							</FormControl>
+							{form.formState.errors.is_check_in_only && (
+								<FormMessage>
+									{form.formState.errors.is_check_in_only.message}
 								</FormMessage>
 							)}
 						</FormItem>

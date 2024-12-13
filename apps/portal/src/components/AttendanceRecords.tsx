@@ -1,5 +1,10 @@
 
-
+import {
+    Tabs,
+    TabsContent,
+    TabsList,
+    TabsTrigger,
+} from "@/components/ui/tabs"
 
 import {
     Table,
@@ -20,7 +25,7 @@ import { getStudentFullName, Student } from "@repo/models/Student";
 import useMediaQuery from "@custom-react-hooks/use-media-query";
 import { useQuery } from "@tanstack/react-query";
 import { format, parseISO } from "date-fns";
-import { TableProperties, CircleAlert, Eye, AlignLeft, LogIn, LogOut, Calendar, Redo, UndoIcon, ChevronLeft, ChevronRight } from "lucide-react";
+import { TableProperties, CircleAlert, Eye, AlignLeft, LogIn, LogOut, Calendar, Redo, UndoIcon, ChevronLeft, ChevronRight, Hourglass, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 // import { truncateString } from "@/utils/utils";
 
@@ -29,7 +34,7 @@ type AttendanceSectionProps = {
     events: Event[];
 }
 
-
+type AttendanceRemark = "attended" | "incomplete" | "incomplete"
 
 const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendanceRecords, events }) => {
 
@@ -75,16 +80,20 @@ const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendance
                 const recordsForEvent = attendanceRecords.filter(
                     (record) => record.date === event.date
                 );
-
-
-
                 // console.log("recordsForEvent", JSON.stringify(recordsForEvent))
 
                 // Initialize the remark as "missed" by default
                 let remark = "missed";
 
+                let attendedDuration = 0
+
                 if (event.is_required) {
-                    if (recordsForEvent[0]?.records.length === 1) {
+
+                    if (recordsForEvent[0]?.records.length >= 1 && event.is_check_in_only) {
+                        // If only one record exists but event is check-in only, mark as attended
+                        remark = "attended";
+                    }
+                    else if (recordsForEvent[0]?.records.length === 1) {
                         // If only one record exists, mark as incomplete
                         remark = "incomplete";
 
@@ -115,13 +124,13 @@ const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendance
 
                         // Step 3: Calculate the duration in minutes
                         const durationSeconds = latestSeconds - earliestSeconds;
-                        const attendedDuration = durationSeconds / 60;
+                        attendedDuration = durationSeconds / 60;
 
 
                         console.log("YOU ATTENDED MINUTESSS: ", event.name, attendedDuration)
 
                         // Compare attended duration with required duration
-                        if (attendedDuration >= 0) {
+                        if (attendedDuration >= event.duration_in_minutes) {
                             remark = "attended";
                         } else {
                             remark = "incomplete";
@@ -147,7 +156,9 @@ const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendance
                     name: event.name,
                     date: event.date,
                     duration_in_minutes: event.duration_in_minutes,
-                    remark,
+                    remark: remark as AttendanceRemark,
+                    attended_duration_in_minutes: Math.floor(attendedDuration),
+                    is_check_in_only: event.is_check_in_only
                 };
             });
 
@@ -170,143 +181,183 @@ const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendance
 
     return (
 
-        <>
 
+        <Tabs defaultValue="summary" className="w-full pt-4">
+            <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="summary">Summary</TabsTrigger>
+                <TabsTrigger value="details">Details</TabsTrigger>
+            </TabsList>
+            <TabsContent value="summary" className="min-h-full">
+                <div className="flex w-full gap-4 py-2">
+                    <div className="p-4 bg-neutral-500 flex-auto rounded-md bg-opacity-20 items-center text-center">
+                        <p className="font-bold text-sm">
+                            Attended
+                        </p>
 
-            <div className="flex w-full gap-4 p-4">
-                <div className="p-4 bg-neutral-500 flex-auto rounded-md bg-opacity-20 items-center text-center">
-                    <p className="font-bold text-sm">
-                        Attended
-                    </p>
-
-                    <p className="font-bold text-xl">
-                        {totalSummary.attended}
-                    </p>
-                </div>
-
-
-
-                <div className="p-4 bg-yellow-500 flex-auto rounded-md bg-opacity-70 items-center text-center">
-                    <p className="font-bold text-sm">
-                        Incomplete
-                    </p>
-
-                    <p className="font-bold text-xl">
-                        {totalSummary.incomplete}
-                    </p>
-                </div>
-
-                <div className="p-4 bg-red-500 flex-auto rounded-md bg-opacity-70 items-center text-center">
-                    <p className="font-bold text-sm">
-                        Missed
-                    </p>
-
-                    <p className="font-bold text-xl">
-                        {totalSummary.missed}
-                    </p>
-                </div>
-            </div>
-
-            <div className="flex flex-col w-full">
-                {attendanceSummary.map((item, index) => (
-                    <div key={index} className=" rounded-md bg-neutral-500 bg-opacity-0 flex px-4 py-2 justify-between items-center gap-4">
-                        <div className="flex flex-col flex-initial">
-                            <p className="font-bold">{item.name}</p>
-                            <p className="text-xs opacity-50 font-bold">{item.date}</p>
-
-                            {/* <p className="opacity-50 mt-1 text-red-500">{item.duration_in_minutes}</p> */}
-                        </div>
-
-                        <div className="font text-right bg-gradient-to-r from-transparent to-neutral-500/20 px-4 py-2 rounded-md flex-auto">
-                            <p>
-                                {item.remark}
-                            </p>
-                        </div>
-
+                        <p className="font-bold text-xl">
+                            {totalSummary.attended}
+                        </p>
                     </div>
-                ))}
-            </div>
-
-
-            <div className=" overflow-scroll border-red-500 border-1  w-full grid-cols-2 grid">
 
 
 
+                    <div className="p-4 bg-yellow-500 flex-auto rounded-md bg-opacity-20 items-center text-center">
+                        <p className="font-bold text-sm">
+                            Incomplete
+                        </p>
+
+                        <p className="font-bold text-xl">
+                            {totalSummary.incomplete}
+                        </p>
+                    </div>
+
+                    <div className="p-4 bg-red-500 flex-auto rounded-md bg-opacity-20 items-center text-center">
+                        <p className="font-bold text-sm">
+                            Missed
+                        </p>
+
+                        <p className="font-bold text-xl">
+                            {totalSummary.missed}
+                        </p>
+                    </div>
+                </div>
+
+                <div className="flex flex-col w-full">
+                    {attendanceSummary.map((item, index) => (
+                        <div key={index} className=" rounded-md bg-neutral-500 bg-opacity-0 flex py-2 justify-between items-center gap-4">
+                            <div className="flex flex-col flex-initial">
+                                <p className="font-bold">{item.name}</p>
+
+                                <div className="flex gap-1 opacity-50 text-xs font-semibold items-center">
+                                    <Calendar className="size-2" />
+                                    <p className="mr-1">{item.date}</p>
+
+                                    {/* {item.duration_in_minutes && (
+                                    <>
+                                        <Hourglass className="size-2 " />
+                                        <p className="mr-2">{item.duration_in_minutes}</p>
+                                    </>
+                                )} */}
+
+                                    {item.attended_duration_in_minutes > 0 && (
+                                        <>
+                                            <Hourglass className="size-2" />
+                                            <p className="mr-2">{item.attended_duration_in_minutes}/{item.duration_in_minutes} mn</p>
+                                        </>
+                                    )}
+
+                                </div>
 
 
-
-
-
-                {groupedAttendanceRecords.length > 0 ? (
-                    groupedAttendanceRecords.map((attendanceGroup) => (
-
-                        <div key={attendanceGroup.date} className=" bg-neutral-500  bg-opacity-0 rounded-md p-4 ">
-
-                            <div className="flex flex-col justify-between items-left  rounded-md ">
-
-                                <p className="text-xs flex  font-bold gap-1 items-center opacity-50">
-
-                                    <Calendar className="size-3 " />
-                                    {formatDate(attendanceGroup.date)}
-
-                                </p>
-
-
-                                {getEventNameFromDate(events, attendanceGroup.date) ? (
-                                    <span className="font-bold ">
-                                        {getEventNameFromDate(events, attendanceGroup.date)}
-                                    </span>
-                                ) : (
-                                    <span className="font-bold text italic">
-                                        No Event
-                                    </span>
+                                {(item.is_check_in_only) && (
+                                    <div className="flex gap-1 opacity-50 text-xs font-semibold items-center">
+                                        <LogIn className="size-3" />
+                                        <p className="">Check-in only</p>
+                                    </div>
                                 )}
+
+
                             </div>
 
 
 
 
 
-                            {/* SECTION FOR EACH ATTENDANCE RECORD */}
-                            <div className="">
-                                {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
-                                {/* <TableHeader>
+                            <div className={`font text-right p-4 rounded-md flex-auto bg-gradient-to-r from-transparent ${item.remark === 'attended'
+                                ? 'to-neutral-500/20'
+                                : item.remark === 'incomplete'
+                                    ? 'to-yellow-500/20'
+                                    : item.remark === 'missed'
+                                        ? 'to-red-500/20'
+                                        : 'to-neutral-500/20'
+                                }`}>
+                                <p>
+                                    {item.remark}
+                                </p>
+                            </div>
+
+                        </div>
+                    ))}
+                </div>
+
+            </TabsContent>
+            <TabsContent value="details" className="min-h-full">
+                <div className=" overflow-scroll border-red-500 border-1  w-full grid-cols-2 grid gap-8 pt-4">
+                    {groupedAttendanceRecords.length > 0 ? (
+                        groupedAttendanceRecords.map((attendanceGroup) => (
+
+                            <div key={attendanceGroup.date} className=" bg-neutral-500  bg-opacity-0 rounded-md">
+
+                                <div className="flex flex-col justify-between items-left  rounded-md ">
+
+                                    <p className="text-xs flex  font-bold gap-1 items-center opacity-50">
+
+                                        <Calendar className="size-3 " />
+                                        {formatDate(attendanceGroup.date)}
+
+                                    </p>
+
+
+                                    {getEventNameFromDate(events, attendanceGroup.date) ? (
+                                        <span className="font-bold ">
+                                            {getEventNameFromDate(events, attendanceGroup.date)}
+                                        </span>
+                                    ) : (
+                                        <span className="font-bold text italic">
+                                            No Event
+                                        </span>
+                                    )}
+                                </div>
+
+
+
+
+
+                                {/* SECTION FOR EACH ATTENDANCE RECORD */}
+                                <div className="">
+                                    {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
+                                    {/* <TableHeader>
 								<TableRow >
 									<TableHead className="hidden">Time</TableHead>
 									<TableHead className="hidden">Scanner</TableHead>
 
 								</TableRow>
 							</TableHeader> */}
-                                <div className="">
-                                    {attendanceGroup?.records.map((record) => (
-                                        <div key={record.id} className="border-none outline-none justify-left flex align-middle gap-4 py-1">
+                                    <div className="">
+                                        {attendanceGroup?.records.map((record) => (
+                                            <div key={record.id} className="border-none outline-none justify-left flex align-middle gap-4 py-1">
 
 
-                                            {record.is_time_in ?
-                                                (<div className="flex gap-2 items-center font-bold text-xs"> <div className="size-2 color-green-500 bg-green-500 opacity-80 rounded-full" />{record.time}</div>) :
-                                                (<div className="flex gap-2 items-center font-bold text-xs"><div className="size-2 color-green-500 bg-red-500 opacity-80 rounded-full" />{record.time}</div>)
-                                            }
+                                                {record.is_time_in ?
+                                                    (<div className="flex gap-2 items-center font-bold text-xs"> <div className="size-2 color-green-500 bg-green-500 opacity-80 rounded-full" />{record.time}</div>) :
+                                                    (<div className="flex gap-2 items-center font-bold text-xs"><div className="size-2 color-green-500 bg-red-500 opacity-80 rounded-full" />{record.time}</div>)
+                                                }
 
 
 
-                                        </div>
-                                    ))}
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
+                        ))
+
+
+
+
+                    ) : (
+                        <div className="flex items-center justify-center h-full">
+                            <p className="text-center text-sm px-4 py-2 rounded-full flex items-center gap-2"><CircleAlert className="size-4" />No records found</p>
                         </div>
-                    ))
+                    )}
+
+                </div>
+            </TabsContent>
+        </Tabs>
 
 
 
 
-                ) : (
-                    <div className="flex items-center justify-center h-full">
-                        <p className="text-center text-sm px-4 py-2 rounded-full flex items-center gap-2"><CircleAlert className="size-4" />No records found</p>
-                    </div>
-                )}
-
-            </div>
-        </>
     )
 
 }

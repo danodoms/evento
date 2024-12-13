@@ -11,4 +11,5 @@ export const eventSchema = z.object({
   duration: z.enum(["AM_ONLY", "PM_ONLY", "AM_AND_PM"]), // enum for duration
   duration_in_minutes: z.number().optional(),
   is_required: z.boolean().default(true),
+  is_check_in_only: z.boolean().default(false),
 });

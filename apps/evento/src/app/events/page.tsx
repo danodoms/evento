@@ -343,6 +343,14 @@ export default function EventsPage() {
 								)}
 
 
+								{event.is_check_in_only && (
+									<Badge className="flex gap-1" variant={"secondary"}>
+										<LogIn className="size-3" />
+										Check-in only
+									</Badge>
+								)}
+
+
 								{getEventTimeInCount(event) !== "0" && (
 									<Badge className="flex gap-1 bg-green-500 bg-opacity-50" variant={"outline"}>
 										<LogIn className="size-3" />

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp";
-import { getAttendanceRecordsBySchoolId } from "@repo/models/Attendance";
+import { getAttendanceRecordsBySchoolId, GroupedAttendance } from "@repo/models/Attendance";
 import { getEvents } from "@repo/models/Event";
 import { getStudentBySchoolId } from "@repo/models/Student";
 import AttendanceRecords from "@/components/AttendanceRecords";
@@ -125,32 +125,34 @@ export default function Records() {
 
 
 
+    //* FUNCTION TO DEDUPLICATE ATTENDANCE RECORDS
+    //* FUNCTION TO DEDUPLICATE ATTENDANCE RECORDS
+    //* FUNCTION TO DEDUPLICATE ATTENDANCE RECORDS
+    // function deduplicateRecords(data: GroupedAttendance[]) {
+    //     const THIRTY_MINUTES = 30 * 60 * 1000; // 30 minutes in milliseconds
 
-    function deduplicateRecords(data) {
-        const THIRTY_MINUTES = 30 * 60 * 1000; // 30 minutes in milliseconds
+    //     return data.map((day) => {
+    //         const sortedRecords = [...day.records].sort(
+    //             (a, b) => new Date(a.created_at) - new Date(b.created_at)
+    //         );
 
-        return data.map((day) => {
-            const sortedRecords = [...day.records].sort(
-                (a, b) => new Date(a.created_at) - new Date(b.created_at)
-            );
+    //         const deduplicated = [];
+    //         sortedRecords.forEach((record) => {
+    //             if (
+    //                 deduplicated.length === 0 || // Always keep the first record
+    //                 new Date(record.created_at) - new Date(deduplicated[deduplicated.length - 1].created_at) >=
+    //                 THIRTY_MINUTES
+    //             ) {
+    //                 deduplicated.push(record);
+    //             }
+    //         });
 
-            const deduplicated = [];
-            sortedRecords.forEach((record) => {
-                if (
-                    deduplicated.length === 0 || // Always keep the first record
-                    new Date(record.created_at) - new Date(deduplicated[deduplicated.length - 1].created_at) >=
-                    THIRTY_MINUTES
-                ) {
-                    deduplicated.push(record);
-                }
-            });
-
-            return {
-                date: day.date,
-                records: deduplicated,
-            };
-        });
-    }
+    //         return {
+    //             date: day.date,
+    //             records: deduplicated,
+    //         };
+    //     });
+    // }
 
 
 
@@ -164,14 +166,14 @@ export default function Records() {
 
 
     return (
-        <div className="min-h-screen flex items-center flex-col justify-center p-4 pt-16 w-full">
+        <div className="min-h-screen flex items-center flex-col justify-center pt-20 w-full px-8 min-w-full pb-8">
             {isStudentFound && student ? (
                 <div>
-                    <div className="p-4 text-center">
+                    <div className=" text-center">
                         {/* <p className="text-sm opacity-50 mb-2">Showing attendance records for</p> */}
                         <p className="text-3xl font-bold">{student && truncateString(student.first_name, 3, "...")} {student && truncateString(student.last_name, 1, ".")}</p>
                         <p className="tracking-wide opacity-50 font-bold">{student?.school_id}</p>
-                        <Button className="w-full mt-4" variant="outline" onClick={() => setIsStudentFound(false)}>Search Again</Button>
+
                     </div>
 
                     <div className="h-auto w-full overflow-scroll">
@@ -179,6 +181,7 @@ export default function Records() {
                         {/* <h2 className="font-bold my-8">Deduplicated records</h2>
                         <AttendanceRecords groupedAttendanceRecords={deduplicateRecords(groupedAttendanceRecords)} events={events} /> */}
                     </div>
+                    <Button className="w-full mt-4" variant="outline" onClick={() => setIsStudentFound(false)}>Search Again</Button>
                 </div>
             ) : (
                 <div>

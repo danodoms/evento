@@ -13,6 +13,7 @@ export type Event = {
   duration: eventDuration;
   duration_in_minutes: number | undefined;
   is_required: boolean;
+  is_check_in_only: boolean;
 };
 
 export type EventStat = {
