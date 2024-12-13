@@ -28,11 +28,15 @@ import { format, parseISO } from "date-fns";
 import { TableProperties, CircleAlert, Eye, AlignLeft, LogIn, LogOut, Calendar, Redo, UndoIcon, ChevronLeft, ChevronRight, Hourglass, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 // import { truncateString } from "@/utils/utils";
+import { useGlobalStore } from "@/hooks/useGlobalStore";
+import { useEffect } from "react";
 
 type AttendanceSectionProps = {
     groupedAttendanceRecords: GroupedAttendance[];
     events: Event[];
 }
+
+
 
 type AttendanceRemark = "attended" | "incomplete" | "incomplete"
 
@@ -108,10 +112,6 @@ const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendance
                         // const attendedDuration = (latest - earliest) / (60 * 1000); // in minutes
 
 
-
-
-
-
                         // Step 1: Convert time strings to total seconds
                         const totalSeconds = times.map(time => {
                             const [hours, minutes, seconds] = time.split(":").map(Number);
@@ -170,18 +170,23 @@ const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendance
     }
 
 
-
     // console.log(calculateEventSummary(events, groupedAttendanceRecords))
 
 
     const { summary: attendanceSummary, totalSummary } = calculateEventSummary(events, groupedAttendanceRecords)
 
+    const { setGlobalRecords } = useGlobalStore()
 
 
+    useEffect(() => {
+        setGlobalRecords({
+            attended: totalSummary.attended,
+            incomplete: totalSummary.incomplete,
+            missed: totalSummary.missed,
+        });
+    }, []);
 
     return (
-
-
         <Tabs defaultValue="summary" className="w-full pt-4">
             <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="summary">Summary</TabsTrigger>
