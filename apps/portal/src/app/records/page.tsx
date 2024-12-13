@@ -15,7 +15,7 @@ import { Download, Search } from "lucide-react";
 import { useGlobalStore } from "@/hooks/useGlobalStore";
 
 export default function Records() {
-    const COOLDOWN_TIME = 300000; // 1 minute in milliseconds
+    const COOLDOWN_TIME = 60000; // 1 minute in milliseconds
 
     const [schoolId, setSchoolId] = useState("");
     const [isStudentFound, setIsStudentFound] = useState(false);
@@ -124,7 +124,7 @@ export default function Records() {
 
 
     // Helper function to determine if a color is light or dark
-    function isLightColor(color) {
+    function isLightColor(color: string) {
         // Convert RGB to a brightness value (lighter colors will have higher brightness)
         const rgb = color.match(/\d+/g);
         if (!rgb) return true; // Default to light if the color format is not RGB
@@ -133,7 +133,7 @@ export default function Records() {
         return brightness > 127; // If brightness is greater than 127, it's a light color
     }
 
-    async function downloadImageWithWatermark(elementId, watermarkTexts) {
+    async function downloadImageWithWatermark(elementId: string, watermarkTexts: string[]) {
         const element = document.getElementById(elementId);
 
         if (!element) {
@@ -155,6 +155,12 @@ export default function Records() {
                 canvas.width = img.width;
                 canvas.height = img.height;
                 const ctx = canvas.getContext('2d');
+
+
+                if (!ctx) {
+                    return console.log("CTX not found")
+                }
+
 
                 // Draw the captured image onto the canvas
                 ctx.drawImage(img, 0, 0);
@@ -217,7 +223,7 @@ export default function Records() {
                 // Create a downloadable link
                 const link = document.createElement('a');
                 link.href = finalImage;
-                link.download = 'screenshot_with_diagonal_watermark_and_dots.png';
+                link.download = 'evento-attendance-summary.png';
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -266,8 +272,6 @@ export default function Records() {
     //         };
     //     });
     // }
-
-
 
 
 

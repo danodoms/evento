@@ -311,7 +311,11 @@ export function EventForm({ event, handleClose, handleError }: EventFormProps) {
 								{/* <MapPin className="size-4" /> */}
 							</FormLabel>
 							<FormControl>
-								<Input type="number" placeholder="Enter event duration in minutes" {...field} value={field.value} onChange={(e) => field.onChange(Number(e.target.value))} />
+								<Input type="number" placeholder="Enter event duration in minutes" {...field} value={field.value ?? 0}
+									onChange={(e) => {
+										const value = e.target.value;
+										field.onChange(value ? Number(value) : 0); // Convert to number, or default to 0 if empty
+									}} />
 							</FormControl>
 							{form.formState.errors.duration_in_minutes && (
 								<FormMessage>

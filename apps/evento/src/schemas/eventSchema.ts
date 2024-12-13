@@ -9,7 +9,7 @@ export const eventSchema = z.object({
   date: z.date(), // Assuming ISO 8601 date string
   location: z.string().optional(),
   duration: z.enum(["AM_ONLY", "PM_ONLY", "AM_AND_PM"]), // enum for duration
-  duration_in_minutes: z.number().optional(),
+  duration_in_minutes: z.number(),
   is_required: z.boolean().default(true),
   is_check_in_only: z.boolean().default(false),
 });

@@ -11,7 +11,7 @@ export type Event = {
   description: string | undefined; // text type, represented as string
   location: string | undefined; // text type, represented as string
   duration: eventDuration;
-  duration_in_minutes: number | undefined;
+  duration_in_minutes: number;
   is_required: boolean;
   is_check_in_only: boolean;
 };
