@@ -1,6 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox"
+
 import {
 	Form,
 	FormControl,
@@ -90,6 +92,9 @@ export function EventForm({ event, handleClose, handleError }: EventFormProps) {
 				description: event.description,
 				location: event.location,
 				duration: event.duration,
+				duration_in_minutes: event.duration_in_minutes,
+				is_required: event.is_required,
+				is_check_in_only: event.is_check_in_only
 			}
 			: {
 				name: "",
@@ -111,6 +116,9 @@ export function EventForm({ event, handleClose, handleError }: EventFormProps) {
 			description: values.description,
 			location: values.location,
 			duration: values.duration,
+			duration_in_minutes: values.duration_in_minutes,
+			is_required: true,
+			is_check_in_only: false
 		};
 
 		if (event) {
@@ -123,6 +131,9 @@ export function EventForm({ event, handleClose, handleError }: EventFormProps) {
 				description: values.description,
 				location: values.location,
 				duration: values.duration,
+				duration_in_minutes: values.duration_in_minutes,
+				is_required: values.is_required,
+				is_check_in_only: values.is_check_in_only
 			};
 
 			console.log("event to update: ", eventToUpdate);
@@ -287,6 +298,77 @@ export function EventForm({ event, handleClose, handleError }: EventFormProps) {
 						</FormItem>
 					)}
 				/>
+
+
+
+				<FormField
+					control={form.control}
+					name="duration_in_minutes"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel className="flex gap-2 items-center">
+								Duration in Minutes
+								{/* <MapPin className="size-4" /> */}
+							</FormLabel>
+							<FormControl>
+								<Input type="number" placeholder="Enter event duration in minutes" {...field} value={field.value ?? 0}
+									onChange={(e) => {
+										const value = e.target.value;
+										field.onChange(value ? Number(value) : 0); // Convert to number, or default to 0 if empty
+									}} />
+							</FormControl>
+							{form.formState.errors.duration_in_minutes && (
+								<FormMessage>
+									{form.formState.errors.duration_in_minutes.message}
+								</FormMessage>
+							)}
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name="is_required"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel className="flex gap-2 items-center">
+								Require Attendance
+							</FormLabel>
+							<FormControl>
+								<Checkbox checked={field.value} onCheckedChange={field.onChange} />
+							</FormControl>
+							{form.formState.errors.is_required && (
+								<FormMessage>
+									{form.formState.errors.is_required.message}
+								</FormMessage>
+							)}
+						</FormItem>
+					)}
+				/>
+
+
+				<FormField
+					control={form.control}
+					name="is_check_in_only"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel className="flex gap-2 items-center">
+								Check In Only
+							</FormLabel>
+							<FormControl>
+								<Checkbox checked={field.value} onCheckedChange={field.onChange} />
+							</FormControl>
+							{form.formState.errors.is_check_in_only && (
+								<FormMessage>
+									{form.formState.errors.is_check_in_only.message}
+								</FormMessage>
+							)}
+						</FormItem>
+					)}
+				/>
+
+
+
 				<Button
 					type="submit"
 					disabled={form.formState.isSubmitting}
