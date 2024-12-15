@@ -38,6 +38,19 @@ export async function getEvents(): Promise<Event[]> {
   return data as Event[];
 }
 
+export async function getActiveEvents(): Promise<Event[]> {
+  const { data, error } = await supabase
+    .from("events")
+    .select("*")
+    .eq("is_active", true); // Add condition to filter active events
+
+  if (error) {
+    console.error("Error fetching events", error);
+  }
+  console.log("All events", data);
+  return data as Event[];
+}
+
 export async function addEvent(
   event: Omit<Event, "id" | "created_at">
 ): Promise<Event> {

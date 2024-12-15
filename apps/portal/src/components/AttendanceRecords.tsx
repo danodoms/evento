@@ -29,7 +29,7 @@ import { TableProperties, CircleAlert, Eye, AlignLeft, LogIn, LogOut, Calendar, 
 import { Badge } from "@/components/ui/badge";
 // import { truncateString } from "@/utils/utils";
 import { useGlobalStore } from "@/hooks/useGlobalStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 type AttendanceSectionProps = {
     groupedAttendanceRecords: GroupedAttendance[];
@@ -64,7 +64,7 @@ const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendance
     // 	return event ? event.name : formatDate(date);
     // };
 
-
+    const { setGlobalRecords } = useGlobalStore()
 
 
     // Function to calculate attendance summary
@@ -103,7 +103,6 @@ const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendance
 
                     } else if (recordsForEvent[0]?.records.length > 1) {
 
-                        console.log("dsdasbsid")
 
                         // Calculate the duration covered by attendance
                         const times = recordsForEvent[0].records.map((record) => record.time);
@@ -127,7 +126,7 @@ const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendance
                         attendedDuration = durationSeconds / 60;
 
 
-                        console.log("YOU ATTENDED MINUTESSS: ", event.name, attendedDuration)
+                        // console.log("YOU ATTENDED MINUTESSS: ", event.name, attendedDuration)
 
                         // Compare attended duration with required duration
                         if (attendedDuration >= event.duration_in_minutes) {
@@ -162,6 +161,7 @@ const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendance
                 };
             });
 
+
         // Return both the individual event summary and the total summary
         return {
             summary,
@@ -175,16 +175,27 @@ const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendance
 
     const { summary: attendanceSummary, totalSummary } = calculateEventSummary(events, groupedAttendanceRecords)
 
-    const { setGlobalRecords } = useGlobalStore()
 
+
+    // Avoid excessive state updates
+    const [previousTotalSummary, setPreviousTotalSummary] = useState(totalSummary);
 
     useEffect(() => {
-        setGlobalRecords({
-            attended: totalSummary.attended,
-            incomplete: totalSummary.incomplete,
-            missed: totalSummary.missed,
-        });
-    }, []);
+        // Only update global records if the total summary has changed
+        if (
+            previousTotalSummary.attended !== totalSummary.attended ||
+            previousTotalSummary.incomplete !== totalSummary.incomplete ||
+            previousTotalSummary.missed !== totalSummary.missed
+        ) {
+            setGlobalRecords({
+                attended: totalSummary.attended,
+                incomplete: totalSummary.incomplete,
+                missed: totalSummary.missed
+            });
+            setPreviousTotalSummary(totalSummary); // Update the previous summary
+        }
+    }, [totalSummary, previousTotalSummary]); // Dependency array ensures the effect only runs when `totalSummary` changes
+
 
     return (
         <Tabs defaultValue="summary" className="w-full pt-4">

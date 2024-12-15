@@ -5,13 +5,13 @@ import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp";
 import { getAttendanceRecordsBySchoolId, GroupedAttendance } from "@repo/models/Attendance";
-import { getEvents } from "@repo/models/Event";
+import { getActiveEvents, getEvents } from "@repo/models/Event";
 import { getStudentBySchoolId } from "@repo/models/Student";
 import AttendanceRecords from "@/components/AttendanceRecords";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import html2canvas from 'html2canvas';
 import { toPng } from "html-to-image";
-import { Download, Search } from "lucide-react";
+import { Download, LoaderCircle, Search } from "lucide-react";
 import { useGlobalStore } from "@/hooks/useGlobalStore";
 
 export default function Records() {
@@ -62,11 +62,13 @@ export default function Records() {
     const { data: attendanceRecords = [], refetch: refetchAttendanceRecords } = useQuery({
         queryKey: ["studentAttendanceRecords", schoolId],
         queryFn: () => getAttendanceRecordsBySchoolId(formatWithDash(schoolId)),
+        enabled: false
     });
 
-    const { data: events = [] } = useQuery({
+    const { data: events = [], refetch: refetchEvents, isStale: isEventsStale } = useQuery({
         queryKey: ["events"],
-        queryFn: getEvents,
+        queryFn: getActiveEvents,
+        enabled: false
     });
 
     const { data: student, refetch: refetchStudent } = useQuery({
@@ -97,6 +99,18 @@ export default function Records() {
 
         // Fetch attendance records
         refetchAttendanceRecords();
+
+        if (isEventsStale) {
+            console.log("Events data is stale, refetching...");
+            refetchEvents();
+        } else if (!events || events.length === 0) {
+            console.log("Events data is empty, refetching...");
+            refetchEvents();
+        } else {
+            console.log("Events data is fresh, no refetch needed.");
+        }
+
+
 
         // Save the current time as the last query time
         const currentTime = Date.now();
@@ -277,7 +291,8 @@ export default function Records() {
 
 
     const { globalRecords } = useGlobalStore()
-    const combinedRecords = String(globalRecords.attended) + String(globalRecords.incomplete) + String(globalRecords.missed)
+    const combinedRecords = `${globalRecords.attended}${globalRecords.incomplete}${globalRecords.missed}`;
+
 
 
 
@@ -295,7 +310,16 @@ export default function Records() {
                     </div>
 
                     <div className="h-auto w-full overflow-scroll">
-                        <AttendanceRecords groupedAttendanceRecords={groupedAttendanceRecords} events={events} />
+
+                        {!attendanceRecords || !events ? (
+                            <div className="w-full p-8 flex-auto">
+                                <LoaderCircle className="animate-spin" />
+                            </div>
+                        ) : (
+                            <AttendanceRecords groupedAttendanceRecords={groupedAttendanceRecords} events={events} />
+                        )}
+
+
                         {/* <h2 className="font-bold my-8">Deduplicated records</h2>
                         <AttendanceRecords groupedAttendanceRecords={deduplicateRecords(groupedAttendanceRecords)} events={events} /> */}
                     </div>
