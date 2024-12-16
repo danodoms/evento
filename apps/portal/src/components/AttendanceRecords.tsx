@@ -20,7 +20,7 @@ import {
     getAttendanceRecordsBySchoolId,
     type GroupedAttendance
 } from "@repo/models/Attendance";
-import { Event, getEvents } from "@repo/models/Event";
+import { Event, eventDuration, getEvents } from "@repo/models/Event";
 import { getStudentFullName, Student } from "@repo/models/Student";
 import useMediaQuery from "@custom-react-hooks/use-media-query";
 import { useQuery } from "@tanstack/react-query";
@@ -38,7 +38,7 @@ type AttendanceSectionProps = {
 
 
 
-type AttendanceRemark = "attended" | "incomplete" | "incomplete"
+type AttendanceRemark = "attended" | "incomplete" | "missed"
 
 const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendanceRecords, events }) => {
 
@@ -67,10 +67,30 @@ const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendance
     const { setGlobalRecords } = useGlobalStore()
 
 
+    function getHoursMissed(remark: AttendanceRemark, eventDuration: eventDuration): number {
+        if (remark === "missed") {
+            if (eventDuration === "AM_AND_PM") {
+                return 8;
+            } else {
+                return 4;
+            }
+        } else if (remark === "incomplete") {
+            if (eventDuration === "AM_AND_PM") {
+                return 4;
+            } else {
+                return 2;
+            }
+        } else {
+            return 0; // If the remark is "attended", no hours are missed
+        }
+    }
+
+
     // Function to calculate attendance summary
     function calculateEventSummary(events: Event[], attendanceRecords: GroupedAttendance[]) {
         // Object to store the total summary counts
         const totalSummary = {
+            total_hours_missed: 0,
             attended: 0,
             missed: 0,
             incomplete: 0
@@ -87,7 +107,7 @@ const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendance
                 // console.log("recordsForEvent", JSON.stringify(recordsForEvent))
 
                 // Initialize the remark as "missed" by default
-                let remark = "missed";
+                let remark: AttendanceRemark = "missed";
 
                 let attendedDuration = 0
 
@@ -150,17 +170,22 @@ const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendance
                 }
 
 
+                totalSummary.total_hours_missed = totalSummary.total_hours_missed + getHoursMissed(remark, event.duration)
+
+
+
                 // Return the event name, date, and calculated remark
                 return {
                     name: event.name,
                     date: event.date,
+                    duration: event.duration,
                     duration_in_minutes: event.duration_in_minutes,
-                    remark: remark as AttendanceRemark,
+                    remark: remark,
                     attended_duration_in_minutes: Math.floor(attendedDuration),
-                    is_check_in_only: event.is_check_in_only
+                    is_check_in_only: event.is_check_in_only,
+                    hours_missed: getHoursMissed(remark, event.duration)
                 };
             });
-
 
         // Return both the individual event summary and the total summary
         return {
@@ -168,6 +193,8 @@ const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendance
             totalSummary
         };
     }
+
+
 
 
     // console.log(calculateEventSummary(events, groupedAttendanceRecords))
@@ -204,39 +231,55 @@ const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendance
                 <TabsTrigger value="details">Details</TabsTrigger>
             </TabsList>
             <TabsContent value="summary" className="min-h-full">
-                <div className="flex w-full gap-4 py-2">
-                    <div className="p-4 bg-neutral-500 flex-auto rounded-md bg-opacity-20 items-center text-center">
-                        <p className="font-bold text-sm">
-                            Attended
-                        </p>
 
-                        <p className="font-bold text-xl">
-                            {totalSummary.attended}
-                        </p>
+                <div>
+                    <div className="flex w-full gap-4 py-2">
+                        <div className="p-4 bg-neutral-500 flex-auto rounded-md bg-opacity-20 items-center text-center">
+                            <p className="font-bold text-sm">
+                                Total Hours Missed
+                            </p>
+
+                            <p className="font-bold text-xl">
+                                {totalSummary.total_hours_missed}
+                            </p>
+                        </div>
                     </div>
+                    <div className="flex w-full gap-4 py-2">
+                        <div className="p-4 bg-neutral-500 flex-auto rounded-md bg-opacity-20 items-center text-center">
+                            <p className="font-bold text-sm">
+                                Attended
+                            </p>
+
+                            <p className="font-bold text-xl">
+                                {totalSummary.attended}
+                            </p>
+                        </div>
 
 
 
-                    <div className="p-4 bg-yellow-500 flex-auto rounded-md bg-opacity-20 items-center text-center">
-                        <p className="font-bold text-sm">
-                            Incomplete
-                        </p>
+                        <div className="p-4 bg-yellow-500 flex-auto rounded-md bg-opacity-20 items-center text-center">
+                            <p className="font-bold text-sm">
+                                Incomplete
+                            </p>
 
-                        <p className="font-bold text-xl">
-                            {totalSummary.incomplete}
-                        </p>
-                    </div>
+                            <p className="font-bold text-xl">
+                                {totalSummary.incomplete}
+                            </p>
+                        </div>
 
-                    <div className="p-4 bg-red-500 flex-auto rounded-md bg-opacity-20 items-center text-center">
-                        <p className="font-bold text-sm">
-                            Missed
-                        </p>
+                        <div className="p-4 bg-red-500 flex-auto rounded-md bg-opacity-20 items-center text-center">
+                            <p className="font-bold text-sm">
+                                Missed
+                            </p>
 
-                        <p className="font-bold text-xl">
-                            {totalSummary.missed}
-                        </p>
+                            <p className="font-bold text-xl">
+                                {totalSummary.missed}
+                            </p>
+                        </div>
                     </div>
                 </div>
+
+
 
                 <div className="flex flex-col w-full">
                     {attendanceSummary.map((item, index) => (
@@ -244,7 +287,11 @@ const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendance
                             <div className="flex flex-col flex-initial">
                                 <p className="font-bold">{item.name}</p>
 
+
+
                                 <div className="flex gap-1 opacity-50 text-xs font-semibold items-center">
+
+
                                     <Calendar className="size-2" />
                                     <p className="mr-1">{item.date}</p>
 
@@ -265,12 +312,23 @@ const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendance
                                 </div>
 
 
-                                {(item.is_check_in_only) && (
-                                    <div className="flex gap-1 opacity-50 text-xs font-semibold items-center">
-                                        <LogIn className="size-3" />
-                                        <p className="">Check-in only</p>
-                                    </div>
-                                )}
+
+                                <div className="flex gap-1 text-xs font-semibold items-center">
+
+                                    {item.duration == "AM_AND_PM" ? (
+                                        <p className="opacity-50 ">Whole day</p>
+                                    ) : (
+                                        <p className="opacity-50 ">Half day</p>
+                                    )}
+
+                                    {(item.is_check_in_only) && (
+                                        <div className="flex gap-1 text-xs font-semibold items-center">
+                                            <LogIn className="size-3" />
+                                            <p className="">Check-in only</p>
+                                        </div>
+                                    )}
+                                </div>
+
 
 
                             </div>
@@ -289,8 +347,19 @@ const AttendanceRecords: React.FC<AttendanceSectionProps> = ({ groupedAttendance
                                 }`}>
                                 <p>
                                     {item.remark}
+
                                 </p>
+
+
+                                {item.hours_missed !== 0 && (
+                                    <p className="opacity-50 text-xs">
+                                        {item.hours_missed} hours
+                                    </p>
+                                )}
+
                             </div>
+
+
 
                         </div>
                     ))}
