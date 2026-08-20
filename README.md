@@ -14,7 +14,7 @@
 - **Responsive Design**: Fully responsive design to ensure usability on any device, including desktops, tablets, and smartphones.
 
 ## Read the Case Study here
-https://www.danodoms.xyz/case-studies/evento
+https://www.danodoms.com/case-studies/evento
 
 ## Screenshots
 
